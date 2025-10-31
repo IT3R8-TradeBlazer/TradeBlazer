@@ -1,6 +1,8 @@
 import React from "react";
 import { View, Text, TextInput, ScrollView, StyleSheet, Image, TouchableOpacity, SafeAreaView } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import BottomNav from "../../components/BottomNav";
+import Header from "../../components/Header";
 
 export default function HomeScreen({ navigation }) {
   const products = [
@@ -36,17 +38,17 @@ export default function HomeScreen({ navigation }) {
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* Header */}
-      <View style={styles.header}>
-        <Text style={styles.logo}>TradeBlazer</Text>
-        <TouchableOpacity>
-          <Ionicons name="menu" size={26} color="#fff" />
-        </TouchableOpacity>
-      </View>
+      {/* Reusable Header */}
+      <Header navigation={navigation} title="TradeBlazer" />
 
       {/* Search Bar */}
       <View style={styles.searchContainer}>
-        <Ionicons name="search" size={20} color="#555" style={{ marginLeft: 10 }} />
+        <Ionicons
+          name="search"
+          size={20}
+          color="#555"
+          style={{ marginLeft: 10 }}
+        />
         <TextInput
           style={styles.searchInput}
           placeholder="Search for anything..."
@@ -69,25 +71,7 @@ export default function HomeScreen({ navigation }) {
       </ScrollView>
 
       {/* Bottom Navigation */}
-      <View style={styles.bottomNav}>
-        <TouchableOpacity>
-          <Ionicons name="home" size={26} color="#ECF2E8" />
-        </TouchableOpacity>
-        <TouchableOpacity>
-          <Ionicons name="notifications" size={26} color="#ECF2E8" />
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.addButton}>
-          <Ionicons name="add" size={30} color="#2E5E3E" />
-        </TouchableOpacity>
-
-        <TouchableOpacity>
-          <Ionicons name="chatbubbles" size={26} color="#ECF2E8" />
-        </TouchableOpacity>
-        <TouchableOpacity>
-          <Ionicons name="person" size={26} color="#ECF2E8" />
-        </TouchableOpacity>
-      </View>
+      <BottomNav navigation={navigation} />
     </SafeAreaView>
   );
 }
@@ -96,19 +80,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#ECF2E8",
-  },
-  header: {
-    backgroundColor: "#2E5E3E",
-    paddingHorizontal: 20,
-    paddingVertical: 12,
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  logo: {
-    fontSize: 20,
-    fontWeight: "bold",
-    color: "#fff",
   },
   searchContainer: {
     flexDirection: "row",
@@ -160,24 +131,5 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: "#444",
     marginTop: 4,
-  },
-  bottomNav: {
-    flexDirection: "row",
-    justifyContent: "space-around",
-    alignItems: "center",
-    backgroundColor: "#2E5E3E",
-    paddingVertical: 12,
-    borderTopLeftRadius: 25,
-    borderTopRightRadius: 25,
-    position: "absolute",
-    bottom: 0,
-    width: "100%",
-    elevation: 10,
-  },
-  addButton: {
-    backgroundColor: "#ECF2E8",
-    borderRadius: 30,
-    padding: 10,
-    marginBottom: 10,
   },
 });
