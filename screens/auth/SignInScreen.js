@@ -46,7 +46,7 @@ const handleContinue = async () => {
 
     if (email === storedEmail && password === storedPassword) {
       Alert.alert("Login successful!", `Welcome back, ${storedName}!`, [
-        { text: "Continue", onPress: () => navigation.navigate("Home") }
+        { text: "Continue", onPress: () => navigation.navigate("Main") }
       ]);
     } else {
       Alert.alert("Invalid credentials", "Your email or password is incorrect.");

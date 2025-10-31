@@ -1,16 +1,10 @@
 import React from "react";
-import {
-  View,
-  Text,
-  TextInput,
-  ScrollView,
-  StyleSheet,
-  Image,
-  TouchableOpacity,
-} from "react-native";
+import { View, Text, TextInput, ScrollView, StyleSheet, Image, TouchableOpacity, SafeAreaView } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import BottomNav from "../../components/BottomNav";
+import Header from "../../components/Header";
 
-export default function HomeScreen() {
+export default function HomeScreen({ navigation }) {
   const products = [
     {
       id: 1,
@@ -43,12 +37,9 @@ export default function HomeScreen() {
   ];
 
   return (
-    <View style={styles.container}>
-      {/* Header */}
-      <View style={styles.header}>
-        <Text style={styles.logo}>TradeBlazer</Text>
-        <Ionicons name="menu" size={26} color="#fff" />
-      </View>
+    <SafeAreaView style={styles.container}>
+      {/* Reusable Header */}
+      <Header navigation={navigation} title="TradeBlazer" />
 
       {/* Search Bar */}
       <View style={styles.searchContainer}>
@@ -60,7 +51,7 @@ export default function HomeScreen() {
         />
         <TextInput
           style={styles.searchInput}
-          placeholder="Search for anything"
+          placeholder="Search for anything..."
           placeholderTextColor="#888"
         />
       </View>
@@ -80,26 +71,8 @@ export default function HomeScreen() {
       </ScrollView>
 
       {/* Bottom Navigation */}
-      <View style={styles.bottomNav}>
-        <TouchableOpacity>
-          <Ionicons name="home" size={26} color="#ECF2E8" />
-        </TouchableOpacity>
-        <TouchableOpacity>
-          <Ionicons name="notifications" size={26} color="#ECF2E8" />
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.addButton}>
-          <Ionicons name="add" size={30} color="#2E5E3E" />
-        </TouchableOpacity>
-
-        <TouchableOpacity>
-          <Ionicons name="chatbubbles" size={26} color="#ECF2E8" />
-        </TouchableOpacity>
-        <TouchableOpacity>
-          <Ionicons name="person" size={26} color="#ECF2E8" />
-        </TouchableOpacity>
-      </View>
-    </View>
+      <BottomNav navigation={navigation} />
+    </SafeAreaView>
   );
 }
 
@@ -107,19 +80,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#ECF2E8",
-  },
-  header: {
-    backgroundColor: "#2E5E3E",
-    paddingHorizontal: 20,
-    paddingVertical: 12,
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  logo: {
-    fontSize: 20,
-    fontWeight: "bold",
-    color: "#fff",
   },
   searchContainer: {
     flexDirection: "row",
@@ -137,7 +97,7 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     paddingHorizontal: 15,
-    paddingBottom: 100,
+    paddingBottom: 120, // prevents bottom nav overlap
   },
   sectionTitle: {
     fontWeight: "bold",
@@ -171,23 +131,5 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: "#444",
     marginTop: 4,
-  },
-  bottomNav: {
-    flexDirection: "row",
-    justifyContent: "space-around",
-    alignItems: "center",
-    backgroundColor: "#2E5E3E",
-    paddingVertical: 12,
-    borderTopLeftRadius: 25,
-    borderTopRightRadius: 25,
-    position: "absolute",
-    bottom: 0,
-    width: "100%",
-  },
-  addButton: {
-    backgroundColor: "#ECF2E8",
-    borderRadius: 30,
-    padding: 10,
-    marginBottom: 10,
   },
 });
