@@ -6,9 +6,9 @@ import NotificationsScreen from "../screens/notifications/NotificationsScreen";
 import AddPostScreen from "../screens/post/AddPostScreen";
 import ChatListScreen from "../screens/chat/ChatListScreen";
 import ProfileScreen from "../screens/profile/ProfileScreen";
-import MenuSettingsScreen from "../screens/main/MenuSettingsScreen";
-import FavoritesScreen from '../screens/main/FavoritesScreen';
-import SettingsScreen from '../screens/main/SettingsScreen';
+import MenuSettingsScreen from "../screens/menu/MenuSettingsScreen";
+import FavoritesScreen from '../screens/menu/FavoritesScreen';
+import SettingsScreen from '../screens/menu/SettingsScreen';
 
 const Stack = createNativeStackNavigator();
 

@@ -8,10 +8,10 @@ export default function FavoritesScreen({ navigation }) {
   return (
     <SafeAreaView style={styles.container}>
 
-      {/* ✅ Global TradeBlazer Header */}
+      {/* Main Header */}
       <Header navigation={navigation} />
 
-      {/* ✅ Page Content */}
+      {/* Page Content */}
       <View style={styles.content}>
 
         {/* Back + Title Row */}
@@ -22,7 +22,7 @@ export default function FavoritesScreen({ navigation }) {
           <Text style={styles.title}>Favorites</Text>
         </View>
 
-        {/* ✅ Product Grid */}
+        {/* Product Grid */}
         <ScrollView contentContainerStyle={styles.grid}>
           
           {/* Item 1 */}
@@ -48,7 +48,7 @@ export default function FavoritesScreen({ navigation }) {
         </ScrollView>
       </View>
 
-      {/* ✅ Bottom Navigation */}
+      {/* Bottom Navigation */}
       <BottomNav navigation={navigation} />
     </SafeAreaView>
   );
