@@ -1,29 +1,18 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, Image, StyleSheet, FlatList } from 'react-native';
-import { getUser } from '../../utils/storage';
+import React from 'react';
+import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import Header from '../../components/Header';
 import BottomNav from '../../components/BottomNav';
 
-export default function ProfileScreen() {
-  const [user, setUser] = useState(null);
-
-  // Mock posts - replace later with AsyncStorage or API
-  const mockPosts = [
-    { id: '1', title: 'Samsung S24 Ultra', price: '₱50,000' },
-  ];
-
-  useEffect(() => {
-    const loadUser = async () => {
-      const currentUser = await getUser();
-      setUser(currentUser);
-    };
-    loadUser();
-  }, []);
+export default function UserProfileScreen() {
+  const navigation = useNavigation();
+  const route = useRoute();
+  const { user } = route.params || {};
 
   if (!user) {
     return (
       <View style={styles.center}>
-        <Text>Loading profile...</Text>
+        <Text>No user data found.</Text>
       </View>
     );
   }
@@ -44,6 +33,21 @@ export default function ProfileScreen() {
         <Text style={styles.subtext}>{user.department || 'Student'}</Text>
       </View>
 
+      <View style={styles.buttons}>
+        <TouchableOpacity style={styles.contactBtn}>
+          <Text style={styles.btnText}>CONTACT</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.reportBtn}
+          onPress={() =>
+            navigation.navigate('ReportUserScreen', { reportedUserId: user.id })
+          }
+        >
+          <Text style={styles.btnText}>REPORT</Text>
+        </TouchableOpacity>
+      </View>
+
       <View style={styles.infoSection}>
         <Text style={styles.label}>About</Text>
         <Text>{user.address || 'Cagayan de Oro, Philippines'}</Text>
@@ -53,17 +57,6 @@ export default function ProfileScreen() {
         <Text>{user.phone || 'N/A'}</Text>
       </View>
 
-      <Text style={styles.postHeader}>Posts</Text>
-      <FlatList
-        data={mockPosts}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <View style={styles.postCard}>
-            <Text style={styles.postTitle}>{item.title}</Text>
-            <Text style={styles.postPrice}>{item.price}</Text>
-          </View>
-        )}
-      />
       <BottomNav />
     </View>
   );
@@ -71,21 +64,15 @@ export default function ProfileScreen() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#f9f9f9' },
-  center: { flex: 1, alignItems: 'center', justifyContent: 'center' },
+  center: { flex: 1, justifyContent: 'center', alignItems: 'center' },
   profileSection: { alignItems: 'center', marginTop: 20 },
   profilePic: { width: 100, height: 100, borderRadius: 50, marginBottom: 10 },
   name: { fontSize: 20, fontWeight: 'bold' },
   subtext: { color: '#777' },
+  buttons: { flexDirection: 'row', justifyContent: 'center', gap: 10, marginTop: 15 },
+  contactBtn: { backgroundColor: '#2e7d32', padding: 10, borderRadius: 8 },
+  reportBtn: { backgroundColor: '#d32f2f', padding: 10, borderRadius: 8 },
+  btnText: { color: '#fff', fontWeight: 'bold' },
   infoSection: { margin: 20 },
   label: { marginTop: 10, fontWeight: 'bold' },
-  postHeader: { fontSize: 18, fontWeight: 'bold', marginHorizontal: 20 },
-  postCard: {
-    backgroundColor: '#fff',
-    padding: 15,
-    margin: 10,
-    borderRadius: 10,
-    elevation: 3,
-  },
-  postTitle: { fontSize: 16, fontWeight: '600' },
-  postPrice: { color: '#444' },
 });
