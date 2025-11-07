@@ -1,76 +1,93 @@
-import React from "react";
-import { View, Text, TextInput, ScrollView, StyleSheet, Image, TouchableOpacity, SafeAreaView } from "react-native";
+import React, { useState } from "react";
+import {
+  View,
+  Text,
+  ScrollView,
+  StyleSheet,
+  SafeAreaView,
+  TouchableOpacity,
+} from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import BottomNav from "../../components/BottomNav";
 import Header from "../../components/Header";
+import SearchBar from "../../components/SearchBar";
+import ProductCard from "../../components/ProductCard";
 
 export default function HomeScreen({ navigation }) {
+  const [searchQuery, setSearchQuery] = useState("");
+
   const products = [
     {
       id: 1,
       name: "Ferro Rocher Bouquet",
-      price: "₱1,100",
+      price: "1,100",
       image:
         "https://i.pinimg.com/1200x/2c/82/eb/2c82ebd17b033b757144f0b0c6da9e5a.jpg",
     },
     {
       id: 2,
       name: "Cake with Bows",
-      price: "₱600",
+      price: "600",
       image:
         "https://i.pinimg.com/736x/72/bb/51/72bb51b23cf78b03d532234af0e6e9ae.jpg",
     },
     {
       id: 3,
       name: "Hair Clamps",
-      price: "₱25",
+      price: "25",
       image:
         "https://i.pinimg.com/736x/5a/bc/1b/5abc1b02fc9539d7e969e3e8249ed53d.jpg",
     },
     {
       id: 4,
       name: "Teddy Bear",
-      price: "₱600",
+      price: "600",
       image:
         "https://i.pinimg.com/736x/9b/78/0c/9b780ca25db2bce72b62acc72723ddb5.jpg",
     },
   ];
 
+  const filtered = products.filter((item) =>
+    item.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
     <SafeAreaView style={styles.container}>
-      {/* Reusable Header */}
       <Header navigation={navigation} title="TradeBlazer" />
-
-      {/* Search Bar */}
-      <View style={styles.searchContainer}>
-        <Ionicons
-          name="search"
-          size={20}
-          color="#555"
-          style={{ marginLeft: 10 }}
-        />
-        <TextInput
-          style={styles.searchInput}
-          placeholder="Search for anything..."
-          placeholderTextColor="#888"
-        />
+      <SearchBar
+        placeholder="Search for anything..."
+        value={searchQuery}
+        onChangeText={setSearchQuery}
+      />
+      <View style={styles.categoryContainer}>
+        <Text style={styles.sectionTitle}>Categories</Text>
+        <View style={styles.categoryRow}>
+          <TouchableOpacity
+            style={styles.categoryBox}
+            onPress={() =>
+              navigation.navigate("Category", { categoryName: "Gifts" })
+            }
+          >
+            <Ionicons name="gift-outline" size={22} color="#2E5E3E" />
+            <Text style={styles.categoryText}>Gifts</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.categoryBox}
+            onPress={() =>
+              navigation.navigate("Category", { categoryName: "Electronics" })
+            }
+          >
+            <Ionicons name="laptop-outline" size={22} color="#2E5E3E" />
+            <Text style={styles.categoryText}>Electronics</Text>
+          </TouchableOpacity>
+        </View>
       </View>
-
-      {/* Product List */}
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <Text style={styles.sectionTitle}>Products</Text>
-        {products.map((item) => (
-          <View key={item.id} style={styles.card}>
-            <Image source={{ uri: item.image }} style={styles.image} />
-            <View style={styles.cardDetails}>
-              <Text style={styles.productName}>{item.name}</Text>
-              <Text style={styles.productPrice}>{item.price}</Text>
-            </View>
-          </View>
+        {filtered.map((item) => (
+          <ProductCard key={item.id} product={item} />
         ))}
       </ScrollView>
-
-      {/* Bottom Navigation */}
       <BottomNav navigation={navigation} />
     </SafeAreaView>
   );
@@ -81,55 +98,37 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#ECF2E8",
   },
-  searchContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "#fff",
-    margin: 15,
-    paddingVertical: 8,
-    borderRadius: 25,
-    elevation: 2,
-  },
-  searchInput: {
-    flex: 1,
-    paddingHorizontal: 10,
-    color: "#333",
-  },
-  scrollContent: {
+  categoryContainer: {
     paddingHorizontal: 15,
-    paddingBottom: 120, // prevents bottom nav overlap
+    marginBottom: 10,
   },
   sectionTitle: {
     fontWeight: "bold",
     fontSize: 16,
-    marginBottom: 10,
+    marginVertical: 10,
   },
-  card: {
+  categoryRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  categoryBox: {
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
     backgroundColor: "#fff",
-    borderRadius: 15,
-    marginBottom: 20,
-    elevation: 4,
-    overflow: "hidden",
-    shadowColor: "#000",
-    shadowOpacity: 0.1,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 4,
+    marginHorizontal: 5,
+    paddingVertical: 10,
+    borderRadius: 10,
+    elevation: 3,
   },
-  image: {
-    width: "100%",
-    height: 180,
-  },
-  cardDetails: {
-    padding: 15,
-  },
-  productName: {
-    fontSize: 16,
+  categoryText: {
+    marginLeft: 6,
     fontWeight: "600",
     color: "#2E5E3E",
   },
-  productPrice: {
-    fontSize: 14,
-    color: "#444",
-    marginTop: 4,
+  scrollContent: {
+    paddingHorizontal: 15,
+    paddingBottom: 120,
   },
 });
