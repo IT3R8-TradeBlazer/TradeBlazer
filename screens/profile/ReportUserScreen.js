@@ -1,14 +1,7 @@
 import React, { useState } from 'react';
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  StyleSheet,
-  Alert,
-} from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import { useRoute, useNavigation } from '@react-navigation/native';
-//import { saveReport } from '../../utils/storage';
+import { saveReport } from '../../utils/storage';
 import Header from '../../components/Header';
 import BottomNav from '../../components/BottomNav';
 
@@ -23,6 +16,7 @@ export default function ReportUserScreen() {
       Alert.alert('Please enter a reason for reporting.');
       return;
     }
+
     await saveReport(reportedUserId, reason);
     Alert.alert('Reported Successfully');
     setReason('');

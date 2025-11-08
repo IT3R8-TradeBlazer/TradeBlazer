@@ -1,16 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Image, StyleSheet, FlatList } from 'react-native';
+import { View, Text, Image, StyleSheet } from 'react-native';
 import { getUser } from '../../utils/storage';
 import Header from '../../components/Header';
 import BottomNav from '../../components/BottomNav';
 
 export default function ProfileScreen() {
   const [user, setUser] = useState(null);
-
-  // Mock posts - replace later with AsyncStorage or API
-  const mockPosts = [
-    { id: '1', title: 'Samsung S24 Ultra', price: '₱50,000' },
-  ];
 
   useEffect(() => {
     const loadUser = async () => {
@@ -31,13 +26,14 @@ export default function ProfileScreen() {
   return (
     <View style={styles.container}>
       <Header title="TradeBlazer" />
+
       <View style={styles.profileSection}>
         <Image
-          source={
-            user.photo
-              ? { uri: user.photo }
-              : require('../../assets/images/default-profile.jpg')
-          }
+          source={{
+            uri: user.photo
+              ? user.photo
+              : 'https://scontent.fcgm1-1.fna.fbcdn.net/v/t1.15752-9/566535979_1780782289237149_96679168949369319_n.jpg?_nc_cat=102&ccb=1-7&_nc_sid=9f807c&_nc_eui2=AeHx5EP842wTlRutmCYcdi3VUr3B-pk69rNSvcH6mTr2s6Pscz9iz0RN8Nlug92Z2rr7AzWELSjq0ht4AG5wn0Ju&_nc_ohc=KhctuCp3zo4Q7kNvwHZ6rte&_nc_oc=AdnIkagcF2JeDHyTK3frVaz0UlUQUG5m_bMiFjXNjq0ek75z3O5g3uHQ-jM6LQA2Lzg&_nc_zt=23&_nc_ht=scontent.fcgm1-1.fna&oh=03_Q7cD3wEfANxkXH1t5PaRY6iyreZWjWZKwTSQVjqntcAGJvBCZw&oe=6932F369',
+          }}
           style={styles.profilePic}
         />
         <Text style={styles.name}>{user.name}</Text>
@@ -53,17 +49,6 @@ export default function ProfileScreen() {
         <Text>{user.phone || 'N/A'}</Text>
       </View>
 
-      <Text style={styles.postHeader}>Posts</Text>
-      <FlatList
-        data={mockPosts}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <View style={styles.postCard}>
-            <Text style={styles.postTitle}>{item.title}</Text>
-            <Text style={styles.postPrice}>{item.price}</Text>
-          </View>
-        )}
-      />
       <BottomNav />
     </View>
   );
@@ -78,14 +63,4 @@ const styles = StyleSheet.create({
   subtext: { color: '#777' },
   infoSection: { margin: 20 },
   label: { marginTop: 10, fontWeight: 'bold' },
-  postHeader: { fontSize: 18, fontWeight: 'bold', marginHorizontal: 20 },
-  postCard: {
-    backgroundColor: '#fff',
-    padding: 15,
-    margin: 10,
-    borderRadius: 10,
-    elevation: 3,
-  },
-  postTitle: { fontSize: 16, fontWeight: '600' },
-  postPrice: { color: '#444' },
 });

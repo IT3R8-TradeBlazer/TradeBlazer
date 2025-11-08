@@ -22,11 +22,11 @@ export default function UserProfileScreen() {
       <Header title="TradeBlazer" />
       <View style={styles.profileSection}>
         <Image
-          source={
-            user.photo
-              ? { uri: user.photo }
-              : require('../../assets/images/default-profile.jpg')
-          }
+          source={{
+            uri: user.photo
+              ? user.photo
+              : 'https://cdn-icons-png.flaticon.com/512/9942/9942203.png',
+          }}
           style={styles.profilePic}
         />
         <Text style={styles.name}>{user.name}</Text>
@@ -41,7 +41,7 @@ export default function UserProfileScreen() {
         <TouchableOpacity
           style={styles.reportBtn}
           onPress={() =>
-            navigation.navigate('ReportUserScreen', { reportedUserId: user.id })
+            navigation.navigate('ReportUser', { reportedUserId: user.id })
           }
         >
           <Text style={styles.btnText}>REPORT</Text>

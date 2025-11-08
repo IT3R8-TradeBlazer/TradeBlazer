@@ -7,6 +7,8 @@ import AddPostScreen from "../screens/post/AddPostScreen";
 import ChatListScreen from "../screens/chat/ChatListScreen";
 import ProfileScreen from "../screens/profile/ProfileScreen";
 import MenuSettingsScreen from "../screens/main/MenuSettingsScreen";
+import UserProfileScreen from "../screens/profile/UserProfileScreen";
+import ReportUserScreen from "../screens/profile/ReportUserScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -19,7 +21,8 @@ export default function MainNavigator() {
       <Stack.Screen name="ChatList" component={ChatListScreen} />
       <Stack.Screen name="Profile" component={ProfileScreen} />
       <Stack.Screen name="MenuSettings" component={MenuSettingsScreen} />
-
+      <Stack.Screen name="UserProfile" component={UserProfileScreen} />
+      <Stack.Screen name="ReportUser" component={ReportUserScreen} />
     </Stack.Navigator>
   );
 }
