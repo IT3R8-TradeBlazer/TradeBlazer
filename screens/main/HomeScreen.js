@@ -1,11 +1,19 @@
-import React from "react";
-import { View, Text, TextInput, ScrollView, StyleSheet, Image, TouchableOpacity, SafeAreaView } from "react-native";
+import React, { useState, useEffect } from "react";
+import {
+  View,
+  Text,
+  TextInput,
+  ScrollView,
+  StyleSheet,
+  Image,
+  SafeAreaView,
+} from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import BottomNav from "../../components/BottomNav";
 import Header from "../../components/Header";
 
-export default function HomeScreen({ navigation }) {
-  const products = [
+export default function HomeScreen({ navigation, route }) {
+  const [products, setProducts] = useState([
     {
       id: 1,
       name: "Ferro Rocher Bouquet",
@@ -34,11 +42,18 @@ export default function HomeScreen({ navigation }) {
       image:
         "https://i.pinimg.com/736x/9b/78/0c/9b780ca25db2bce72b62acc72723ddb5.jpg",
     },
-  ];
+  ]);
+
+  // Listen for new products passed from AddPostScreen
+  useEffect(() => {
+    if (route.params?.newProduct) {
+      setProducts((prev) => [route.params.newProduct, ...prev]);
+    }
+  }, [route.params?.newProduct]);
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* Reusable Header */}
+      {/* Header */}
       <Header navigation={navigation} title="TradeBlazer" />
 
       {/* Search Bar */}
@@ -97,7 +112,7 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     paddingHorizontal: 15,
-    paddingBottom: 120, // prevents bottom nav overlap
+    paddingBottom: 120,
   },
   sectionTitle: {
     fontWeight: "bold",
