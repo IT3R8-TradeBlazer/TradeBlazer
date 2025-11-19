@@ -25,7 +25,7 @@ export default function ProfileScreen({ navigation }) {
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* Header (with navigation) */}
+      {/* Header */}
       <Header navigation={navigation} />
 
       {/* Profile Section */}
@@ -53,7 +53,7 @@ export default function ProfileScreen({ navigation }) {
         <Text>{user.phone || 'N/A'}</Text>
       </View>
 
-      {/* Bottom Navigation (with navigation) */}
+      {/* Bottom Navigation */}
       <BottomNav navigation={navigation} />
     </SafeAreaView>
   );
