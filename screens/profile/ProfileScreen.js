@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Image, StyleSheet } from 'react-native';
+import { View, Text, Image, StyleSheet, SafeAreaView } from 'react-native';
 import { getUser } from '../../utils/storage';
 import Header from '../../components/Header';
 import BottomNav from '../../components/BottomNav';
 
-export default function ProfileScreen() {
+export default function ProfileScreen({ navigation }) {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
@@ -17,16 +17,18 @@ export default function ProfileScreen() {
 
   if (!user) {
     return (
-      <View style={styles.center}>
+      <SafeAreaView style={styles.center}>
         <Text>Loading profile...</Text>
-      </View>
+      </SafeAreaView>
     );
   }
 
   return (
-    <View style={styles.container}>
-      <Header title="TradeBlazer" />
+    <SafeAreaView style={styles.container}>
+      {/* Header (with navigation) */}
+      <Header navigation={navigation} />
 
+      {/* Profile Section */}
       <View style={styles.profileSection}>
         <Image
           source={{
@@ -37,9 +39,11 @@ export default function ProfileScreen() {
           style={styles.profilePic}
         />
         <Text style={styles.name}>{user.name}</Text>
-        <Text style={styles.subtext}>{user.department || 'Student'}</Text>
+        <Text style={styles.subtext}>{user.department}</Text>
+        <Text style={styles.subtext}>{user.role === 'student' ? 'Student' : 'Employee'}</Text>
       </View>
 
+      {/* Info Section */}
       <View style={styles.infoSection}>
         <Text style={styles.label}>About</Text>
         <Text>{user.address || 'Cagayan de Oro, Philippines'}</Text>
@@ -49,13 +53,14 @@ export default function ProfileScreen() {
         <Text>{user.phone || 'N/A'}</Text>
       </View>
 
-      <BottomNav />
-    </View>
+      {/* Bottom Navigation (with navigation) */}
+      <BottomNav navigation={navigation} />
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#f9f9f9' },
+  container: { flex: 1, backgroundColor: '#ECF2E8' },
   center: { flex: 1, alignItems: 'center', justifyContent: 'center' },
   profileSection: { alignItems: 'center', marginTop: 20 },
   profilePic: { width: 100, height: 100, borderRadius: 50, marginBottom: 10 },
