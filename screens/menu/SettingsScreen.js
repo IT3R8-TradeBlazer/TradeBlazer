@@ -11,44 +11,47 @@ export default function SettingsScreen() {
   return (
     <SafeAreaView style={styles.container}>
       
-      {/* ✅ Global Header */}
+      {/* Main Header */}
       <Header navigation={navigation} />
 
-      {/* ✅ Screen Title + Back */}
-      <View style={styles.titleRow}>
+      {/* Screen Title + Back */}
+      <View style={styles.headerRow}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Ionicons name="chevron-back" size={24} color="#2C4B23" />
+          <Ionicons name="chevron-back" size={24} color="#2E5E3E" />
         </TouchableOpacity>
-        <Text style={styles.title}>Account Settings</Text>
+        <Text style={styles.headerTitle}>Account Settings</Text>
       </View>
 
-      {/* ✅ Content */}
+      {/* Content */}
       <View style={styles.content}>
 
-        <TouchableOpacity 
-          style={styles.item} 
-          onPress={() => navigation.navigate("EditName")}
-        >
-          <Text style={styles.text}>✏️  Edit Name</Text>
+        <TouchableOpacity style={styles.item} onPress={() => navigation.navigate("EditName")}>
+          <View style={styles.itemRow}>
+            <Ionicons name="pencil" size={20} color="#2C4B23" />
+            <Text style={styles.text}>Edit Name</Text>
+          </View>
         </TouchableOpacity>
+        <View style={styles.divider} />
 
-        <TouchableOpacity 
-          style={styles.item} 
-          onPress={() => navigation.navigate("ChangePhoto")}
-        >
-          <Text style={styles.text}>🖼️  Change Display Photo</Text>
+        <TouchableOpacity style={styles.item} onPress={() => navigation.navigate("ChangeDisplayPhoto")}>
+          <View style={styles.itemRow}>
+            <Ionicons name="image" size={20} color="#2C4B23" />
+            <Text style={styles.text}>Change Display Photo</Text>
+          </View>
         </TouchableOpacity>
+        <View style={styles.divider} />
 
-        <TouchableOpacity 
-          style={styles.item} 
-          onPress={() => navigation.navigate("ChangePassword")}
-        >
-          <Text style={styles.text}>🔒  Change Password</Text>
+        <TouchableOpacity style={styles.item} onPress={() => navigation.navigate("ChangePassword")}>
+          <View style={styles.itemRow}>
+            <Ionicons name="lock-closed" size={20} color="#2C4B23" />
+            <Text style={styles.text}>Change Password</Text>
+          </View>
         </TouchableOpacity>
+        <View style={styles.divider} />
 
       </View>
 
-      {/* ✅ Bottom Navigation */}
+      {/* Bottom Navigation */}
       <BottomNav navigation={navigation} />
 
     </SafeAreaView>
@@ -60,30 +63,40 @@ const styles = StyleSheet.create({
     flex:1, 
     backgroundColor:"#ECF2E8",
   },
-  titleRow:{
+  headerRow:{
     flexDirection: "row",
     alignItems: "center",
-    paddingHorizontal: 15,
-    paddingVertical: 12,
+    paddingHorizontal: 20,
+    paddingTop: 15,
+    paddingBottom: 10,
   },
-  title:{ 
-    fontSize:20, 
+  headerTitle:{ 
+    fontSize:22, 
     fontWeight:"bold",
-    color:"#2C4B23",
-    marginLeft: 5,
+    color:"#2E5E3E",
+    marginLeft: 6,
   },
   content:{
     flex:1,
-    paddingHorizontal:15,
-    marginTop:5,
+    paddingHorizontal:20,
+    marginTop:10,
   },
-  item:{ 
-    paddingVertical:15, 
-    borderBottomWidth:1, 
-    borderColor:"#2C4B23",
+  item: {
+    paddingVertical: 12,
+  },
+  itemRow:{
+    flexDirection: "row",
+    alignItems: "center",
   },
   text:{ 
-    fontSize:16, 
-    color:"#2C4B23" 
+    fontSize:18, 
+    color:"#2C4B23",
+    marginLeft: 10,
+  },
+  divider: {
+    height: 1,
+    backgroundColor: "#2C4B23",
+    opacity: 0.4,
   },
 });
+

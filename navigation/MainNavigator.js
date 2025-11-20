@@ -9,8 +9,10 @@ import ProfileScreen from "../screens/profile/ProfileScreen";
 import UserProfileScreen from "../screens/profile/UserProfileScreen";
 import ReportUserScreen from "../screens/profile/ReportUserScreen";
 import MenuSettingsScreen from "../screens/menu/MenuSettingsScreen";
-import FavoritesScreen from '../screens/menu/FavoritesScreen';
-import SettingsScreen from '../screens/menu/SettingsScreen';
+import FavoritesScreen from "../screens/menu/FavoritesScreen";
+import SettingsScreen from "../screens/menu/SettingsScreen";
+import EditNameScreen from "../screens/menu/EditNameScreen";
+import ChangeDisplayPhotoScreen from "../screens/menu/ChangeDisplayPhotoScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -27,6 +29,8 @@ export default function MainNavigator() {
       <Stack.Screen name="ReportUser" component={ReportUserScreen} />
       <Stack.Screen name="Favorites" component={FavoritesScreen} />
       <Stack.Screen name="Settings" component={SettingsScreen} />
+      <Stack.Screen name="EditName" component={EditNameScreen} />
+      <Stack.Screen name="ChangeDisplayPhoto" component={ChangeDisplayPhotoScreen} />
     </Stack.Navigator>
   );
 }

@@ -15,20 +15,20 @@ export default function FavoritesScreen({ navigation }) {
       <View style={styles.content}>
 
         {/* Back + Title Row */}
-        <View style={styles.topRow}>
+        <View style={styles.headerRow}>
           <TouchableOpacity onPress={() => navigation.goBack()}>
-            <Ionicons name="chevron-back" size={30} color="black" />
+            <Ionicons name="chevron-back" size={24} color="#2E5E3E" />
           </TouchableOpacity>
-          <Text style={styles.title}>Favorites</Text>
+          <Text style={styles.headerTitle}>Favorites</Text>
         </View>
 
         {/* Product Grid */}
         <ScrollView contentContainerStyle={styles.grid}>
-          
+
           {/* Item 1 */}
           <TouchableOpacity style={styles.card}>
             <Image
-              source={{ uri: "https://i.pinimg.com/736x/72/bb/51/72bb51b23cf78b03d532234af0e6e9ae.jpg" }} // proxy image
+              source={{ uri: "https://i.pinimg.com/736x/72/bb/51/72bb51b23cf78b03d532234af0e6e9ae.jpg" }}
               style={styles.image}
             />
             <Text style={styles.name}>Cake with Bows</Text>
@@ -38,13 +38,13 @@ export default function FavoritesScreen({ navigation }) {
           {/* Item 2 */}
           <TouchableOpacity style={styles.card}>
             <Image
-              source={{ uri: "https://i.pinimg.com/1200x/2c/82/eb/2c82ebd17b033b757144f0b0c6da9e5a.jpg" }} // proxy image
+              source={{ uri: "https://i.pinimg.com/1200x/2c/82/eb/2c82ebd17b033b757144f0b0c6da9e5a.jpg" }}
               style={styles.image}
             />
             <Text style={styles.name}>Ferro Rocher Bouquet</Text>
             <Text style={styles.price}>₱1,100</Text>
           </TouchableOpacity>
-          
+
         </ScrollView>
       </View>
 
@@ -61,23 +61,25 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    paddingHorizontal: 10,
-    paddingTop: 10,
+    paddingHorizontal: 20,
+    marginTop: 10,
   },
-  topRow: {
+  headerRow: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 10,
+    paddingBottom: 10,
   },
-  title: {
+  headerTitle: {
     fontSize: 22,
     fontWeight: "bold",
-    marginLeft: 5,
+    color: "#2E5E3E",
+    marginLeft: 6,
   },
   grid: {
     flexDirection: "row",
     flexWrap: "wrap",
     gap: 10,
+    marginTop: 10,
   },
   card: {
     backgroundColor: "white",
@@ -95,13 +97,16 @@ const styles = StyleSheet.create({
     backgroundColor: "#ddd",
   },
   name: {
-    fontSize: 14,
+    fontSize: 16,
     marginTop: 6,
     marginLeft: 6,
+    color: "#2C4B23",
   },
   price: {
-    fontSize: 13,
+    fontSize: 14,
     opacity: 0.7,
     marginLeft: 6,
+    color: "#2C4B23",
   },
 });
+
