@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Image, StyleSheet, SafeAreaView, TouchableOpacity } from 'react-native';
+import { View, Text, Image, StyleSheet, SafeAreaView, TouchableOpacity, Alert } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { getUser, saveUser } from '../../utils/storage';
 import Header from '../../components/Header';
 import BottomNav from '../../components/BottomNav';
+import { Ionicons } from '@expo/vector-icons';
 
 export default function ChangeDisplayPhotoScreen({ navigation }) {
   const [user, setUser] = useState(null);
@@ -29,7 +30,7 @@ export default function ChangeDisplayPhotoScreen({ navigation }) {
   const pickImage = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (status !== 'granted') {
-      alert('Permission required to access gallery');
+      Alert.alert('Permission required', 'Permission required to access gallery');
       return;
     }
 
@@ -51,7 +52,7 @@ export default function ChangeDisplayPhotoScreen({ navigation }) {
 
     const updatedUser = { ...user, photo: newPhoto };
     await saveUser(updatedUser); // save in AsyncStorage
-    alert('Profile photo updated!');
+    Alert.alert('Success', 'Profile photo updated!');
     navigation.goBack(); // ProfileScreen will reload on focus
   };
 
@@ -65,7 +66,16 @@ export default function ChangeDisplayPhotoScreen({ navigation }) {
 
   return (
     <SafeAreaView style={styles.container}>
+      {/* Main Header */}
       <Header navigation={navigation} />
+
+      {/* Header Row with Back Button and Title */}
+      <View style={styles.headerRow}>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <Ionicons name="chevron-back" size={24} color="#2E5E3E" />
+        </TouchableOpacity>
+        <Text style={styles.headerTitle}>Change Display Photo</Text>
+      </View>
 
       <View style={styles.profileSection}>
         <Image
@@ -96,12 +106,46 @@ export default function ChangeDisplayPhotoScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#ECF2E8' },
-  center: { flex: 1, alignItems: 'center', justifyContent: 'center' },
-  profileSection: { alignItems: 'center', marginTop: 20 },
-  profilePic: { width: 120, height: 120, borderRadius: 60, marginBottom: 10, backgroundColor: '#ccc' },
-  name: { fontSize: 20, fontWeight: 'bold' },
-  subtext: { color: '#777' },
+  container: { 
+    flex: 1, 
+    backgroundColor: '#ECF2E8' ,
+  },
+  center: { 
+    flex: 1, 
+    alignItems: 'center', 
+    justifyContent: 'center',
+  },
+  headerRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    paddingTop: 15,
+    paddingBottom: 10,
+  },
+  headerTitle: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    color: '#2E5E3E',
+    marginLeft: 6,
+  },
+  profileSection: { 
+    alignItems: 'center', 
+    marginTop: 20,
+   },
+  profilePic: { 
+    width: 120, 
+    height: 120, 
+    borderRadius: 60, 
+    marginBottom: 10, 
+    backgroundColor: '#ccc', 
+  },
+  name: { 
+    fontSize: 20, 
+    fontWeight: 'bold',
+   },
+  subtext: { 
+    color: '#777',
+   },
   button: {
     backgroundColor: '#2E5E3E',
     padding: 12,

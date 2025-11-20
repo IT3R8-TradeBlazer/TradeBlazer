@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, Alert } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import Header from "../../components/Header";
 import BottomNav from "../../components/BottomNav";
@@ -7,6 +7,18 @@ import { Ionicons } from "@expo/vector-icons";
 
 export default function SettingsScreen() {
   const navigation = useNavigation();
+
+  const handleLogout = () => {
+    Alert.alert(
+      "Logout",
+      "Are you sure you want to logout?",
+      [
+        { text: "Cancel", style: "cancel" },
+        { text: "OK", onPress: () => navigation.replace("SignIn") },
+      ],
+      { cancelable: true }
+    );
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -45,6 +57,15 @@ export default function SettingsScreen() {
           <View style={styles.itemRow}>
             <Ionicons name="lock-closed" size={20} color="#2C4B23" />
             <Text style={styles.text}>Change Password</Text>
+          </View>
+        </TouchableOpacity>
+        <View style={styles.divider} />
+
+        {/* Logout Button */}
+        <TouchableOpacity style={styles.item} onPress={handleLogout}>
+          <View style={styles.itemRow}>
+            <Ionicons name="log-out-outline" size={20} color="#2C4B23" />
+            <Text style={styles.text}>Logout</Text>
           </View>
         </TouchableOpacity>
         <View style={styles.divider} />
@@ -99,4 +120,3 @@ const styles = StyleSheet.create({
     opacity: 0.4,
   },
 });
-

@@ -40,13 +40,23 @@ export default function MenuScreen({ navigation }) {
         >
           <View style={styles.menuRow}>
             <Ionicons name="settings-sharp" size={20} color="#2C4B23" />
-            <Text style={styles.menuText}>Settings</Text>
+            <Text style={styles.menuText}>Account Settings</Text>
           </View>
         </TouchableOpacity>
 
         <View style={styles.divider} />
 
-        {/* You can add more here later */}
+        <TouchableOpacity 
+          style={styles.menuItem} 
+          onPress={() => navigation.navigate("SupportAndInfo")}
+        >
+          <View style={styles.menuRow}>
+            <Ionicons name="information-circle-outline" size={20} color="#2C4B23" />
+            <Text style={styles.menuText}>Support & Info</Text>
+          </View>
+        </TouchableOpacity>
+
+        <View style={styles.divider} />        
         
       </View>
 
