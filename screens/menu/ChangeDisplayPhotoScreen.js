@@ -1,5 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Image, StyleSheet, SafeAreaView, TouchableOpacity, Alert } from 'react-native';
+import { 
+  View, 
+  Text, 
+  Image, 
+  StyleSheet, 
+  SafeAreaView, 
+  TouchableOpacity, 
+  Alert 
+} from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { getUser, saveUser } from '../../utils/storage';
 import Header from '../../components/Header';
@@ -10,94 +18,88 @@ export default function ChangeDisplayPhotoScreen({ navigation }) {
   const [user, setUser] = useState(null);
   const [newPhoto, setNewPhoto] = useState(null);
 
-  // Load user from AsyncStorage
   const loadUser = async () => {
     const currentUser = await getUser();
     setUser(currentUser);
-    setNewPhoto(currentUser?.photo || null); // initialize newPhoto
+    setNewPhoto(currentUser?.photo || null);
   };
 
+  useEffect(() => { loadUser(); }, []);
   useEffect(() => {
-    loadUser();
-  }, []);
-
-  useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', loadUser);
-    return unsubscribe;
+    const unsub = navigation.addListener('focus', loadUser);
+    return unsub;
   }, [navigation]);
 
-  // Pick a new photo from gallery
+  // Pick an image
   const pickImage = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (status !== 'granted') {
-      Alert.alert('Permission required', 'Permission required to access gallery');
+      Alert.alert('Permission required', 'Allow gallery access to change your photo.');
       return;
     }
 
     const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: [ImagePicker.MediaType.Images],
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       aspect: [1, 1],
       quality: 1,
     });
 
+
     if (!result.canceled) {
-      setNewPhoto(result.assets[0].uri); // preview new photo
+      setNewPhoto(result.assets[0].uri);
     }
   };
 
-  // Save new photo to AsyncStorage
   const handleSave = async () => {
-    if (!newPhoto || !user) return;
-
+    if (!user) return;
+    
     const updatedUser = { ...user, photo: newPhoto };
-    await saveUser(updatedUser); // save in AsyncStorage
-    Alert.alert('Success', 'Profile photo updated!');
-    navigation.goBack(); // ProfileScreen will reload on focus
+    await saveUser(updatedUser);
+
+    Alert.alert("Success", "Profile photo updated!");
+    navigation.goBack();
   };
 
   if (!user) {
     return (
       <SafeAreaView style={styles.center}>
-        <Text>Loading profile...</Text>
+        <Text>Loading...</Text>
       </SafeAreaView>
     );
   }
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* Main Header */}
+
       <Header navigation={navigation} />
 
-      {/* Header Row with Back Button and Title */}
+      {/* Back + Title Row */}
       <View style={styles.headerRow}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Ionicons name="chevron-back" size={24} color="#2E5E3E" />
+          <Ionicons name="chevron-back" size={28} color="#2E5E3E" />
         </TouchableOpacity>
+
         <Text style={styles.headerTitle}>Change Display Photo</Text>
       </View>
 
-      <View style={styles.profileSection}>
+      {/* Profile Photo Circle */}
+      <View style={styles.photoWrapper}>
         <Image
-          key={newPhoto} // forces re-render
-          source={{
-            uri: newPhoto
-              ? newPhoto
-              : 'https://scontent.fcgm1-1.fna.fbcdn.net/v/t1.15752-9/566535979_1780782289237149_96679168949369319_n.jpg',
-          }}
-          style={styles.profilePic}
+          key={newPhoto}
+          source={{ uri: newPhoto || undefined }}
+          style={styles.photo}
         />
-        <Text style={styles.name}>{user.name}</Text>
-        <Text style={styles.subtext}>{user.department}</Text>
-        <Text style={styles.subtext}>{user.role === 'student' ? 'Student' : 'Employee'}</Text>
       </View>
 
-      <TouchableOpacity onPress={pickImage} style={styles.button}>
-        <Text style={styles.buttonText}>Choose New Photo</Text>
+      {/* Change Photo Button */}
+      <TouchableOpacity onPress={pickImage} style={styles.changeBtn}>
+        <Text style={styles.changeBtnText}>Change Photo</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity onPress={handleSave} style={[styles.button, { backgroundColor: '#1C4520' }]}>
-        <Text style={styles.buttonText}>Save</Text>
+      {/* Save Button */}
+      <TouchableOpacity onPress={handleSave} style={styles.saveBtn}>
+        <Text style={styles.saveText}>Save</Text>
       </TouchableOpacity>
 
       <BottomNav navigation={navigation} />
@@ -106,52 +108,55 @@ export default function ChangeDisplayPhotoScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  container: { 
-    flex: 1, 
-    backgroundColor: '#ECF2E8' ,
-  },
-  center: { 
-    flex: 1, 
-    alignItems: 'center', 
-    justifyContent: 'center',
-  },
+  container: { flex: 1, backgroundColor: '#ECF2E8' },
+  center: { flex: 1, alignItems: 'center', justifyContent: 'center' },
+
   headerRow: {
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 20,
-    paddingTop: 15,
-    paddingBottom: 10,
+    paddingTop: 10,
   },
   headerTitle: {
     fontSize: 22,
     fontWeight: 'bold',
+    marginLeft: 10,
     color: '#2E5E3E',
-    marginLeft: 6,
   },
-  profileSection: { 
-    alignItems: 'center', 
-    marginTop: 20,
-   },
-  profilePic: { 
-    width: 120, 
-    height: 120, 
-    borderRadius: 60, 
-    marginBottom: 10, 
-    backgroundColor: '#ccc', 
+
+  photoWrapper: {
+    marginTop: 35,
+    justifyContent: "center",
+    alignItems: "center",
   },
-  name: { 
-    fontSize: 20, 
-    fontWeight: 'bold',
-   },
-  subtext: { 
-    color: '#777',
-   },
-  button: {
-    backgroundColor: '#2E5E3E',
-    padding: 12,
-    marginHorizontal: 20,
-    borderRadius: 8,
-    marginTop: 15,
+
+  photo: {
+    width: 140,
+    height: 140,
+    borderRadius: 70,
+    backgroundColor: '#1C4520', // Dark green circle when empty
   },
-  buttonText: { color: 'white', textAlign: 'center', fontWeight: 'bold' },
+
+  changeBtn: {
+    borderWidth: 2,
+    borderColor: "#2E5E3E",
+    paddingVertical: 8,
+    paddingHorizontal: 20,
+    alignSelf: "center",
+    marginTop: 18,
+  },
+  changeBtnText: {
+    color: "#2E5E3E",
+    fontSize: 16,
+  },
+
+  saveBtn: { 
+    marginTop: 15, 
+    alignSelf: "center" 
+  },
+  saveText: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "#1C4520",
+  },
 });
