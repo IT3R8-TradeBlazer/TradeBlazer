@@ -150,13 +150,21 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
 
-  saveBtn: { 
-    marginTop: 15, 
-    alignSelf: "center" 
-  },
+  saveBtn: {
+  backgroundColor: "#2E5E3E",
+  paddingVertical: 14,
+  borderRadius: 10,
+  alignItems: "center",
+  marginTop: 15,
+  width: "90%",
+  alignSelf: "center",
+  elevation: 3,
+},
+
   saveText: {
-    fontSize: 16,
-    fontWeight: "bold",
-    color: "#1C4520",
+  color: "#fff",
+  fontSize: 18,
+  fontWeight: "600",
+  letterSpacing: 0.5,
   },
 });

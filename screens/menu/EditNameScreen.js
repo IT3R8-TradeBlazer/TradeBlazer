@@ -92,16 +92,31 @@ const styles = StyleSheet.create({
     marginBottom: 20, 
   },
 
-  saveButton: {
+    saveButton: {
     backgroundColor: "#2E5E3E",
     padding: 14,
     borderRadius: 10,
     alignItems: "center",
+    backgroundColor: "#2E5E3E",
+    paddingVertical: 14,
+    paddingHorizontal: 20,
+    borderRadius: 12,
+    alignItems: "center",
+    justifyContent: "center",
+    alignSelf: "center",
+    width: "100%",
+    marginTop: 10,
+    elevation: 3,
   },
   saveText: {
     color: "#fff",
     fontSize: 18,
     fontWeight: "bold",
+    color: "#fff",
+    fontSize: 18,
+    fontWeight: "600",
+    letterSpacing: 0.5,
   },
+
 });
 
