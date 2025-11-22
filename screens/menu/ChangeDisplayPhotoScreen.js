@@ -138,16 +138,19 @@ const styles = StyleSheet.create({
   },
 
   changeBtn: {
-    borderWidth: 2,
-    borderColor: "#2E5E3E",
-    paddingVertical: 8,
-    paddingHorizontal: 20,
-    alignSelf: "center",
-    marginTop: 18,
+  backgroundColor: "#2E5E3E",
+  paddingVertical: 14,
+  borderRadius: 10,
+  alignItems: "center",
+  marginTop: 15,
+  width: "50%",
+  alignSelf: "center",
+  elevation: 3,
   },
   changeBtnText: {
-    color: "#2E5E3E",
-    fontSize: 16,
+  color: "#fff",
+  fontSize: 18,
+  fontWeight: "600",
   },
 
   saveBtn: {
@@ -155,8 +158,8 @@ const styles = StyleSheet.create({
   paddingVertical: 14,
   borderRadius: 10,
   alignItems: "center",
-  marginTop: 15,
-  width: "90%",
+  marginTop: 10,
+  width: "50%",
   alignSelf: "center",
   elevation: 3,
 },

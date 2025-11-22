@@ -104,7 +104,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     alignSelf: "center",
-    width: "100%",
+    width: "50%",
     marginTop: 10,
     elevation: 3,
   },
