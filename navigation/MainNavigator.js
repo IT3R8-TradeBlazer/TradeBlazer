@@ -16,6 +16,7 @@ import ChangeDisplayPhotoScreen from "../screens/menu/ChangeDisplayPhotoScreen";
 import SupportAndInfoScreen from "../screens/menu/SupportAndInfoScreen";
 import ChangePasswordScreen from "../screens/menu/ChangePasswordScreen";
 import FAQScreen from "../screens/menu/FAQScreen";
+import ChatScreen from "../screens/chat/ChatScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -37,6 +38,7 @@ export default function MainNavigator() {
       <Stack.Screen name="SupportAndInfo" component={SupportAndInfoScreen} />
       <Stack.Screen name="ChangePassword" component={ChangePasswordScreen} />
       <Stack.Screen name="FAQ" component={FAQScreen} />
+      <Stack.Screen name="ChatScreen" component={ChatScreen} />
     </Stack.Navigator>
   );
 }
