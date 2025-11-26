@@ -11,9 +11,10 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import BottomNav from "../../components/BottomNav";
 import Header from "../../components/Header";
+import { getPosts } from "../../utils/storage";
 
-export default function HomeScreen({ navigation, route }) {
-  const [products, setProducts] = useState([
+export default function HomeScreen({ navigation }) {
+  const defaultProducts = [
     {
       id: 1,
       name: "Ferro Rocher Bouquet",
@@ -42,21 +43,26 @@ export default function HomeScreen({ navigation, route }) {
       image:
         "https://i.pinimg.com/736x/9b/78/0c/9b780ca25db2bce72b62acc72723ddb5.jpg",
     },
-  ]);
+  ];
 
-  // Listen for new products passed from AddPostScreen
+  const [products, setProducts] = useState(defaultProducts);
+
   useEffect(() => {
-    if (route.params?.newProduct) {
-      setProducts((prev) => [route.params.newProduct, ...prev]);
-    }
-  }, [route.params?.newProduct]);
+    const loadPosts = async () => {
+      const posts = await getPosts();
+
+      // ✅ USER POSTS FIRST, DEFAULT PRODUCTS BELOW
+      setProducts([...posts, ...defaultProducts]);
+    };
+
+    const unsubscribe = navigation.addListener("focus", loadPosts);
+    return unsubscribe;
+  }, [navigation]);
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* Header */}
       <Header navigation={navigation} title="TradeBlazer" />
 
-      {/* Search Bar */}
       <View style={styles.searchContainer}>
         <Ionicons
           name="search"
@@ -71,11 +77,11 @@ export default function HomeScreen({ navigation, route }) {
         />
       </View>
 
-      {/* Product List */}
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <Text style={styles.sectionTitle}>Products</Text>
-        {products.map((item) => (
-          <View key={item.id} style={styles.card}>
+
+        {products.map((item, index) => (
+          <View key={index} style={styles.card}>
             <Image source={{ uri: item.image }} style={styles.image} />
             <View style={styles.cardDetails}>
               <Text style={styles.productName}>{item.name}</Text>
@@ -85,7 +91,6 @@ export default function HomeScreen({ navigation, route }) {
         ))}
       </ScrollView>
 
-      {/* Bottom Navigation */}
       <BottomNav navigation={navigation} />
     </SafeAreaView>
   );

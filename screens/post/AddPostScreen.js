@@ -14,6 +14,7 @@ import * as ImagePicker from "expo-image-picker";
 import { Ionicons } from "@expo/vector-icons";
 import Header from "../../components/Header";
 import BottomNav from "../../components/BottomNav";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function AddPostScreen({ navigation }) {
   const [photoUri, setPhotoUri] = useState(null);
@@ -40,7 +41,19 @@ export default function AddPostScreen({ navigation }) {
     if (!result.canceled) setPhotoUri(result.assets[0].uri);
   };
 
-  const handlePost = () => {
+  // Save new post to AsyncStorage
+  const savePost = async (newProduct) => {
+    try {
+      const storedPosts = await AsyncStorage.getItem("@tradeblazer_posts");
+      const posts = storedPosts ? JSON.parse(storedPosts) : [];
+      posts.push(newProduct);
+      await AsyncStorage.setItem("@tradeblazer_posts", JSON.stringify(posts));
+    } catch (error) {
+      console.log("Error saving post:", error);
+    }
+  };
+
+  const handlePost = async () => {
     if (!title.trim()) {
       Alert.alert("Missing info", "Please enter a title for your product.");
       return;
@@ -48,16 +61,20 @@ export default function AddPostScreen({ navigation }) {
 
     const newProduct = {
       id: Date.now(),
-      name: title, // displayed name on Home
+      name: title,
       price: price ? `₱${price}` : "₱0",
       image:
         photoUri ||
         "https://via.placeholder.com/200x200.png?text=New+Product",
-      description, // stored separately for future use
+      description,
       category,
     };
 
-    navigation.navigate("Home", { newProduct });
+    // Save to AsyncStorage
+    await savePost(newProduct);
+
+    // Navigate back to HomeScreen
+    navigation.navigate("Home");
   };
 
   return (
