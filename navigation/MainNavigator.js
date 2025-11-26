@@ -17,6 +17,7 @@ import SupportAndInfoScreen from "../screens/menu/SupportAndInfoScreen";
 import ChangePasswordScreen from "../screens/menu/ChangePasswordScreen";
 import FAQScreen from "../screens/menu/FAQScreen";
 import ChatScreen from "../screens/chat/ChatScreen";
+import CategoriesScreen from "../screens/main/CategoriesScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -39,6 +40,7 @@ export default function MainNavigator() {
       <Stack.Screen name="ChangePassword" component={ChangePasswordScreen} />
       <Stack.Screen name="FAQ" component={FAQScreen} />
       <Stack.Screen name="ChatScreen" component={ChatScreen} />
+      <Stack.Screen name="CategoriesScreen" component={CategoriesScreen} /> 
     </Stack.Navigator>
   );
 }

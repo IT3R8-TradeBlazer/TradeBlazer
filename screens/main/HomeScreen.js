@@ -1,14 +1,27 @@
-import React from "react";
-import { View, Text, TextInput, ScrollView, StyleSheet, Image, TouchableOpacity, SafeAreaView } from "react-native";
+import React, { useState } from "react";
+import {
+  View,
+  Text,
+  TextInput,
+  ScrollView,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+  SafeAreaView,
+} from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import BottomNav from "../../components/BottomNav";
 import Header from "../../components/Header";
+import SearchBar from "../../components/SearchBar";
+
 
 export default function HomeScreen({ navigation }) {
+  const [showDropdown, setShowDropdown] = useState(false);
+
   const products = [
     {
       id: 1,
-      name: "Ferro Rocher Bouquet",
+      name: "Ferro Rocherrrr Bouquet",
       price: "₱1,100",
       image:
         "https://i.pinimg.com/1200x/2c/82/eb/2c82ebd17b033b757144f0b0c6da9e5a.jpg",
@@ -42,23 +55,17 @@ export default function HomeScreen({ navigation }) {
       <Header navigation={navigation} title="TradeBlazer" />
 
       {/* Search Bar */}
-      <View style={styles.searchContainer}>
-        <Ionicons
-          name="search"
-          size={20}
-          color="#555"
-          style={{ marginLeft: 10 }}
-        />
-        <TextInput
-          style={styles.searchInput}
-          placeholder="Search for anything..."
-          placeholderTextColor="#888"
-        />
+      <View>
+        <SearchBar navigation={navigation} /> 
       </View>
 
       {/* Product List */}
-      <ScrollView contentContainerStyle={styles.scrollContent}>
+      <ScrollView
+        contentContainerStyle={styles.scrollContent}
+        keyboardShouldPersistTaps="handled"
+      >
         <Text style={styles.sectionTitle}>Products</Text>
+
         {products.map((item) => (
           <View key={item.id} style={styles.card}>
             <Image source={{ uri: item.image }} style={styles.image} />
@@ -80,24 +87,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#ECF2E8",
-  },
-  searchContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "#fff",
-    margin: 15,
-    paddingVertical: 8,
-    borderRadius: 25,
-    elevation: 2,
-  },
-  searchInput: {
-    flex: 1,
-    paddingHorizontal: 10,
-    color: "#333",
+    position: "relative",  
   },
   scrollContent: {
     paddingHorizontal: 15,
-    paddingBottom: 120, // prevents bottom nav overlap
+    paddingBottom: 120,
   },
   sectionTitle: {
     fontWeight: "bold",
