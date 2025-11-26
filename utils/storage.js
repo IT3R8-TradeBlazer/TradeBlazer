@@ -1,24 +1,40 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const USER_KEY = 'userData';
+const POSTS_KEY = "@tradeblazer_posts";
 
-// Save user info
-export const saveUser = async (userData) => {
+/**
+ * Add a new post
+ */
+export const addPost = async (post) => {
   try {
-    await AsyncStorage.setItem(USER_KEY, JSON.stringify(userData));
-    console.log('User saved:', userData);
+    const existingPosts = await getPosts();
+    const updatedPosts = [post, ...existingPosts];
+    await AsyncStorage.setItem(POSTS_KEY, JSON.stringify(updatedPosts));
   } catch (error) {
-    console.error('Error saving user:', error);
+    console.log("Error saving post:", error);
   }
 };
 
-// Retrieve user info
-export const getUser = async () => {
+/**
+ * Get all posts
+ */
+export const getPosts = async () => {
   try {
-    const jsonValue = await AsyncStorage.getItem(USER_KEY);
-    return jsonValue != null ? JSON.parse(jsonValue) : null;
+    const storedPosts = await AsyncStorage.getItem(POSTS_KEY);
+    return storedPosts ? JSON.parse(storedPosts) : [];
   } catch (error) {
-    console.error('Error getting user:', error);
-    return null;
+    console.log("Error loading posts:", error);
+    return [];
+  }
+};
+
+/**
+ * Optional: clear all posts (for testing)
+ */
+export const clearPosts = async () => {
+  try {
+    await AsyncStorage.removeItem(POSTS_KEY);
+  } catch (error) {
+    console.log("Error clearing posts:", error);
   }
 };

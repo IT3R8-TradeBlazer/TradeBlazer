@@ -1,11 +1,20 @@
-import React from "react";
-import { View, Text, TextInput, ScrollView, StyleSheet, Image, TouchableOpacity, SafeAreaView } from "react-native";
+import React, { useState, useEffect } from "react";
+import {
+  View,
+  Text,
+  TextInput,
+  ScrollView,
+  StyleSheet,
+  Image,
+  SafeAreaView,
+} from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import BottomNav from "../../components/BottomNav";
 import Header from "../../components/Header";
+import { getPosts } from "../../utils/storage";
 
 export default function HomeScreen({ navigation }) {
-  const products = [
+  const defaultProducts = [
     {
       id: 1,
       name: "Ferro Rocher Bouquet",
@@ -36,12 +45,24 @@ export default function HomeScreen({ navigation }) {
     },
   ];
 
+  const [products, setProducts] = useState(defaultProducts);
+
+  useEffect(() => {
+    const loadPosts = async () => {
+      const posts = await getPosts();
+
+      // ✅ USER POSTS FIRST, DEFAULT PRODUCTS BELOW
+      setProducts([...posts, ...defaultProducts]);
+    };
+
+    const unsubscribe = navigation.addListener("focus", loadPosts);
+    return unsubscribe;
+  }, [navigation]);
+
   return (
     <SafeAreaView style={styles.container}>
-      {/* Reusable Header */}
       <Header navigation={navigation} title="TradeBlazer" />
 
-      {/* Search Bar */}
       <View style={styles.searchContainer}>
         <Ionicons
           name="search"
@@ -56,11 +77,11 @@ export default function HomeScreen({ navigation }) {
         />
       </View>
 
-      {/* Product List */}
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <Text style={styles.sectionTitle}>Products</Text>
-        {products.map((item) => (
-          <View key={item.id} style={styles.card}>
+
+        {products.map((item, index) => (
+          <View key={index} style={styles.card}>
             <Image source={{ uri: item.image }} style={styles.image} />
             <View style={styles.cardDetails}>
               <Text style={styles.productName}>{item.name}</Text>
@@ -70,7 +91,6 @@ export default function HomeScreen({ navigation }) {
         ))}
       </ScrollView>
 
-      {/* Bottom Navigation */}
       <BottomNav navigation={navigation} />
     </SafeAreaView>
   );
@@ -97,7 +117,7 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     paddingHorizontal: 15,
-    paddingBottom: 120, // prevents bottom nav overlap
+    paddingBottom: 120,
   },
   sectionTitle: {
     fontWeight: "bold",
