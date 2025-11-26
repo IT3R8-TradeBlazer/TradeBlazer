@@ -23,7 +23,6 @@ export default function AddPostScreen({ navigation }) {
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("");
 
-  // Pick an image from gallery
   const pickImage = async () => {
     const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (permission.status !== "granted") {
@@ -41,7 +40,6 @@ export default function AddPostScreen({ navigation }) {
     if (!result.canceled) setPhotoUri(result.assets[0].uri);
   };
 
-  // Save new post to AsyncStorage
   const savePost = async (newProduct) => {
     try {
       const storedPosts = await AsyncStorage.getItem("@tradeblazer_posts");
@@ -70,10 +68,7 @@ export default function AddPostScreen({ navigation }) {
       category,
     };
 
-    // Save to AsyncStorage
     await savePost(newProduct);
-
-    // Navigate back to HomeScreen
     navigation.navigate("Home");
   };
 
@@ -81,8 +76,9 @@ export default function AddPostScreen({ navigation }) {
     <SafeAreaView style={styles.container}>
       <Header navigation={navigation} title="Add Post" />
 
-      <ScrollView contentContainerStyle={styles.content}>
-        {/* Add Photo */}
+      <ScrollView
+        contentContainerStyle={[styles.content, { paddingBottom: 120 }]}
+      >
         <Text style={styles.inputLabel}>Add photo</Text>
         <TouchableOpacity style={styles.photoBox} onPress={pickImage}>
           {photoUri ? (
@@ -92,7 +88,6 @@ export default function AddPostScreen({ navigation }) {
           )}
         </TouchableOpacity>
 
-        {/* Title */}
         <Text style={styles.inputLabel}>Title</Text>
         <TextInput
           style={styles.input}
@@ -102,7 +97,6 @@ export default function AddPostScreen({ navigation }) {
           onChangeText={setTitle}
         />
 
-        {/* Price */}
         <Text style={styles.inputLabel}>Price</Text>
         <TextInput
           style={styles.input}
@@ -113,7 +107,6 @@ export default function AddPostScreen({ navigation }) {
           onChangeText={setPrice}
         />
 
-        {/* Description */}
         <Text style={styles.inputLabel}>Description</Text>
         <TextInput
           style={[styles.input, styles.description]}
@@ -124,7 +117,6 @@ export default function AddPostScreen({ navigation }) {
           onChangeText={setDescription}
         />
 
-        {/* Category */}
         <Text style={styles.inputLabel}>Category</Text>
         <TextInput
           style={styles.input}
@@ -134,7 +126,6 @@ export default function AddPostScreen({ navigation }) {
           onChangeText={setCategory}
         />
 
-        {/* Post Button */}
         <TouchableOpacity style={styles.postButton} onPress={handlePost}>
           <Text style={styles.postText}>Post</Text>
         </TouchableOpacity>
