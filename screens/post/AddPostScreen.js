@@ -14,7 +14,7 @@ import * as ImagePicker from "expo-image-picker";
 import { Ionicons } from "@expo/vector-icons";
 import Header from "../../components/Header";
 import BottomNav from "../../components/BottomNav";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { savePost, getUser } from "../../utils/storage";
 
 export default function AddPostScreen({ navigation }) {
   const [photoUri, setPhotoUri] = useState(null);
@@ -40,30 +40,20 @@ export default function AddPostScreen({ navigation }) {
     if (!result.canceled) setPhotoUri(result.assets[0].uri);
   };
 
-  const savePost = async (newProduct) => {
-    try {
-      const storedPosts = await AsyncStorage.getItem("@tradeblazer_posts");
-      const posts = storedPosts ? JSON.parse(storedPosts) : [];
-      posts.push(newProduct);
-      await AsyncStorage.setItem("@tradeblazer_posts", JSON.stringify(posts));
-    } catch (error) {
-      console.log("Error saving post:", error);
-    }
-  };
-
   const handlePost = async () => {
     if (!title.trim()) {
       Alert.alert("Missing info", "Please enter a title for your product.");
       return;
     }
 
+    const user = await getUser();
+
     const newProduct = {
       id: Date.now(),
+      userId: user?.id,
       name: title,
       price: price ? `₱${price}` : "₱0",
-      image:
-        photoUri ||
-        "https://via.placeholder.com/200x200.png?text=New+Product",
+      image: photoUri || "https://via.placeholder.com/200x200.png?text=New+Product",
       description,
       category,
     };
@@ -76,9 +66,7 @@ export default function AddPostScreen({ navigation }) {
     <SafeAreaView style={styles.container}>
       <Header navigation={navigation} title="Add Post" />
 
-      <ScrollView
-        contentContainerStyle={[styles.content, { paddingBottom: 120 }]}
-      >
+      <ScrollView contentContainerStyle={[styles.content, { paddingBottom: 120 }]}>
         <Text style={styles.inputLabel}>Add photo</Text>
         <TouchableOpacity style={styles.photoBox} onPress={pickImage}>
           {photoUri ? (
