@@ -11,6 +11,11 @@ const categories = [
   { title: "Men's Apparel", icon: 'shirt-outline', screen: 'MensApparelScreen' },
   { title: 'Mobiles & Gadgets', icon: 'phone-portrait-outline', screen: 'MobilesGadgetsScreen' },
   { title: 'Health & Personal Care', icon: 'medkit-outline', screen: 'HealthPersonalCareScreen' },
+  { title: 'Gifts', icon: 'gift-outline', screen: 'GiftsScreen' },
+  { title: 'Accessories', icon: 'sparkles-outline', screen: 'AccessoriesScreen' },
+  { title: 'Food & Snacks', icon: 'fast-food-outline', screen: 'FoodScreen' },
+  { title: 'Books & Stationery', icon: 'book-outline', screen: 'BooksScreen' },
+  { title: 'Home & Decor', icon: 'home-outline', screen: 'HomeDecorScreen' },
 ];
 
 export default function CategoriesScreen({ navigation }) {
@@ -46,6 +51,7 @@ const styles = StyleSheet.create({
   },
   scrollContainer: {
     padding: 20,
+    paddingBottom: 120,
   },
   grid: {
     flexDirection: 'row',
@@ -63,6 +69,7 @@ const styles = StyleSheet.create({
   },
   icon: {
     marginBottom: 10,
+     color: '#215e3aff',
   },
   title: {
     textAlign: 'center',

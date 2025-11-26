@@ -18,6 +18,7 @@ import ChangePasswordScreen from "../screens/menu/ChangePasswordScreen";
 import FAQScreen from "../screens/menu/FAQScreen";
 import ChatScreen from "../screens/chat/ChatScreen";
 import CategoriesScreen from "../screens/main/CategoriesScreen";
+import ProductDetailsScreen from "../screens/dashboardproduct/ProductDetailsScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -41,6 +42,7 @@ export default function MainNavigator() {
       <Stack.Screen name="FAQ" component={FAQScreen} />
       <Stack.Screen name="ChatScreen" component={ChatScreen} />
       <Stack.Screen name="CategoriesScreen" component={CategoriesScreen} /> 
+      <Stack.Screen name="ProductDetails" component={ProductDetailsScreen} />
     </Stack.Navigator>
   );
 }
