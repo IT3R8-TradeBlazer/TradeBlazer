@@ -14,7 +14,11 @@ export default function ProfileScreen({ navigation }) {
 
     const posts = await getPosts();
     const filtered = posts.filter(p => p.userId === currentUser?.id);
-    setMyPosts(filtered);
+
+    // Reverse so latest post appears first
+    const latestFirst = filtered.slice().reverse();
+
+    setMyPosts(latestFirst);
   };
 
   useEffect(() => {

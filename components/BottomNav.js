@@ -1,10 +1,13 @@
 import React from "react";
 import { View, TouchableOpacity, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function BottomNav({ navigation }) {
+  const insets = useSafeAreaInsets();
+
   return (
-    <View style={styles.bottomNav}>
+    <View style={[styles.bottomNav, { paddingBottom: 5 + insets.bottom }]}>
       <TouchableOpacity onPress={() => navigation.navigate("Home")}>
         <Ionicons name="home" size={26} color="#ECF2E8" />
       </TouchableOpacity>
