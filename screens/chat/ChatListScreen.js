@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -7,17 +7,14 @@ import {
   TouchableOpacity,
   TextInput
 } from "react-native";
-<<<<<<< HEAD
-import { Ionicons } from "@expo/vector-icons";
-=======
 import { SafeAreaView } from "react-native-safe-area-context";
->>>>>>> ScreensChat
+import { Ionicons } from "@expo/vector-icons";
 import Header from "../../components/Header";
 import BottomNav from "../../components/BottomNav";
 
 export default function ChatListScreen({ navigation }) {
   const [search, setSearch] = useState("");
-  const names = ["Synteche", "Cypress"];
+  const names = ["Syntyche", "Cypress", "Bryan"];
 
   const filtered = names.filter((n) =>
     n.toLowerCase().includes(search.toLowerCase())

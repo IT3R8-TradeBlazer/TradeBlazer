@@ -5,7 +5,6 @@ import HomeScreen from "../screens/main/HomeScreen";
 import NotificationsScreen from "../screens/notifications/NotificationsScreen";
 import AddPostScreen from "../screens/post/AddPostScreen";
 import ChatListScreen from "../screens/chat/ChatListScreen";
-import ChatScreen from "../screens/chat/ChatScreen";
 import ProfileScreen from "../screens/profile/ProfileScreen";
 import UserProfileScreen from "../screens/profile/UserProfileScreen";
 import ReportUserScreen from "../screens/profile/ReportUserScreen";
@@ -28,7 +27,6 @@ export default function MainNavigator() {
       <Stack.Screen name="Notifications" component={NotificationsScreen} />
       <Stack.Screen name="AddPost" component={AddPostScreen} />
       <Stack.Screen name="ChatList" component={ChatListScreen} />
-      <Stack.Screen name="ChatScreen" component={ChatScreen} />
       <Stack.Screen name="Profile" component={ProfileScreen} />
       <Stack.Screen name="MenuSettings" component={MenuSettingsScreen} />
       <Stack.Screen name="UserProfile" component={UserProfileScreen} />

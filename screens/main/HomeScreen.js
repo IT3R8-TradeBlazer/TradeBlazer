@@ -1,19 +1,7 @@
-<<<<<<< HEAD
-import React, { useState, useEffect } from "react";
-import {
-  View,
-  Text,
-  TextInput,
-  ScrollView,
-  StyleSheet,
-  Image,
-  SafeAreaView,
-} from "react-native";
-=======
-import React from "react";
+
+import React, {useState, useEffect} from "react";
 import { View, Text, TextInput, ScrollView, StyleSheet, Image, TouchableOpacity, } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
->>>>>>> ScreensChat
 import { Ionicons } from "@expo/vector-icons";
 import BottomNav from "../../components/BottomNav";
 import Header from "../../components/Header";
