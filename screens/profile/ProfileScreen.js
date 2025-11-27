@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, Image, StyleSheet, SafeAreaView, ScrollView } from 'react-native';
-import { getUser, getPosts } from '../../utils/storage';
-import Header from '../../components/Header';
-import BottomNav from '../../components/BottomNav';
+import React, { useEffect, useState } from "react";
+import { View, Text, Image, StyleSheet, SafeAreaView, ScrollView } from "react-native";
+import { getUser, getPosts } from "../../utils/storage";
+import Header from "../../components/Header";
+import BottomNav from "../../components/BottomNav";
 
 export default function ProfileScreen({ navigation }) {
   const [user, setUser] = useState(null);
@@ -14,11 +14,7 @@ export default function ProfileScreen({ navigation }) {
 
     const posts = await getPosts();
     const filtered = posts.filter(p => p.userId === currentUser?.id);
-
-    // Reverse so latest post appears first
-    const latestFirst = filtered.slice().reverse();
-
-    setMyPosts(latestFirst);
+    setMyPosts(filtered.slice().reverse()); // latest first
   };
 
   useEffect(() => {
@@ -26,7 +22,7 @@ export default function ProfileScreen({ navigation }) {
   }, []);
 
   useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', loadData);
+    const unsubscribe = navigation.addListener("focus", loadData);
     return unsubscribe;
   }, [navigation]);
 
@@ -40,9 +36,10 @@ export default function ProfileScreen({ navigation }) {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Header navigation={navigation} />
+      <Header navigation={navigation} title="TradeBlazer" />
 
-      <ScrollView contentContainerStyle={{ paddingBottom: 120, paddingHorizontal: 15 }}>
+      <ScrollView contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 120 }}>
+        {/* Profile Info */}
         <View style={styles.profileSection}>
           <Image
             key={user.photo}
@@ -51,24 +48,23 @@ export default function ProfileScreen({ navigation }) {
           />
           <Text style={styles.name}>{user.name}</Text>
           <Text style={styles.subtext}>{user.department}</Text>
-          <Text style={styles.subtext}>{user.role === 'student' ? 'Student' : 'Employee'}</Text>
+          <Text style={styles.subtext}>{user.role === "student" ? "Student" : "Employee"}</Text>
         </View>
 
+        {/* About & Contact */}
         <View style={styles.infoSection}>
           <Text style={styles.label}>About</Text>
-          <Text>{user.address || 'Cagayan de Oro, Philippines'}</Text>
+          <Text>{user.address || "Cagayan de Oro, Philippines"}</Text>
 
           <Text style={styles.label}>Contact</Text>
           <Text>{user.email}</Text>
-          <Text>{user.phone || 'N/A'}</Text>
+          <Text>{user.phone || "N/A"}</Text>
         </View>
 
+        {/* Posts */}
         <View style={styles.postsSection}>
-          <Text style={styles.label}>My Posts</Text>
-
-          {myPosts.length === 0 && (
-            <Text style={{ marginTop: 10, textAlign: 'center' }}>No posts yet</Text>
-          )}
+          <Text style={styles.screenTitle}>My Posts</Text>
+          {myPosts.length === 0 && <Text style={{ marginTop: 10, textAlign: "center" }}>No posts yet</Text>}
 
           {myPosts.map((post) => (
             <View key={post.id} style={styles.card}>
@@ -88,29 +84,25 @@ export default function ProfileScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#ECF2E8' },
-  center: { flex: 1, alignItems: 'center', justifyContent: 'center' },
-  profileSection: { alignItems: 'center', marginTop: 20 },
-  profilePic: { width: 100, height: 100, borderRadius: 50, marginBottom: 10, backgroundColor: '#ccc' },
-  name: { fontSize: 20, fontWeight: 'bold' },
-  subtext: { color: '#777' },
+  container: { flex: 1, backgroundColor: "#ECF2E8" },
+  center: { flex: 1, alignItems: "center", justifyContent: "center" },
+  profileSection: { alignItems: "center", marginTop: 20 },
+  profilePic: { width: 100, height: 100, borderRadius: 50, marginBottom: 10, backgroundColor: "#ccc" },
+  name: { fontSize: 20, fontWeight: "bold", color: "#2E5E3E" },
+  subtext: { color: "#777" },
   infoSection: { marginVertical: 20 },
-  label: { marginTop: 10, fontWeight: 'bold', fontSize: 16 },
+  label: { marginTop: 10, fontWeight: "bold", fontSize: 16, color: "#2E5E3E" },
   postsSection: { marginTop: 20 },
-  // --- card styles same as HomeScreen
+  screenTitle: { fontSize: 20, fontWeight: "700", color: "#2E5E3E", marginBottom: 10 },
   card: {
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
     borderRadius: 15,
     marginBottom: 20,
     elevation: 4,
-    overflow: 'hidden',
-    shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 4,
+    overflow: "hidden",
   },
-  image: { width: '100%', height: 180 },
+  image: { width: "100%", height: 180 },
   cardDetails: { padding: 15 },
-  productName: { fontSize: 16, fontWeight: '600', color: '#2E5E3E' },
-  productPrice: { fontSize: 14, color: '#444', marginTop: 4 },
+  productName: { fontSize: 16, fontWeight: "600", color: "#2E5E3E" },
+  productPrice: { fontSize: 14, color: "#444", marginTop: 4 },
 });

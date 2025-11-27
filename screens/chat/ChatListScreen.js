@@ -16,41 +16,33 @@ export default function ChatListScreen({ navigation }) {
   const [search, setSearch] = useState("");
   const names = ["Syntyche", "Cypress", "Bryan"];
 
-  // Filter names based on search input
   const filtered = names.filter((n) =>
     n.toLowerCase().includes(search.toLowerCase())
   );
 
   const goToChat = (name) => navigation.navigate("ChatScreen", { name });
 
-  const renderItem = ({ item }) => {
-    const initials = item[0].toUpperCase();
-    return (
-      <TouchableOpacity
-        style={styles.row}
-        onPress={() => goToChat(item)}
-        activeOpacity={0.75}
-      >
-        <View style={styles.avatar}>
-          <Text style={styles.avatarText}>{initials}</Text>
-        </View>
-
-        <Text style={styles.itemText}>{item}</Text>
-      </TouchableOpacity>
-    );
-  };
+  const renderItem = ({ item }) => (
+    <TouchableOpacity
+      style={styles.row}
+      onPress={() => goToChat(item)}
+      activeOpacity={0.75}
+    >
+      <View style={styles.avatar}>
+        <Text style={styles.avatarText}>{item[0].toUpperCase()}</Text>
+      </View>
+      <Text style={styles.itemText}>{item}</Text>
+    </TouchableOpacity>
+  );
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* Fixed App Header */}
       <Header navigation={navigation} title="TradeBlazer" />
 
-      {/* Screen-specific title */}
       <View style={styles.screenTitleContainer}>
         <Text style={styles.screenTitle}>Chats</Text>
       </View>
 
-      {/* Search Bar */}
       <View style={styles.searchContainer}>
         <Ionicons
           name="search"
@@ -67,7 +59,6 @@ export default function ChatListScreen({ navigation }) {
         />
       </View>
 
-      {/* Chat List */}
       <FlatList
         data={filtered}
         keyExtractor={(item) => item}
@@ -75,27 +66,15 @@ export default function ChatListScreen({ navigation }) {
         contentContainerStyle={{ padding: 16, paddingBottom: 120 }}
       />
 
-      {/* Fixed BottomNav */}
       <BottomNav navigation={navigation} />
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#ECF2E8",
-  },
-  screenTitleContainer: {
-    paddingHorizontal: 16,
-    paddingTop: 16,
-    paddingBottom: 8,
-  },
-  screenTitle: {
-    fontSize: 20,
-    fontWeight: "700",
-    color: "#2E5E3E",
-  },
+  container: { flex: 1, backgroundColor: "#ECF2E8" },
+  screenTitleContainer: { paddingHorizontal: 16, paddingTop: 16, paddingBottom: 8 },
+  screenTitle: { fontSize: 20, fontWeight: "700", color: "#2E5E3E" },
   searchContainer: {
     flexDirection: "row",
     alignItems: "center",
@@ -105,11 +84,7 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     elevation: 2,
   },
-  searchInput: {
-    flex: 1,
-    paddingHorizontal: 10,
-    color: "#333",
-  },
+  searchInput: { flex: 1, paddingHorizontal: 10, color: "#333" },
   row: {
     flexDirection: "row",
     alignItems: "center",
@@ -131,14 +106,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginRight: 12,
   },
-  avatarText: {
-    fontSize: 18,
-    fontWeight: "700",
-    color: "#2E5E3E",
-  },
-  itemText: {
-    fontSize: 18,
-    fontWeight: "600",
-    color: "#2E5E3E",
-  },
+  avatarText: { fontSize: 18, fontWeight: "700", color: "#2E5E3E" },
+  itemText: { fontSize: 18, fontWeight: "600", color: "#2E5E3E" },
 });

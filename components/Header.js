@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     height: 70,
-    paddingTop: 28,
+    paddingTop: 28, // safe area for notch
   },
   logo: { fontSize: 20, fontWeight: "bold", color: "#fff" },
 });
