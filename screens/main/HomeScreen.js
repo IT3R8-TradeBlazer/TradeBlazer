@@ -59,12 +59,10 @@ export default function HomeScreen({ navigation }) {
 
   return (
     <SafeAreaView style={styles.container}>
+      {/* Fixed Header */}
       <Header navigation={navigation} title="TradeBlazer" />
 
-      <View style={styles.screenTitleContainer}>
-        <Text style={styles.screenTitle}>Products</Text>
-      </View>
-
+      {/* Search Bar */}
       <View style={styles.searchContainer}>
         <Ionicons
           name="search"
@@ -79,6 +77,12 @@ export default function HomeScreen({ navigation }) {
         />
       </View>
 
+      {/* Products Title */}
+      <View style={styles.titleContainer}>
+        <Text style={styles.screenTitle}>Products</Text>
+      </View>
+
+      {/* Products List */}
       <ScrollView contentContainerStyle={styles.scrollContent}>
         {products.map((item, index) => (
           <View key={index} style={styles.card}>
@@ -91,6 +95,7 @@ export default function HomeScreen({ navigation }) {
         ))}
       </ScrollView>
 
+      {/* Fixed Bottom Navigation */}
       <BottomNav navigation={navigation} />
     </SafeAreaView>
   );
@@ -98,18 +103,34 @@ export default function HomeScreen({ navigation }) {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: "#ECF2E8" },
-  screenTitleContainer: { paddingHorizontal: 16, paddingTop: 16, paddingBottom: 8 },
-  screenTitle: { fontSize: 20, fontWeight: "700", color: "#2E5E3E" },
+
+  // Search
   searchContainer: {
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: "#fff",
     marginHorizontal: 16,
+    marginTop: 16,
+    marginBottom: 12,
     paddingVertical: 8,
+    paddingHorizontal: 12,
     borderRadius: 25,
     elevation: 2,
   },
   searchInput: { flex: 1, paddingHorizontal: 10, color: "#333" },
+
+  // Title
+  titleContainer: {
+    paddingHorizontal: 16,
+    paddingBottom: 10,
+  },
+  screenTitle: {
+    fontSize: 20,
+    fontWeight: "700",
+    color: "#2E5E3E",
+  },
+
+  // Product Cards
   scrollContent: { paddingHorizontal: 16, paddingBottom: 120 },
   card: {
     backgroundColor: "#fff",

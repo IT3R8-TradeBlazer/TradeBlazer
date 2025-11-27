@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, SafeAreaView } from "react-native";
+import { View, Text, StyleSheet, SafeAreaView, ScrollView } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Header from "../../components/Header";
 import BottomNav from "../../components/BottomNav";
@@ -25,23 +25,25 @@ export default function NotificationsScreen({ navigation }) {
       {/* Fixed Header */}
       <Header navigation={navigation} title="TradeBlazer" />
 
-      {/* Screen-specific title */}
-      <View style={styles.screenTitleContainer}>
-        <Text style={styles.screenTitle}>Notifications</Text>
-      </View>
-
-      {/* Main Content */}
-      <View style={styles.content}>
-        <View style={styles.notificationCard}>
-          <Text style={styles.notificationGreeting}>
-            Welcome to TradeBlazer!
-          </Text>
-
-          <Text style={styles.notificationBody}>
-            We're excited to have you on board.{"\n"}
-          </Text>
+      {/* Screen Content */}
+      <ScrollView contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 120 }}>
+        {/* Search / Title can go here if needed */}
+        <View style={styles.screenTitleContainer}>
+          <Text style={styles.screenTitle}>Notifications</Text>
         </View>
-      </View>
+
+        <View style={styles.content}>
+          <View style={styles.notificationCard}>
+            <Text style={styles.notificationGreeting}>
+              Welcome to TradeBlazer!
+            </Text>
+
+            <Text style={styles.notificationBody}>
+              We're excited to have you on board.{"\n"}
+            </Text>
+          </View>
+        </View>
+      </ScrollView>
 
       {/* Fixed BottomNav */}
       <BottomNav navigation={navigation} />
@@ -55,9 +57,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#ECF2E8",
   },
   screenTitleContainer: {
-    paddingHorizontal: 16,
-    paddingTop: 16,
-    paddingBottom: 8,
+    marginTop: 16,
+    marginBottom: 8,
   },
   screenTitle: {
     fontSize: 20,
@@ -66,8 +67,6 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    paddingHorizontal: 16,
-    paddingTop: 10,
   },
   notificationCard: {
     backgroundColor: "#D6F0D7", // match other product/chat cards

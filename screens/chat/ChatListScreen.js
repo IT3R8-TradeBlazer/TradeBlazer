@@ -37,12 +37,10 @@ export default function ChatListScreen({ navigation }) {
 
   return (
     <SafeAreaView style={styles.container}>
+      {/* Fixed Header */}
       <Header navigation={navigation} title="TradeBlazer" />
 
-      <View style={styles.screenTitleContainer}>
-        <Text style={styles.screenTitle}>Chats</Text>
-      </View>
-
+      {/* Search Bar */}
       <View style={styles.searchContainer}>
         <Ionicons
           name="search"
@@ -59,6 +57,12 @@ export default function ChatListScreen({ navigation }) {
         />
       </View>
 
+      {/* Screen Title */}
+      <View style={styles.screenTitleContainer}>
+        <Text style={styles.screenTitle}>Chats</Text>
+      </View>
+
+      {/* Chat List */}
       <FlatList
         data={filtered}
         keyExtractor={(item) => item}
@@ -66,6 +70,7 @@ export default function ChatListScreen({ navigation }) {
         contentContainerStyle={{ padding: 16, paddingBottom: 120 }}
       />
 
+      {/* Fixed Bottom Navigation */}
       <BottomNav navigation={navigation} />
     </SafeAreaView>
   );
@@ -73,18 +78,33 @@ export default function ChatListScreen({ navigation }) {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: "#ECF2E8" },
-  screenTitleContainer: { paddingHorizontal: 16, paddingTop: 16, paddingBottom: 8 },
-  screenTitle: { fontSize: 20, fontWeight: "700", color: "#2E5E3E" },
+
+  // Search Bar
   searchContainer: {
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: "#fff",
     marginHorizontal: 16,
+    marginTop: 16,
     paddingVertical: 8,
     borderRadius: 25,
     elevation: 2,
   },
   searchInput: { flex: 1, paddingHorizontal: 10, color: "#333" },
+
+  // Screen Title
+  screenTitleContainer: {
+    paddingHorizontal: 16,
+    paddingTop: 8,
+    paddingBottom: 8,
+  },
+  screenTitle: {
+    fontSize: 20,
+    fontWeight: "700",
+    color: "#2E5E3E",
+  },
+
+  // Chat Row
   row: {
     flexDirection: "row",
     alignItems: "center",
