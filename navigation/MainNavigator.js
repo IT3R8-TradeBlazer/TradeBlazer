@@ -6,6 +6,7 @@ import NotificationsScreen from "../screens/notifications/NotificationsScreen";
 import AddPostScreen from "../screens/post/AddPostScreen";
 import ChatListScreen from "../screens/chat/ChatListScreen";
 import ProfileScreen from "../screens/profile/ProfileScreen";
+
 import UserProfileScreen from "../screens/profile/UserProfileScreen";
 import ReportUserScreen from "../screens/profile/ReportUserScreen";
 import MenuSettingsScreen from "../screens/menu/MenuSettingsScreen";
@@ -23,20 +24,52 @@ const Stack = createNativeStackNavigator();
 export default function MainNavigator() {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="Home" component={HomeScreen} />
-      <Stack.Screen name="Notifications" component={NotificationsScreen} />
-      <Stack.Screen name="AddPost" component={AddPostScreen} />
-      <Stack.Screen name="ChatList" component={ChatListScreen} />
-      <Stack.Screen name="Profile" component={ProfileScreen} />
-      <Stack.Screen name="MenuSettings" component={MenuSettingsScreen} />
+      {/* Main screens with slide animation */}
+      <Stack.Screen
+        name="Home"
+        component={HomeScreen}
+        options={{ animation: "none" }}
+      />
+      <Stack.Screen
+        name="Notifications"
+        component={NotificationsScreen}
+        options={{ animation: "none" }}
+      />
+      <Stack.Screen
+        name="AddPost"
+        component={AddPostScreen}
+        options={{ animation: "none" }}
+      />
+      <Stack.Screen
+        name="ChatList"
+        component={ChatListScreen}
+        options={{ animation: "none" }}
+      />
+      <Stack.Screen
+        name="Profile"
+        component={ProfileScreen}
+        options={{ animation: "none" }}
+      />
+
+      {/* Other screens remain normal */}
       <Stack.Screen name="UserProfile" component={UserProfileScreen} />
       <Stack.Screen name="ReportUser" component={ReportUserScreen} />
+      <Stack.Screen name="MenuSettings" component={MenuSettingsScreen} />
       <Stack.Screen name="Favorites" component={FavoritesScreen} />
       <Stack.Screen name="Settings" component={SettingsScreen} />
       <Stack.Screen name="EditName" component={EditNameScreen} />
-      <Stack.Screen name="ChangeDisplayPhoto" component={ChangeDisplayPhotoScreen} />
-      <Stack.Screen name="SupportAndInfo" component={SupportAndInfoScreen} />
-      <Stack.Screen name="ChangePassword" component={ChangePasswordScreen} />
+      <Stack.Screen
+        name="ChangeDisplayPhoto"
+        component={ChangeDisplayPhotoScreen}
+      />
+      <Stack.Screen
+        name="SupportAndInfo"
+        component={SupportAndInfoScreen}
+      />
+      <Stack.Screen
+        name="ChangePassword"
+        component={ChangePasswordScreen}
+      />
       <Stack.Screen name="FAQ" component={FAQScreen} />
       <Stack.Screen name="ChatScreen" component={ChatScreen} />
     </Stack.Navigator>

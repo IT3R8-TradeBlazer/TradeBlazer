@@ -47,31 +47,26 @@ export default function HomeScreen({ navigation }) {
 
   const [products, setProducts] = useState(defaultProducts);
 
+  const loadPosts = async () => {
+    const posts = await getPosts();
+    // Latest posts appear first
+    const reversedPosts = posts.slice().reverse();
+    setProducts([...reversedPosts, ...defaultProducts]);
+  };
+
   useEffect(() => {
-    const loadPosts = async () => {
-      const posts = await getPosts();
-
-      // Reverse posts so the latest added appears first
-      const latestFirstPosts = posts.slice().reverse();
-
-      setProducts([...latestFirstPosts, ...defaultProducts]);
-    };
-
     const unsubscribe = navigation.addListener("focus", loadPosts);
     return unsubscribe;
   }, [navigation]);
 
   return (
     <SafeAreaView style={styles.container}>
+      {/* Fixed Header */}
       <Header navigation={navigation} title="TradeBlazer" />
 
+      {/* Search */}
       <View style={styles.searchContainer}>
-        <Ionicons
-          name="search"
-          size={20}
-          color="#555"
-          style={{ marginLeft: 10 }}
-        />
+        <Ionicons name="search" size={20} color="#555" style={{ marginLeft: 10 }} />
         <TextInput
           style={styles.searchInput}
           placeholder="Search for anything..."
@@ -79,9 +74,9 @@ export default function HomeScreen({ navigation }) {
         />
       </View>
 
+      {/* Content */}
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <Text style={styles.sectionTitle}>Products</Text>
-
         {products.map((item, index) => (
           <View key={index} style={styles.card}>
             <Image source={{ uri: item.image }} style={styles.image} />
@@ -93,16 +88,14 @@ export default function HomeScreen({ navigation }) {
         ))}
       </ScrollView>
 
+      {/* Fixed BottomNav */}
       <BottomNav navigation={navigation} />
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#ECF2E8",
-  },
+  container: { flex: 1, backgroundColor: "#ECF2E8" },
   searchContainer: {
     flexDirection: "row",
     alignItems: "center",
@@ -112,20 +105,9 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     elevation: 2,
   },
-  searchInput: {
-    flex: 1,
-    paddingHorizontal: 10,
-    color: "#333",
-  },
-  scrollContent: {
-    paddingHorizontal: 15,
-    paddingBottom: 120,
-  },
-  sectionTitle: {
-    fontWeight: "bold",
-    fontSize: 16,
-    marginBottom: 10,
-  },
+  searchInput: { flex: 1, paddingHorizontal: 10, color: "#333" },
+  scrollContent: { paddingHorizontal: 15, paddingBottom: 120 },
+  sectionTitle: { fontWeight: "bold", fontSize: 16, marginBottom: 10 },
   card: {
     backgroundColor: "#fff",
     borderRadius: 15,
@@ -137,21 +119,8 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 4,
   },
-  image: {
-    width: "100%",
-    height: 180,
-  },
-  cardDetails: {
-    padding: 15,
-  },
-  productName: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: "#2E5E3E",
-  },
-  productPrice: {
-    fontSize: 14,
-    color: "#444",
-    marginTop: 4,
-  },
+  image: { width: "100%", height: 180 },
+  cardDetails: { padding: 15 },
+  productName: { fontSize: 16, fontWeight: "600", color: "#2E5E3E" },
+  productPrice: { fontSize: 14, color: "#444", marginTop: 4 },
 });

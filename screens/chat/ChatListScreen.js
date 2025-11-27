@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
   StyleSheet,
   FlatList,
   TouchableOpacity,
-  TextInput
+  TextInput,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
@@ -16,6 +16,7 @@ export default function ChatListScreen({ navigation }) {
   const [search, setSearch] = useState("");
   const names = ["Syntyche", "Cypress", "Bryan"];
 
+  // Filter names based on search input
   const filtered = names.filter((n) =>
     n.toLowerCase().includes(search.toLowerCase())
   );
@@ -41,11 +42,22 @@ export default function ChatListScreen({ navigation }) {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Header navigation={navigation} />
+      {/* Fixed App Header */}
+      <Header navigation={navigation} title="TradeBlazer" />
+
+      {/* Screen-specific title */}
+      <View style={styles.screenTitleContainer}>
+        <Text style={styles.screenTitle}>Chats</Text>
+      </View>
 
       {/* Search Bar */}
       <View style={styles.searchContainer}>
-        <Ionicons name="search" size={18} color="#555" style={{ marginLeft: 10 }} />
+        <Ionicons
+          name="search"
+          size={18}
+          color="#555"
+          style={{ marginLeft: 10 }}
+        />
         <TextInput
           style={styles.searchInput}
           placeholder="Search…"
@@ -60,9 +72,10 @@ export default function ChatListScreen({ navigation }) {
         data={filtered}
         keyExtractor={(item) => item}
         renderItem={renderItem}
-        contentContainerStyle={{ padding: 16, paddingBottom: 100 }}
+        contentContainerStyle={{ padding: 16, paddingBottom: 120 }}
       />
 
+      {/* Fixed BottomNav */}
       <BottomNav navigation={navigation} />
     </SafeAreaView>
   );
@@ -73,11 +86,21 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#ECF2E8",
   },
+  screenTitleContainer: {
+    paddingHorizontal: 16,
+    paddingTop: 16,
+    paddingBottom: 8,
+  },
+  screenTitle: {
+    fontSize: 20,
+    fontWeight: "700",
+    color: "#2E5E3E",
+  },
   searchContainer: {
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: "#fff",
-    margin: 15,
+    marginHorizontal: 16,
     paddingVertical: 8,
     borderRadius: 25,
     elevation: 2,

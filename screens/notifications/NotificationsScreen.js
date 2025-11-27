@@ -22,13 +22,16 @@ export default function NotificationsScreen({ navigation }) {
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* Header */}
-      <Header navigation={navigation} />
+      {/* Fixed Header */}
+      <Header navigation={navigation} title="TradeBlazer" />
+
+      {/* Screen-specific title */}
+      <View style={styles.screenTitleContainer}>
+        <Text style={styles.screenTitle}>Notifications</Text>
+      </View>
 
       {/* Main Content */}
       <View style={styles.content}>
-        <Text style={styles.title}>Notifications</Text>
-
         <View style={styles.notificationCard}>
           <Text style={styles.notificationGreeting}>
             Welcome to TradeBlazer!
@@ -40,7 +43,7 @@ export default function NotificationsScreen({ navigation }) {
         </View>
       </View>
 
-      {/* Bottom Navigation */}
+      {/* Fixed BottomNav */}
       <BottomNav navigation={navigation} />
     </SafeAreaView>
   );
@@ -51,34 +54,39 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#ECF2E8",
   },
+  screenTitleContainer: {
+    paddingHorizontal: 16,
+    paddingTop: 16,
+    paddingBottom: 8,
+  },
+  screenTitle: {
+    fontSize: 20,
+    fontWeight: "700",
+    color: "#2E5E3E",
+  },
   content: {
     flex: 1,
     paddingHorizontal: 16,
-    paddingTop: 20,
-  },
-  title: {
-    fontSize: 22,
-    fontWeight: "700",
-    marginBottom: 16,
-    color: "#000",
+    paddingTop: 10,
   },
   notificationCard: {
-    backgroundColor: "#D9D9D9",
-    borderRadius: 8,
+    backgroundColor: "#D6F0D7", // match other product/chat cards
+    borderRadius: 15,
     paddingVertical: 14,
     paddingHorizontal: 16,
     marginBottom: 12,
+    elevation: 2,
   },
   notificationGreeting: {
-    fontSize: 18,
-    fontWeight: "700",
-    color: "#222",
-    marginBottom: 8,
+    fontSize: 16,
+    fontWeight: "600",
+    color: "#2E5E3E",
+    marginBottom: 6,
   },
   notificationBody: {
-    fontSize: 15,
+    fontSize: 14,
     fontWeight: "400",
     color: "#444",
-    lineHeight: 22,
+    lineHeight: 20,
   },
 });
