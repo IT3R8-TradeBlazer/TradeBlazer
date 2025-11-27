@@ -1,4 +1,5 @@
-import { StyleSheet, Text, View, Image, TextInput, SafeAreaView, TouchableOpacity, Alert } from 'react-native';
+import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity, Alert } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import React, { useState } from 'react';
 import buttonStyles from '../../components/SigninRegisButton'; 
 import AsyncStorage from '@react-native-async-storage/async-storage';
