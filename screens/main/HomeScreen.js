@@ -1,6 +1,12 @@
-
-import React, {useState, useEffect} from "react";
-import { View, Text, TextInput, ScrollView, StyleSheet, Image, TouchableOpacity, } from "react-native";
+import React, { useState, useEffect } from "react";
+import {
+  View,
+  Text,
+  TextInput,
+  ScrollView,
+  StyleSheet,
+  Image,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import BottomNav from "../../components/BottomNav";
@@ -45,8 +51,10 @@ export default function HomeScreen({ navigation }) {
     const loadPosts = async () => {
       const posts = await getPosts();
 
-      // ✅ USER POSTS FIRST, DEFAULT PRODUCTS BELOW
-      setProducts([...posts, ...defaultProducts]);
+      // Reverse posts so the latest added appears first
+      const latestFirstPosts = posts.slice().reverse();
+
+      setProducts([...latestFirstPosts, ...defaultProducts]);
     };
 
     const unsubscribe = navigation.addListener("focus", loadPosts);
