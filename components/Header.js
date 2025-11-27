@@ -7,7 +7,7 @@ export default function Header({ title = "TradeBlazer", navigation }) {
     <View style={styles.header}>
       <Text style={styles.logo}>{title}</Text>
 
-      <TouchableOpacity onPress={() => navigation.navigate("MenuSettings")}>
+      <TouchableOpacity onPress={() => navigation?.navigate("MenuSettings")}>
         <Ionicons name="menu" size={26} color="#fff" />
       </TouchableOpacity>
     </View>
@@ -25,9 +25,5 @@ const styles = StyleSheet.create({
     height: 70,
     paddingTop: 28,
   },
-  logo: {
-    fontSize: 20,
-    fontWeight: "bold",
-    color: "#fff",
-  },
+  logo: { fontSize: 20, fontWeight: "bold", color: "#fff" },
 });

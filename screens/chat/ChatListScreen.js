@@ -3,12 +3,15 @@ import {
   View,
   Text,
   StyleSheet,
-  SafeAreaView,
   FlatList,
   TouchableOpacity,
   TextInput
 } from "react-native";
+<<<<<<< HEAD
 import { Ionicons } from "@expo/vector-icons";
+=======
+import { SafeAreaView } from "react-native-safe-area-context";
+>>>>>>> ScreensChat
 import Header from "../../components/Header";
 import BottomNav from "../../components/BottomNav";
 

@@ -1,0 +1,39 @@
+import React from "react";
+import { View, Text, StyleSheet } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import Header from "../../components/Header";
+import BottomNav from "../../components/BottomNav";
+
+export default function MenuSettingsScreen({ navigation }) {
+  return (
+    <SafeAreaView style={styles.container}>
+      {/* Header */}
+      <Header navigation={navigation} />
+
+      {/* Main Content */}
+      <View style={styles.content}>
+        <Text style={styles.text}>MENU SETTINGS</Text>
+      </View>
+
+      {/* Bottom Navigation */}
+      <BottomNav navigation={navigation} />
+    </SafeAreaView>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#ECF2E8",
+  },
+  content: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  text: {
+    fontSize: 24,
+    fontWeight: "bold",
+    color: "#2E5E3E",
+  },
+});
