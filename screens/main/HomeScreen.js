@@ -1,12 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  View,
-  Text,
-  TextInput,
-  ScrollView,
-  StyleSheet,
-  Image,
-} from "react-native";
+import { View, Text, TextInput, ScrollView, StyleSheet, Image, SafeAreaView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import BottomNav from "../../components/BottomNav";
@@ -59,7 +52,7 @@ export default function HomeScreen({ navigation }) {
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* Fixed Header */}
+      {/* Header */}
       <Header navigation={navigation} title="TradeBlazer" />
 
       {/* Search Bar */}
@@ -95,7 +88,7 @@ export default function HomeScreen({ navigation }) {
         ))}
       </ScrollView>
 
-      {/* Fixed Bottom Navigation */}
+      {/* Bottom Navigation */}
       <BottomNav navigation={navigation} />
     </SafeAreaView>
   );
