@@ -1,7 +1,20 @@
-import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity, Alert, KeyboardAvoidingView, Platform, ScrollView, TouchableWithoutFeedback, Keyboard } from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  TextInput,
+  TouchableOpacity,
+  Alert,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  TouchableWithoutFeedback,
+  Keyboard,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import React, { useState } from 'react';
-import buttonStyles from '../../components/SigninRegisButton'; 
+import buttonStyles from '../../components/SigninRegisButton';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function SignInScreen({ navigation }) {
@@ -29,6 +42,7 @@ export default function SignInScreen({ navigation }) {
       newErrors.password = "Password must be at least 6 characters";
       valid = false;
     }
+
     setErrors(newErrors);
     return valid;
   };
@@ -47,7 +61,14 @@ export default function SignInScreen({ navigation }) {
 
       if (email === storedEmail && password === storedPassword) {
         Alert.alert("Login successful!", `Welcome back, ${storedName}!`, [
-          { text: "Continue", onPress: () => navigation.navigate("Main") }
+          {
+            text: "Continue",
+            onPress: () =>
+              navigation.reset({
+                index: 0,
+                routes: [{ name: "Main" }], // <-- FIXED: cannot go back to SignIn
+              })
+          }
         ]);
       } else {
         Alert.alert("Invalid credentials", "Your email or password is incorrect.");
@@ -59,21 +80,18 @@ export default function SignInScreen({ navigation }) {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#eBecf4' }}>
-      {/* KeyboardAvoidingView ensures the content moves up when keyboard appears */}
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={{ flex: 1 }}
       >
-        {/* ScrollView allows scrolling when content is larger than screen */}
         <ScrollView
           contentContainerStyle={{ flexGrow: 1 }}
           keyboardShouldPersistTaps="handled"
         >
-          {/* TouchableWithoutFeedback dismisses keyboard when tapping outside */}
           <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <View style={styles.container}>
               <View style={styles.header}>
-                <Image 
+                <Image
                   source={require('../../assets/lo.png')}
                   style={styles.headerImg}
                 />
