@@ -1,13 +1,5 @@
 import React, { useState } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  FlatList,
-  TouchableOpacity,
-  TextInput,
-} from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, TextInput, SafeAreaView } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import Header from "../../components/Header";
 import BottomNav from "../../components/BottomNav";
@@ -37,7 +29,7 @@ export default function ChatListScreen({ navigation }) {
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* Fixed Header */}
+      {/* Header */}
       <Header navigation={navigation} title="TradeBlazer" />
 
       {/* Search Bar */}
@@ -70,7 +62,7 @@ export default function ChatListScreen({ navigation }) {
         contentContainerStyle={{ padding: 16, paddingBottom: 120 }}
       />
 
-      {/* Fixed Bottom Navigation */}
+      {/* Bottom Navigation */}
       <BottomNav navigation={navigation} />
     </SafeAreaView>
   );
