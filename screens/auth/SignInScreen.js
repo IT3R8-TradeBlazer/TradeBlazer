@@ -1,36 +1,17 @@
-import {
-  StyleSheet,
-  Text,
-  View,
-  Image,
-  TextInput,
-  TouchableOpacity,
-  Alert,
-  KeyboardAvoidingView,
-  Platform,
-  ScrollView,
-  TouchableWithoutFeedback,
-  Keyboard,
-} from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, StyleSheet, Text, View, Image, TextInput, TouchableOpacity, Alert, KeyboardAvoidingView, Platform, ScrollView, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import React, { useState } from 'react';
 import buttonStyles from '../../components/SigninRegisButton';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function SignInScreen({ navigation }) {
-  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [errors, setErrors] = useState({ name: "", email: "", password: "" });
+  const [errors, setErrors] = useState({ email: "", password: "" });
 
   const validate = () => {
     let valid = true;
-    let newErrors = { name: "", email: "", password: "" };
+    let newErrors = { email: "", password: "" };
 
-    if (name.trim() === "") {
-      newErrors.name = "Name cannot be empty";
-      valid = false;
-    }
     if (!email.includes("@")) {
       newErrors.email = "Email must contain '@'";
       valid = false;
@@ -50,33 +31,33 @@ export default function SignInScreen({ navigation }) {
   const handleContinue = async () => {
     if (!validate()) return;
 
-    try {
-      const storedUser = await AsyncStorage.getItem('userData');
-      if (!storedUser) {
-        Alert.alert("No account found", "Please register first.");
-        return;
-      }
-
-      const { name: storedName, email: storedEmail, password: storedPassword } = JSON.parse(storedUser);
-
-      if (email === storedEmail && password === storedPassword) {
-        Alert.alert("Login successful!", `Welcome back, ${storedName}!`, [
-          {
-            text: "Continue",
-            onPress: () =>
-              navigation.reset({
-                index: 0,
-                routes: [{ name: "Main" }], // <-- FIXED: cannot go back to SignIn
-              })
-          }
-        ]);
-      } else {
-        Alert.alert("Invalid credentials", "Your email or password is incorrect.");
-      }
-    } catch (error) {
-      console.error("Error reading user data:", error);
+  try {
+    const storedUser = await AsyncStorage.getItem('userData');
+    if (!storedUser) {
+      Alert.alert("No account found", "Please register first.");
+      return;
     }
-  };
+
+    const { name: storedName, email: storedEmail, password: storedPassword } = JSON.parse(storedUser);
+
+    if (email === storedEmail && password === storedPassword) {
+      Alert.alert("Login successful!", `Welcome, ${storedName}!`, [
+        {
+          text: "Continue",
+          onPress: () =>
+            navigation.reset({
+              index: 0,
+              routes: [{ name: "Main" }],
+            })
+        }
+      ]);
+    } else {
+      Alert.alert("Invalid credentials", "Your email or password is incorrect.");
+    }
+  } catch (error) {
+    console.error("Error reading user data:", error);
+  }
+};
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#eBecf4' }}>
@@ -101,26 +82,6 @@ export default function SignInScreen({ navigation }) {
               <Text style={styles.subtitle}>An online market within campus</Text>
 
               <View style={styles.form}>
-                {/* Name */}
-                <View style={styles.input}>
-                  <Text style={styles.inputLabel}>Name</Text>
-                  <TextInput
-                    placeholder="Full Name"
-                    placeholderTextColor="#6b7288"
-                    style={styles.inputControl}
-                    value={name}
-                    onChangeText={(text) => {
-                      setName(text);
-                      if (text.trim() === "") {
-                        setErrors((prev) => ({ ...prev, name: "Name cannot be empty" }));
-                      } else {
-                        setErrors((prev) => ({ ...prev, name: "" }));
-                      }
-                    }}
-                  />
-                </View>
-                {errors.name ? <Text style={styles.errorText}>{errors.name}</Text> : null}
-
                 {/* Email */}
                 <View style={styles.input}>
                   <Text style={styles.inputLabel}>Email Address</Text>
