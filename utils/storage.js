@@ -3,6 +3,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 const POST_KEY = "@tradeblazer_posts";
 const USER_KEY = "userData";
 
+// User
 export const saveUser = async (userData) => {
   await AsyncStorage.setItem(USER_KEY, JSON.stringify(userData));
 };
@@ -12,6 +13,7 @@ export const getUser = async () => {
   return json ? JSON.parse(json) : null;
 };
 
+// Single post
 export const savePost = async (post) => {
   const json = await AsyncStorage.getItem(POST_KEY);
   const posts = json ? JSON.parse(json) : [];
@@ -19,6 +21,12 @@ export const savePost = async (post) => {
   await AsyncStorage.setItem(POST_KEY, JSON.stringify(posts));
 };
 
+// Multiple posts (needed by PostsContext for add/edit/delete)
+export const savePosts = async (posts) => {
+  await AsyncStorage.setItem(POST_KEY, JSON.stringify(posts));
+};
+
+// Get all posts
 export const getPosts = async () => {
   const json = await AsyncStorage.getItem(POST_KEY);
   return json ? JSON.parse(json) : [];

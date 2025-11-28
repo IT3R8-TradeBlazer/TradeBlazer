@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useContext } from "react";
 import {
   View,
   Text,
@@ -11,7 +11,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import BottomNav from "../../components/BottomNav";
 import Header from "../../components/Header";
-import { getPosts } from "../../utils/storage";
+import { PostsContext } from "../../context/PostsContext";
 
 export default function HomeScreen({ navigation }) {
   const defaultProducts = [
@@ -45,24 +45,18 @@ export default function HomeScreen({ navigation }) {
     },
   ];
 
-  const [products, setProducts] = useState(defaultProducts);
+  const { posts } = useContext(PostsContext);
 
-  useEffect(() => {
-    const loadPosts = async () => {
-      const posts = await getPosts();
-      setProducts([...posts.reverse(), ...defaultProducts]);
-    };
+  // Sort posts by newest first
+  const sortedPosts = [...posts].sort((a, b) => b.id - a.id);
 
-    const unsubscribe = navigation.addListener("focus", loadPosts);
-    return unsubscribe;
-  }, [navigation]);
+  // Combine newest posts + defaultProducts
+  const combinedProducts = [...sortedPosts, ...defaultProducts];
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* Fixed Header */}
       <Header navigation={navigation} title="TradeBlazer" />
 
-      {/* Search Bar */}
       <View style={styles.searchContainer}>
         <Ionicons
           name="search"
@@ -77,14 +71,12 @@ export default function HomeScreen({ navigation }) {
         />
       </View>
 
-      {/* Products Title */}
       <View style={styles.titleContainer}>
         <Text style={styles.screenTitle}>Products</Text>
       </View>
 
-      {/* Products List */}
       <ScrollView contentContainerStyle={styles.scrollContent}>
-        {products.map((item, index) => (
+        {combinedProducts.map((item, index) => (
           <View key={index} style={styles.card}>
             <Image source={{ uri: item.image }} style={styles.image} />
             <View style={styles.cardDetails}>
@@ -95,7 +87,6 @@ export default function HomeScreen({ navigation }) {
         ))}
       </ScrollView>
 
-      {/* Fixed Bottom Navigation */}
       <BottomNav navigation={navigation} />
     </SafeAreaView>
   );
@@ -104,7 +95,6 @@ export default function HomeScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: "#ECF2E8" },
 
-  // Search
   searchContainer: {
     flexDirection: "row",
     alignItems: "center",
@@ -119,18 +109,9 @@ const styles = StyleSheet.create({
   },
   searchInput: { flex: 1, paddingHorizontal: 10, color: "#333" },
 
-  // Title
-  titleContainer: {
-    paddingHorizontal: 16,
-    paddingBottom: 10,
-  },
-  screenTitle: {
-    fontSize: 20,
-    fontWeight: "700",
-    color: "#2E5E3E",
-  },
+  titleContainer: { paddingHorizontal: 16, paddingBottom: 10 },
+  screenTitle: { fontSize: 20, fontWeight: "700", color: "#2E5E3E" },
 
-  // Product Cards
   scrollContent: { paddingHorizontal: 16, paddingBottom: 120 },
   card: {
     backgroundColor: "#fff",

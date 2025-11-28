@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import {
   View,
   Text,
@@ -14,7 +14,8 @@ import * as ImagePicker from "expo-image-picker";
 import { Ionicons } from "@expo/vector-icons";
 import Header from "../../components/Header";
 import BottomNav from "../../components/BottomNav";
-import { savePost, getUser } from "../../utils/storage";
+import { getUser } from "../../utils/storage";
+import { PostsContext } from "../../context/PostsContext"; // <- import context
 
 export default function AddPostScreen({ navigation }) {
   const [photoUri, setPhotoUri] = useState(null);
@@ -22,6 +23,8 @@ export default function AddPostScreen({ navigation }) {
   const [price, setPrice] = useState("");
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("");
+
+  const { addPost } = useContext(PostsContext); // <- get addPost from context
 
   const pickImage = async () => {
     const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -58,7 +61,7 @@ export default function AddPostScreen({ navigation }) {
       category,
     };
 
-    await savePost(newProduct);
+    await addPost(newProduct); // <- addPost updates context AND AsyncStorage
     navigation.navigate("Home");
   };
 
@@ -125,57 +128,13 @@ export default function AddPostScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#ECF2E8",
-  },
-  content: {
-    paddingHorizontal: 20,
-    paddingVertical: 20,
-  },
-  inputLabel: {
-    marginTop: 10,
-    marginBottom: 6,
-    fontWeight: "500",
-    color: "#000",
-    fontSize: 14,
-  },
-  photoBox: {
-    width: "100%",
-    height: 160,
-    backgroundColor: "#D9D9D9",
-    borderRadius: 8,
-    justifyContent: "center",
-    alignItems: "center",
-    marginBottom: 12,
-    overflow: "hidden",
-  },
-  previewImage: {
-    width: "100%",
-    height: "100%",
-    resizeMode: "cover",
-  },
-  input: {
-    backgroundColor: "#D9D9D9",
-    borderRadius: 4,
-    paddingHorizontal: 10,
-    paddingVertical: 8,
-    marginBottom: 12,
-    fontSize: 14,
-    color: "#000",
-  },
-  description: {
-    height: 80,
-    textAlignVertical: "top",
-  },
-  postButton: {
-    alignSelf: "center",
-    marginTop: 50,
-  },
-  postText: {
-    color: "#2E5E3E",
-    fontWeight: "600",
-    fontSize: 16,
-    textDecorationLine: "underline",
-  },
+  container: { flex: 1, backgroundColor: "#ECF2E8" },
+  content: { paddingHorizontal: 20, paddingVertical: 20 },
+  inputLabel: { marginTop: 10, marginBottom: 6, fontWeight: "500", color: "#000", fontSize: 14 },
+  photoBox: { width: "100%", height: 160, backgroundColor: "#D9D9D9", borderRadius: 8, justifyContent: "center", alignItems: "center", marginBottom: 12, overflow: "hidden" },
+  previewImage: { width: "100%", height: "100%", resizeMode: "cover" },
+  input: { backgroundColor: "#D9D9D9", borderRadius: 4, paddingHorizontal: 10, paddingVertical: 8, marginBottom: 12, fontSize: 14, color: "#000" },
+  description: { height: 80, textAlignVertical: "top" },
+  postButton: { alignSelf: "center", marginTop: 50 },
+  postText: { color: "#2E5E3E", fontWeight: "600", fontSize: 16, textDecorationLine: "underline" },
 });
