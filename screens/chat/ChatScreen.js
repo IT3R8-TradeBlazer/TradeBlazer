@@ -11,7 +11,7 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
 } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context"; // ✅ Fixed import
+import { SafeAreaView } from "react-native-safe-area-context";
 import Header from "../../components/Header";
 import { useMessages } from "../../context/MessagesContext";
 
@@ -30,25 +30,54 @@ export default function ChatScreen({ navigation, route }) {
       id: Date.now().toString(),
       text: text.trim(),
       sender: "me",
-      time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+      time: new Date().toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+      }),
     };
 
-    const updatedMessages = [newMsg, ...chatMessages];
-    setMessages(prev => ({ ...prev, [contact]: updatedMessages }));
+    // Save to context → automatically saved to AsyncStorage
+    setMessages((prev) => ({
+      ...prev,
+      [contact]: [newMsg, ...(prev[contact] || [])],
+    }));
+
     setText("");
 
-    setTimeout(() => listRef.current?.scrollToOffset({ offset: 0, animated: true }), 100);
+    setTimeout(() => {
+      listRef.current?.scrollToOffset({ offset: 0, animated: true });
+    }, 100);
   };
 
   const renderItem = ({ item }) => {
     const isMe = item.sender === "me";
     return (
-      <View style={[styles.messageRow, isMe ? styles.rowRight : styles.rowLeft]}>
-        <View style={[styles.bubble, isMe ? styles.bubbleMe : styles.bubbleOther]}>
-          <Text style={[styles.messageText, isMe ? styles.messageTextMe : styles.messageTextOther]}>
+      <View
+        style={[
+          styles.messageRow,
+          isMe ? styles.rowRight : styles.rowLeft,
+        ]}
+      >
+        <View
+          style={[
+            styles.bubble,
+            isMe ? styles.bubbleMe : styles.bubbleOther,
+          ]}
+        >
+          <Text
+            style={[
+              styles.messageText,
+              isMe ? styles.messageTextMe : styles.messageTextOther,
+            ]}
+          >
             {item.text}
           </Text>
-          <Text style={[styles.timeText, isMe ? styles.timeTextMe : styles.timeTextOther]}>
+          <Text
+            style={[
+              styles.timeText,
+              isMe ? styles.timeTextMe : styles.timeTextOther,
+            ]}
+          >
             {item.time}
           </Text>
         </View>
@@ -69,7 +98,7 @@ export default function ChatScreen({ navigation, route }) {
           <FlatList
             ref={listRef}
             data={chatMessages}
-            keyExtractor={item => item.id}
+            keyExtractor={(item) => item.id}
             renderItem={renderItem}
             contentContainerStyle={styles.listContainer}
             inverted
