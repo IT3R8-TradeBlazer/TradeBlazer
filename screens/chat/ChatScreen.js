@@ -10,6 +10,7 @@ import {
   Platform,
   TouchableWithoutFeedback,
   Keyboard,
+  Alert,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Header from "../../components/Header";
@@ -23,6 +24,32 @@ export default function ChatScreen({ navigation, route }) {
   const [text, setText] = useState("");
   const listRef = useRef(null);
 
+  // ---------------------------------------
+  // 🔥 DELETE MESSAGE FUNCTION
+  // ---------------------------------------
+  const handleDeleteMessage = (id) => {
+    Alert.alert(
+      "Delete Message",
+      "Are you sure you want to delete this message?",
+      [
+        { text: "Cancel", style: "cancel" },
+        {
+          text: "Delete",
+          style: "destructive",
+          onPress: () => {
+            setMessages((prev) => ({
+              ...prev,
+              [contact]: prev[contact].filter((msg) => msg.id !== id),
+            }));
+          },
+        },
+      ]
+    );
+  };
+
+  // ---------------------------------------
+  // SEND MESSAGE
+  // ---------------------------------------
   const sendMessage = () => {
     if (!text.trim()) return;
 
@@ -36,7 +63,6 @@ export default function ChatScreen({ navigation, route }) {
       }),
     };
 
-    // Save to context → automatically saved to AsyncStorage
     setMessages((prev) => ({
       ...prev,
       [contact]: [newMsg, ...(prev[contact] || [])],
@@ -49,39 +75,49 @@ export default function ChatScreen({ navigation, route }) {
     }, 100);
   };
 
+  // ---------------------------------------
+  // RENDER EACH MESSAGE ROW
+  // ---------------------------------------
   const renderItem = ({ item }) => {
     const isMe = item.sender === "me";
+
     return (
-      <View
-        style={[
-          styles.messageRow,
-          isMe ? styles.rowRight : styles.rowLeft,
-        ]}
+      <TouchableOpacity
+        onLongPress={() => handleDeleteMessage(item.id)}  // <--- DELETE ON LONG PRESS
+        delayLongPress={300}
       >
         <View
           style={[
-            styles.bubble,
-            isMe ? styles.bubbleMe : styles.bubbleOther,
+            styles.messageRow,
+            isMe ? styles.rowRight : styles.rowLeft,
           ]}
         >
-          <Text
+          <View
             style={[
-              styles.messageText,
-              isMe ? styles.messageTextMe : styles.messageTextOther,
+              styles.bubble,
+              isMe ? styles.bubbleMe : styles.bubbleOther,
             ]}
           >
-            {item.text}
-          </Text>
-          <Text
-            style={[
-              styles.timeText,
-              isMe ? styles.timeTextMe : styles.timeTextOther,
-            ]}
-          >
-            {item.time}
-          </Text>
+            <Text
+              style={[
+                styles.messageText,
+                isMe ? styles.messageTextMe : styles.messageTextOther,
+              ]}
+            >
+              {item.text}
+            </Text>
+
+            <Text
+              style={[
+                styles.timeText,
+                isMe ? styles.timeTextMe : styles.timeTextOther,
+              ]}
+            >
+              {item.time}
+            </Text>
+          </View>
         </View>
-      </View>
+      </TouchableOpacity>
     );
   };
 
@@ -126,10 +162,17 @@ export default function ChatScreen({ navigation, route }) {
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: "#ECF2E8" },
   content: { flex: 1 },
-  listContainer: { paddingHorizontal: 12, paddingTop: 12, paddingBottom: 8 },
+
+  listContainer: {
+    paddingHorizontal: 12,
+    paddingTop: 12,
+    paddingBottom: 8,
+  },
+
   messageRow: { marginVertical: 6, flexDirection: "row" },
   rowLeft: { justifyContent: "flex-start" },
   rowRight: { justifyContent: "flex-end" },
+
   bubble: {
     maxWidth: "80%",
     paddingVertical: 10,
@@ -140,14 +183,18 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 1,
   },
+
   bubbleOther: { backgroundColor: "#FFFFFF", borderTopLeftRadius: 4 },
   bubbleMe: { backgroundColor: "#2E5E3E", borderTopRightRadius: 4 },
+
   messageText: { fontSize: 16, lineHeight: 20 },
   messageTextOther: { color: "#2E5E3E" },
   messageTextMe: { color: "#FFFFFF" },
+
   timeText: { fontSize: 11, marginTop: 6, alignSelf: "flex-end" },
   timeTextOther: { color: "#8AA88A" },
   timeTextMe: { color: "#D6F0D7" },
+
   inputRow: {
     flexDirection: "row",
     paddingHorizontal: 12,
@@ -156,6 +203,7 @@ const styles = StyleSheet.create({
     backgroundColor: "transparent",
     paddingBottom: Platform.OS === "android" ? 30 : 10,
   },
+
   input: {
     flex: 1,
     minHeight: 40,
@@ -170,6 +218,7 @@ const styles = StyleSheet.create({
     shadowRadius: 2,
     elevation: 1,
   },
+
   sendButton: {
     marginLeft: 8,
     backgroundColor: "#2E5E3E",
@@ -179,5 +228,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
+
   sendText: { color: "#FFFFFF", fontWeight: "600" },
 });
