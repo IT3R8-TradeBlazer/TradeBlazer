@@ -1,31 +1,36 @@
-import React, { useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from "react-native";
+import React from "react";
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+} from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
 export default function SearchBar({
+  value,
+  onChangeText,
   placeholder = "Search for anything...",
-  onFocus,
   navigation,
+  showDropdown,
+  setShowDropdown,
 }) {
-  const [showDropdown, setShowDropdown] = useState(false);
-
   return (
     <View style={{ position: "relative" }}>
-      {/* Search Input */}
       <View style={styles.searchContainer}>
         <Ionicons name="search" size={20} color="#555" style={{ marginLeft: 10 }} />
+
         <TextInput
           style={styles.searchInput}
           placeholder={placeholder}
           placeholderTextColor="#888"
-          onFocus={() => {
-            setShowDropdown(true);
-            if (onFocus) onFocus(); // Optional external callback
-          }}
+          value={value}
+          onChangeText={onChangeText}
+          onFocus={() => setShowDropdown(true)}
         />
       </View>
 
-      {/* Dropdown */}
       {showDropdown && (
         <View style={styles.dropdown}>
           <TouchableOpacity
@@ -40,16 +45,32 @@ export default function SearchBar({
 
           <TouchableOpacity
             style={styles.dropdownItem}
-            onPress={() => setShowDropdown(false)}
+            onPress={() => {
+              navigation.navigate("GiftsScreen");
+              setShowDropdown(false);
+            }}
           >
             <Text style={styles.dropdownText}>Gifts</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
             style={styles.dropdownItem}
-            onPress={() => setShowDropdown(false)}
+            onPress={() => {
+              navigation.navigate("SchoolSuppliesScreen");
+              setShowDropdown(false);
+            }}
           >
             <Text style={styles.dropdownText}>School Supplies</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.dropdownItem}
+            onPress={() => {
+              navigation.navigate("AccessoriesScreen");
+              setShowDropdown(false);
+            }}
+          >
+            <Text style={styles.dropdownText}>Accessories</Text>
           </TouchableOpacity>
         </View>
       )}

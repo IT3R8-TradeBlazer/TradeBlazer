@@ -1,20 +1,26 @@
 import React from "react";
-import { View, Text, Image, StyleSheet, ScrollView, TouchableOpacity, SafeAreaView } from "react-native";
+import {
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+  SafeAreaView,
+} from "react-native";
 import Header from "../../components/Header";
 import BottomNav from "../../components/BottomNav";
 import { Ionicons } from "@expo/vector-icons";
+import { useFavorites } from "../../src/context/FavoritesContext";
 
 export default function FavoritesScreen({ navigation }) {
+  const { favorites } = useFavorites();
+
   return (
     <SafeAreaView style={styles.container}>
-
-      {/* Main Header */}
       <Header navigation={navigation} />
 
-      {/* Page Content */}
       <View style={styles.content}>
-
-        {/* Back + Title Row */}
         <View style={styles.headerRow}>
           <TouchableOpacity onPress={() => navigation.goBack()}>
             <Ionicons name="chevron-back" size={24} color="#2E5E3E" />
@@ -22,33 +28,29 @@ export default function FavoritesScreen({ navigation }) {
           <Text style={styles.headerTitle}>Favorites</Text>
         </View>
 
-        {/* Product Grid */}
         <ScrollView contentContainerStyle={styles.grid}>
-
-          {/* Item 1 */}
-          <TouchableOpacity style={styles.card}>
-            <Image
-              source={{ uri: "https://i.pinimg.com/736x/72/bb/51/72bb51b23cf78b03d532234af0e6e9ae.jpg" }}
-              style={styles.image}
-            />
-            <Text style={styles.name}>Cake with Bows</Text>
-            <Text style={styles.price}>₱600</Text>
-          </TouchableOpacity>
-
-          {/* Item 2 */}
-          <TouchableOpacity style={styles.card}>
-            <Image
-              source={{ uri: "https://i.pinimg.com/1200x/2c/82/eb/2c82ebd17b033b757144f0b0c6da9e5a.jpg" }}
-              style={styles.image}
-            />
-            <Text style={styles.name}>Ferro Rocher Bouquet</Text>
-            <Text style={styles.price}>₱1,100</Text>
-          </TouchableOpacity>
-
+          {favorites.length === 0 ? (
+            <Text style={styles.empty}>No favorites yet.</Text>
+          ) : (
+            favorites.map((item) => (
+              <TouchableOpacity
+                key={item.id}
+                style={styles.card}
+                onPress={() =>
+                  navigation.navigate("ProductDetailsScreen", {
+                    product: item,
+                  })
+                }
+              >
+                <Image source={{ uri: item.image }} style={styles.image} />
+                <Text style={styles.name}>{item.name}</Text>
+                <Text style={styles.price}>{item.price}</Text>
+              </TouchableOpacity>
+            ))
+          )}
         </ScrollView>
       </View>
 
-      {/* Bottom Navigation */}
       <BottomNav navigation={navigation} />
     </SafeAreaView>
   );
@@ -81,6 +83,13 @@ const styles = StyleSheet.create({
     gap: 10,
     marginTop: 10,
   },
+  empty: {
+    fontSize: 18,
+    color: "#666",
+    marginTop: 20,
+    textAlign: "center",
+    width: "100%",
+  },
   card: {
     backgroundColor: "white",
     width: "48%",
@@ -109,4 +118,3 @@ const styles = StyleSheet.create({
     color: "#2C4B23",
   },
 });
-

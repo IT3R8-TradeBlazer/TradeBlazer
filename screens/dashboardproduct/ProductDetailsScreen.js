@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -11,14 +11,28 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import Header from "../../components/Header";
 import BottomNav from "../../components/BottomNav";
+import { useFavorites } from "../../src/context/FavoritesContext";
 
 export default function ProductDetailsScreen({ route, navigation }) {
   const { product } = route.params;
+  const { favorites, addFavorite, removeFavorite } = useFavorites();
 
-  const [photoUri, setPhotoUri] = useState(product.image);
-  const [isFavorite, setIsFavorite] = useState(product.isFavorite || false);
+  const [photoUri] = useState(product.image);
+  const [isFavorite, setIsFavorite] = useState(false);
 
-  const toggleFavorite = () => setIsFavorite(!isFavorite);
+  useEffect(() => {
+    const exists = favorites.some((item) => item.id === product.id);
+    setIsFavorite(exists);
+  }, [favorites]);
+
+  const toggleFavorite = () => {
+    if (isFavorite) {
+      removeFavorite(product.id);
+    } else {
+      addFavorite(product);
+    }
+    setIsFavorite(!isFavorite);
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -26,7 +40,6 @@ export default function ProductDetailsScreen({ route, navigation }) {
 
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <View style={styles.box}>
-          {/* PHOTO + FAVORITE */}
           <View style={styles.photoRow}>
             <Image source={{ uri: photoUri }} style={styles.photo} />
             <TouchableOpacity onPress={toggleFavorite} style={styles.favoriteBtn}>
@@ -38,7 +51,6 @@ export default function ProductDetailsScreen({ route, navigation }) {
             </TouchableOpacity>
           </View>
 
-          {/* PRODUCT INFO (read-only) */}
           <Text style={styles.label}>Title</Text>
           <Text style={styles.info}>{product.name}</Text>
 
@@ -46,12 +58,13 @@ export default function ProductDetailsScreen({ route, navigation }) {
           <Text style={styles.info}>{product.price}</Text>
 
           <Text style={styles.label}>Description</Text>
-          <Text style={[styles.info, { minHeight: 80 }]}>{product.description || "-"}</Text>
+          <Text style={[styles.info, { minHeight: 80 }]}>
+            {product.description || "-"}
+          </Text>
 
           <Text style={styles.label}>Category</Text>
           <Text style={styles.info}>{product.category || "-"}</Text>
 
-          {/* CONTACT SELLER */}
           <TouchableOpacity
             style={styles.contactBtn}
             onPress={() =>
@@ -73,12 +86,16 @@ const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: "#ECF2E8" },
   scrollContent: { padding: 15, paddingBottom: 150 },
   box: {
-    backgroundColor: "#E6F2E6", // very light pastel green
+    backgroundColor: "#E6F2E6",
     borderRadius: 15,
     padding: 15,
     elevation: 2,
   },
-  photoRow: { flexDirection: "row", justifyContent: "space-between", alignItems: "center" },
+  photoRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
   photo: { width: "75%", height: 180, borderRadius: 15 },
   favoriteBtn: {
     marginLeft: 10,
