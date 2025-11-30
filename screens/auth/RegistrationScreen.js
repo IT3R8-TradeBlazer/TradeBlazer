@@ -1,17 +1,27 @@
-import { StyleSheet, Text, View, Image, TextInput, SafeAreaView, TouchableOpacity, ScrollView, Alert } from 'react-native';
+import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity, ScrollView, Alert } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import React, { useState } from 'react';
 import RNPickerSelect from 'react-native-picker-select';
 import buttonStyles from '../../components/SigninRegisButton'; 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function RegistrationScreen({ navigation }) {
+
+  // Form input values
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  // Stores validation error messages for each input
   const [errors, setErrors] = useState({ name: "", email: "", password: "" });
+
+  // Role = student or employee
   const [selectedRole, setSelectedRole] = useState(null);
+
+  // Department picker selection
   const [selectedDepartment, setSelectedDepartment] = useState(null);
 
+  // List of departments for the dropdown menu
   const departments = [
     { label: 'CITC', value: 'CITC' },
     { label: 'CEA', value: 'CEA' },
@@ -22,18 +32,26 @@ export default function RegistrationScreen({ navigation }) {
     { label: 'School of Medicine', value: 'School of Medicine' },
   ];
 
+  // ---------------------------
+  // VALIDATION FUNCTION
+  // ---------------------------
   const validate = () => {
     let valid = true;
     let newErrors = { name: "", email: "", password: "" };
 
+    // Name validation
     if (name.trim() === "") {
       newErrors.name = "Name cannot be empty";
       valid = false;
     }
+
+    // Email validation
     if (!email.includes("@")) {
       newErrors.email = "Email must contain '@'";
       valid = false;
     }
+
+    // Password validation
     if (password.trim() === "") {
       newErrors.password = "Password cannot be empty";
       valid = false;
@@ -41,24 +59,33 @@ export default function RegistrationScreen({ navigation }) {
       newErrors.password = "Password must be at least 6 characters";
       valid = false;
     }
+
     setErrors(newErrors);
     return valid;
   };
 
+  // ---------------------------
+  // HANDLE REGISTRATION
+  // ---------------------------
   const handleContinue = async () => {
+
+    // Check if all inputs are valid before proceeding
     if (!validate()) return;
 
+    // Make sure user chose a role
     if (!selectedRole) {
       Alert.alert("Missing Role", "Please select your role (Student or Employee).");
       return;
     }
 
+    // Make sure user selected a department
     if (!selectedDepartment) {
       Alert.alert("Missing Department", "Please select your department or college.");
       return;
     }
 
     try {
+      // Bundle user info into an object
       const userData = {
         name,
         email,
@@ -67,13 +94,16 @@ export default function RegistrationScreen({ navigation }) {
         department: selectedDepartment,
       };
 
+      // Save to local storage (acts like a temporary database)
       await AsyncStorage.setItem('userData', JSON.stringify(userData));
 
+      // Confirmation message
       Alert.alert(
         "Account Created",
         `Welcome, ${name}!`,
         [{ text: "Continue", onPress: () => navigation.navigate("SignIn") }]
       );
+
     } catch (error) {
       console.error("Error saving user data:", error);
     }
@@ -82,6 +112,8 @@ export default function RegistrationScreen({ navigation }) {
   return (
     <ScrollView style={{ flex: 1, backgroundColor: '#eBecf4' }}>
       <View style={styles.container}>
+
+        {/* Logo */}
         <View style={styles.header}>
           <Image
             source={require('../../assets/lo.png')}
@@ -93,7 +125,10 @@ export default function RegistrationScreen({ navigation }) {
         <Text style={styles.subtitle}>An online market within campus</Text>
 
         <View style={styles.form}>
-          {/* Name */}
+
+          {/* --------------------
+              NAME INPUT
+          -------------------- */}
           <View style={styles.input}>
             <Text style={styles.inputLabel}>Name</Text>
             <TextInput
@@ -103,6 +138,8 @@ export default function RegistrationScreen({ navigation }) {
               value={name}
               onChangeText={(text) => {
                 setName(text);
+
+                // Live validation
                 if (text.trim() === "") {
                   setErrors((prev) => ({ ...prev, name: "Name cannot be empty" }));
                 } else {
@@ -113,7 +150,9 @@ export default function RegistrationScreen({ navigation }) {
           </View>
           {errors.name ? <Text style={styles.errorText}>{errors.name}</Text> : null}
 
-          {/* Email */}
+          {/* --------------------
+              EMAIL INPUT
+          -------------------- */}
           <View style={styles.input}>
             <Text style={styles.inputLabel}>Email Address</Text>
             <TextInput
@@ -126,6 +165,8 @@ export default function RegistrationScreen({ navigation }) {
               value={email}
               onChangeText={(text) => {
                 setEmail(text);
+
+                // Live validation
                 if (!text.includes("@")) {
                   setErrors((prev) => ({ ...prev, email: "Email must contain '@'" }));
                 } else {
@@ -136,7 +177,9 @@ export default function RegistrationScreen({ navigation }) {
           </View>
           {errors.email ? <Text style={styles.errorText}>{errors.email}</Text> : null}
 
-          {/* Password */}
+          {/* --------------------
+              PASSWORD INPUT
+          -------------------- */}
           <View style={styles.input}>
             <Text style={styles.inputLabel}>Password</Text>
             <TextInput
@@ -147,6 +190,8 @@ export default function RegistrationScreen({ navigation }) {
               value={password}
               onChangeText={(text) => {
                 setPassword(text);
+
+                // Live validation
                 if (text.trim() === "") {
                   setErrors((prev) => ({ ...prev, password: "Password cannot be empty" }));
                 } else if (text.length < 6) {
@@ -159,8 +204,11 @@ export default function RegistrationScreen({ navigation }) {
           </View>
           {errors.password ? <Text style={styles.errorText}>{errors.password}</Text> : null}
 
-          {/* Role Selection */}
+          {/* --------------------
+              ROLE SELECTION BUTTONS
+          -------------------- */}
           <View style={styles.roleContainer}>
+            {/* Student button */}
             <TouchableOpacity onPress={() => setSelectedRole("student")}>
               <View style={[
                 buttonStyles.btn,
@@ -177,6 +225,7 @@ export default function RegistrationScreen({ navigation }) {
 
             <Text style={styles.orText}>or</Text>
 
+            {/* Employee button */}
             <TouchableOpacity onPress={() => setSelectedRole("employee")}>
               <View style={[
                 buttonStyles.btn,
@@ -192,17 +241,16 @@ export default function RegistrationScreen({ navigation }) {
             </TouchableOpacity>
           </View>
 
-          {/* Department Dropdown */}
+          {/* --------------------
+              DEPARTMENT DROPDOWN
+          -------------------- */}
           <View style={styles.input}>
             <Text style={styles.inputLabel}>Department</Text>
             <View style={styles.dropdownContainer}>
               <RNPickerSelect
                 onValueChange={(value) => setSelectedDepartment(value)}
                 items={departments}
-                placeholder={{
-                  label: 'Select your department...',
-                  value: null,
-                }}
+                placeholder={{ label: 'Select your department...', value: null }}
                 style={{
                   inputIOS: styles.dropdownInput,
                   inputAndroid: styles.dropdownInput,
@@ -212,7 +260,9 @@ export default function RegistrationScreen({ navigation }) {
             </View>
           </View>
 
-          {/* Submit */}
+          {/* --------------------
+              SUBMIT BUTTON
+          -------------------- */}
           <View style={styles.formAction}>
             <TouchableOpacity onPress={handleContinue}>
               <View style={buttonStyles.btn}>
@@ -221,10 +271,12 @@ export default function RegistrationScreen({ navigation }) {
             </TouchableOpacity>
           </View>
 
+          {/* Navigate to Sign In */}
           <Text style={styles.formFooter}>Already have an account?</Text>
           <TouchableOpacity onPress={() => navigation.navigate("SignIn")}>
             <Text style={styles.reg}>Sign In</Text>
           </TouchableOpacity>
+
         </View>
       </View>
     </ScrollView>

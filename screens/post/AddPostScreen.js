@@ -15,24 +15,31 @@ import { Ionicons } from "@expo/vector-icons";
 import Header from "../../components/Header";
 import BottomNav from "../../components/BottomNav";
 import { getUser } from "../../utils/storage";
-import { PostsContext } from "../../context/PostsContext"; // import context
+import { PostsContext } from "../../context/PostsContext"; // Import global post context
 
 export default function AddPostScreen({ navigation }) {
+  // Local state for the new post fields
   const [photoUri, setPhotoUri] = useState(null);
   const [title, setTitle] = useState("");
   const [price, setPrice] = useState("");
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("");
 
-  const { addPost } = useContext(PostsContext); // get addPost from context
+  // Access the addPost function from PostsContext
+  const { addPost } = useContext(PostsContext);
 
+  // -----------------------------------------------------------
+  // Open device image picker to choose a product photo
+  // -----------------------------------------------------------
   const pickImage = async () => {
+    // Request gallery permission
     const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (permission.status !== "granted") {
       Alert.alert("Permission required", "Please allow photo access.");
       return;
     }
 
+    // Launch image picker
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
@@ -40,20 +47,27 @@ export default function AddPostScreen({ navigation }) {
       quality: 1,
     });
 
+    // Save chosen image URI
     if (!result.canceled) setPhotoUri(result.assets[0].uri);
   };
 
+  // -----------------------------------------------------------
+  // Create a post object and save it using context
+  // -----------------------------------------------------------
   const handlePost = async () => {
+    // Basic validation
     if (!title.trim()) {
       Alert.alert("Missing info", "Please enter a title for your product.");
       return;
     }
 
+    // Get current logged-in user from storage
     const user = await getUser();
 
+    // Build the post object
     const newProduct = {
-      id: Date.now(),
-      userId: user?.id,
+      id: Date.now(), // Unique ID based on timestamp
+      userId: user?.id, // Attach the user who posted it
       name: title,
       price: price ? `₱${price}` : "₱0",
       image:
@@ -62,9 +76,10 @@ export default function AddPostScreen({ navigation }) {
       category,
     };
 
-    await addPost(newProduct); // adds to context & storage
+    // Save the post using context + AsyncStorage
+    await addPost(newProduct);
 
-    // Show popup after posting
+    // Success popup
     Alert.alert("Success", "Posted", [
       {
         text: "OK",
@@ -73,20 +88,30 @@ export default function AddPostScreen({ navigation }) {
     ]);
   };
 
+  // -----------------------------------------------------------
+  // UI LAYOUT
+  // -----------------------------------------------------------
   return (
     <SafeAreaView style={styles.container}>
+      {/* Header component */}
       <Header navigation={navigation} title="Add Post" />
 
+      {/* Scrollable content */}
       <ScrollView contentContainerStyle={[styles.content, { paddingBottom: 120 }]}>
+
+        {/* Photo picker */}
         <Text style={styles.inputLabel}>Add photo</Text>
         <TouchableOpacity style={styles.photoBox} onPress={pickImage}>
           {photoUri ? (
+            // Show preview if selected
             <Image source={{ uri: photoUri }} style={styles.previewImage} />
           ) : (
+            // Show plus icon if no photo selected
             <Ionicons name="add" size={32} color="#2E5E3E" />
           )}
         </TouchableOpacity>
 
+        {/* Title input */}
         <Text style={styles.inputLabel}>Title</Text>
         <TextInput
           style={styles.input}
@@ -96,6 +121,7 @@ export default function AddPostScreen({ navigation }) {
           onChangeText={setTitle}
         />
 
+        {/* Price input */}
         <Text style={styles.inputLabel}>Price</Text>
         <TextInput
           style={styles.input}
@@ -106,6 +132,7 @@ export default function AddPostScreen({ navigation }) {
           onChangeText={setPrice}
         />
 
+        {/* Description input */}
         <Text style={styles.inputLabel}>Description</Text>
         <TextInput
           style={[styles.input, styles.description]}
@@ -116,6 +143,7 @@ export default function AddPostScreen({ navigation }) {
           onChangeText={setDescription}
         />
 
+        {/* Category input */}
         <Text style={styles.inputLabel}>Category</Text>
         <TextInput
           style={styles.input}
@@ -125,19 +153,25 @@ export default function AddPostScreen({ navigation }) {
           onChangeText={setCategory}
         />
 
+        {/* Submit post */}
         <TouchableOpacity style={styles.postButton} onPress={handlePost}>
           <Text style={styles.postText}>Post</Text>
         </TouchableOpacity>
       </ScrollView>
 
+      {/* Bottom navigation bar */}
       <BottomNav navigation={navigation} />
     </SafeAreaView>
   );
 }
 
+// -----------------------------------------------------------
+// STYLES
+// -----------------------------------------------------------
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: "#ECF2E8" },
   content: { paddingHorizontal: 20, paddingVertical: 20 },
+
   inputLabel: {
     marginTop: 10,
     marginBottom: 6,
@@ -145,6 +179,7 @@ const styles = StyleSheet.create({
     color: "#000",
     fontSize: 14,
   },
+
   photoBox: {
     width: "100%",
     height: 160,
@@ -155,7 +190,13 @@ const styles = StyleSheet.create({
     marginBottom: 12,
     overflow: "hidden",
   },
-  previewImage: { width: "100%", height: "100%", resizeMode: "cover" },
+
+  previewImage: {
+    width: "100%",
+    height: "100%",
+    resizeMode: "cover",
+  },
+
   input: {
     backgroundColor: "#D9D9D9",
     borderRadius: 4,
@@ -165,8 +206,14 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: "#000",
   },
+
   description: { height: 80, textAlignVertical: "top" },
-  postButton: { alignSelf: "center", marginTop: 50 },
+
+  postButton: {
+    alignSelf: "center",
+    marginTop: 50,
+  },
+
   postText: {
     color: "#2E5E3E",
     fontWeight: "600",

@@ -16,11 +16,13 @@ import { Ionicons } from "@expo/vector-icons";
 import { PostsContext } from "../../context/PostsContext";
 
 export default function ProfileScreen({ navigation }) {
-  const [user, setUser] = useState(null);
-  const [menuVisible, setMenuVisible] = useState(null);
+  const [user, setUser] = useState(null);  
+  const [menuVisible, setMenuVisible] = useState(null);  
 
+  // Access all posts and the delete function from PostsContext
   const { posts, deletePost } = useContext(PostsContext);
 
+  // Load the saved user data from async storage when the screen opens
   useEffect(() => {
     const loadUser = async () => {
       const currentUser = await getUser();
@@ -29,6 +31,7 @@ export default function ProfileScreen({ navigation }) {
     loadUser();
   }, []);
 
+  // Show a loading screen while user data is being fetched
   if (!user) {
     return (
       <SafeAreaView style={styles.center}>
@@ -37,11 +40,13 @@ export default function ProfileScreen({ navigation }) {
     );
   }
 
-  // Filter posts that belong to this user and sort newest first
+  // Get only the posts created by this user
+  // Also sort them so the newest posts appear first
   const myPosts = posts
     .filter((p) => p.userId === user?.id)
     .sort((a, b) => b.id - a.id);
 
+  // Ask for confirmation before deleting a post
   const confirmDelete = (postId) => {
     Alert.alert(
       "Delete Post",
@@ -59,16 +64,21 @@ export default function ProfileScreen({ navigation }) {
 
   return (
     <SafeAreaView style={styles.container}>
+      {/* Main app header */}
       <Header navigation={navigation} title="TradeBlazer" />
 
       <ScrollView contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 120 }}>
-        {/* Profile Info */}
+
+        {/* USER PROFILE INFO */}
         <View style={styles.profileSection}>
+          {/* User image */}
           <Image
             key={user.photo}
             source={{ uri: user.photo || undefined }}
             style={styles.profilePic}
           />
+
+          {/* User name, department, and role */}
           <Text style={styles.name}>{user.name}</Text>
           <Text style={styles.subtext}>{user.department}</Text>
           <Text style={styles.subtext}>
@@ -76,7 +86,7 @@ export default function ProfileScreen({ navigation }) {
           </Text>
         </View>
 
-        {/* About & Contact */}
+        {/* ABOUT & CONTACT SECTION */}
         <View style={styles.infoSection}>
           <Text style={styles.label}>About</Text>
           <Text>{user.address || "Cagayan de Oro, Philippines"}</Text>
@@ -86,22 +96,30 @@ export default function ProfileScreen({ navigation }) {
           <Text>{user.phone || "N/A"}</Text>
         </View>
 
-        {/* User Posts */}
+        {/* USER POSTS SECTION */}
         <View style={styles.postsSection}>
           <Text style={styles.screenTitle}>My Posts</Text>
+
+          {/* If no posts exist */}
           {myPosts.length === 0 && (
             <Text style={{ marginTop: 10, textAlign: "center" }}>No posts yet</Text>
           )}
 
+          {/* Render each post */}
           {myPosts.map((post) => (
             <View key={post.id} style={styles.card}>
+
+              {/* Post image */}
               <Image source={{ uri: post.image }} style={styles.image} />
+
+              {/* Post header: name, price, and options menu */}
               <View style={styles.cardHeader}>
                 <View>
                   <Text style={styles.productName}>{post.name}</Text>
                   <Text style={styles.productPrice}>{post.price}</Text>
                 </View>
 
+                {/* Button to toggle the options menu */}
                 <TouchableOpacity
                   onPress={() =>
                     setMenuVisible(menuVisible === post.id ? null : post.id)
@@ -111,8 +129,11 @@ export default function ProfileScreen({ navigation }) {
                 </TouchableOpacity>
               </View>
 
+              {/* WHEN MENU IS OPEN — Edit / Delete options */}
               {menuVisible === post.id && (
                 <View style={styles.menu}>
+                  
+                  {/* Edit button */}
                   <TouchableOpacity
                     style={styles.menuItem}
                     onPress={() => {
@@ -123,6 +144,7 @@ export default function ProfileScreen({ navigation }) {
                     <Text style={styles.menuText}>Edit</Text>
                   </TouchableOpacity>
 
+                  {/* Delete button */}
                   <TouchableOpacity
                     style={styles.menuItem}
                     onPress={() => confirmDelete(post.id)}
@@ -136,6 +158,7 @@ export default function ProfileScreen({ navigation }) {
         </View>
       </ScrollView>
 
+      {/* Bottom navigation bar */}
       <BottomNav navigation={navigation} />
     </SafeAreaView>
   );
@@ -144,6 +167,7 @@ export default function ProfileScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: "#ECF2E8" },
   center: { flex: 1, alignItems: "center", justifyContent: "center" },
+
   profileSection: { alignItems: "center", marginTop: 20 },
   profilePic: { width: 100, height: 100, borderRadius: 50, backgroundColor: "#ccc" },
   name: { fontSize: 20, fontWeight: "bold", color: "#2E5E3E" },

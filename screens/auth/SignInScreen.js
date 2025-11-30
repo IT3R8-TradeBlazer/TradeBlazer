@@ -18,11 +18,18 @@ import buttonStyles from '../../components/SigninRegisButton';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function SignInScreen({ navigation }) {
+  // Form fields
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  // Validation error messages
   const [errors, setErrors] = useState({ name: "", email: "", password: "" });
 
+  // ---------------------------------------------------------
+  // VALIDATION FUNCTION
+  // Checks if the inputs are valid before signing in
+  // ---------------------------------------------------------
   const validate = () => {
     let valid = true;
     let newErrors = { name: "", email: "", password: "" };
@@ -47,28 +54,38 @@ export default function SignInScreen({ navigation }) {
     return valid;
   };
 
+  // ---------------------------------------------------------
+  // SIGN IN FUNCTION
+  // Verifies user input against saved user data
+  // ---------------------------------------------------------
   const handleContinue = async () => {
-    if (!validate()) return;
+    if (!validate()) return; // Stop if invalid
 
     try {
+      // Get saved user data from AsyncStorage
       const storedUser = await AsyncStorage.getItem('userData');
+
       if (!storedUser) {
         Alert.alert("No account found", "Please register first.");
         return;
       }
 
-      const { name: storedName, email: storedEmail, password: storedPassword } = JSON.parse(storedUser);
+      // Convert stored string back to object
+      const { name: storedName, email: storedEmail, password: storedPassword } =
+        JSON.parse(storedUser);
 
+      // Check if email + password match
       if (email === storedEmail && password === storedPassword) {
         Alert.alert("Login successful!", `Welcome back, ${storedName}!`, [
           {
             text: "Continue",
             onPress: () =>
+              // Reset navigation history so the user can't go back to SignIn
               navigation.reset({
                 index: 0,
-                routes: [{ name: "Main" }], // <-- FIXED: cannot go back to SignIn
-              })
-          }
+                routes: [{ name: "Main" }],
+              }),
+          },
         ]);
       } else {
         Alert.alert("Invalid credentials", "Your email or password is incorrect.");
@@ -80,16 +97,16 @@ export default function SignInScreen({ navigation }) {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#eBecf4' }}>
+      {/* Moves UI upward when keyboard appears */}
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={{ flex: 1 }}
       >
-        <ScrollView
-          contentContainerStyle={{ flexGrow: 1 }}
-          keyboardShouldPersistTaps="handled"
-        >
+        <ScrollView contentContainerStyle={{ flexGrow: 1 }} keyboardShouldPersistTaps="handled">
           <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <View style={styles.container}>
+
+              {/* Logo */}
               <View style={styles.header}>
                 <Image
                   source={require('../../assets/lo.png')}
@@ -100,8 +117,10 @@ export default function SignInScreen({ navigation }) {
               <Text style={styles.title}>Sign In to TradeBlazer</Text>
               <Text style={styles.subtitle}>An online market within campus</Text>
 
+              {/* ---------------------- FORM ---------------------- */}
               <View style={styles.form}>
-                {/* Name */}
+
+                {/* Name Field */}
                 <View style={styles.input}>
                   <Text style={styles.inputLabel}>Name</Text>
                   <TextInput
@@ -111,22 +130,20 @@ export default function SignInScreen({ navigation }) {
                     value={name}
                     onChangeText={(text) => {
                       setName(text);
-                      if (text.trim() === "") {
-                        setErrors((prev) => ({ ...prev, name: "Name cannot be empty" }));
-                      } else {
-                        setErrors((prev) => ({ ...prev, name: "" }));
-                      }
+                      setErrors((prev) => ({
+                        ...prev,
+                        name: text.trim() === "" ? "Name cannot be empty" : "",
+                      }));
                     }}
                   />
                 </View>
                 {errors.name ? <Text style={styles.errorText}>{errors.name}</Text> : null}
 
-                {/* Email */}
+                {/* Email Field */}
                 <View style={styles.input}>
                   <Text style={styles.inputLabel}>Email Address</Text>
                   <TextInput
                     autoCapitalize="none"
-                    autoCorrect={false}
                     keyboardType="email-address"
                     placeholder="text@sample.com"
                     placeholderTextColor="#6b7288"
@@ -134,17 +151,16 @@ export default function SignInScreen({ navigation }) {
                     value={email}
                     onChangeText={(text) => {
                       setEmail(text);
-                      if (!text.includes("@")) {
-                        setErrors((prev) => ({ ...prev, email: "Email must contain '@'" }));
-                      } else {
-                        setErrors((prev) => ({ ...prev, email: "" }));
-                      }
+                      setErrors((prev) => ({
+                        ...prev,
+                        email: !text.includes("@") ? "Email must contain '@'" : "",
+                      }));
                     }}
                   />
                 </View>
                 {errors.email ? <Text style={styles.errorText}>{errors.email}</Text> : null}
 
-                {/* Password */}
+                {/* Password Field */}
                 <View style={styles.input}>
                   <Text style={styles.inputLabel}>Password</Text>
                   <TextInput
@@ -155,13 +171,15 @@ export default function SignInScreen({ navigation }) {
                     value={password}
                     onChangeText={(text) => {
                       setPassword(text);
-                      if (text.trim() === "") {
-                        setErrors((prev) => ({ ...prev, password: "Password cannot be empty" }));
-                      } else if (text.length < 6) {
-                        setErrors((prev) => ({ ...prev, password: "Password must be at least 6 characters" }));
-                      } else {
-                        setErrors((prev) => ({ ...prev, password: "" }));
-                      }
+                      setErrors((prev) => ({
+                        ...prev,
+                        password:
+                          text.trim() === ""
+                            ? "Password cannot be empty"
+                            : text.length < 6
+                            ? "Password must be at least 6 characters"
+                            : "",
+                      }));
                     }}
                   />
                 </View>
@@ -176,11 +194,12 @@ export default function SignInScreen({ navigation }) {
                   </TouchableOpacity>
                 </View>
 
-                {/* Register link */}
+                {/* Registration Link */}
                 <Text style={styles.formFooter}>Don't have an account?</Text>
                 <TouchableOpacity onPress={() => navigation.navigate("RegistrationScreen")}>
                   <Text style={styles.reg}>Register</Text>
                 </TouchableOpacity>
+
               </View>
             </View>
           </TouchableWithoutFeedback>
