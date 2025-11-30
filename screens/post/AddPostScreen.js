@@ -15,12 +15,10 @@ import { Ionicons } from "@expo/vector-icons";
 import Header from "../../components/Header";
 import BottomNav from "../../components/BottomNav";
 import { getUser } from "../../utils/storage";
-import { PostsContext } from "../../context/PostsContext"; // Import global post context
+import { PostsContext } from "../../context/PostsContext";
 import CustomAlert from "../../components/CustomAlert";
 
-
 export default function AddPostScreen({ navigation }) {
-  // Local state for the new post fields
   const [photoUri, setPhotoUri] = useState(null);
   const [title, setTitle] = useState("");
   const [price, setPrice] = useState("");
@@ -30,22 +28,18 @@ export default function AddPostScreen({ navigation }) {
   const [alertTitle, setAlertTitle] = useState("");
   const [alertMessage, setAlertMessage] = useState("");
 
+  // 🔹 Added to manage redirect vs. staying on page
+  const [isSuccess, setIsSuccess] = useState(false);
 
-  // Access the addPost function from PostsContext
   const { addPost } = useContext(PostsContext);
 
-  // -----------------------------------------------------------
-  // Open device image picker to choose a product photo
-  // -----------------------------------------------------------
   const pickImage = async () => {
-    // Request gallery permission
     const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (permission.status !== "granted") {
       Alert.alert("Permission required", "Please allow photo access.");
       return;
     }
 
-    // Launch image picker
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
@@ -53,16 +47,12 @@ export default function AddPostScreen({ navigation }) {
       quality: 1,
     });
 
-    // Save chosen image URI
     if (!result.canceled) setPhotoUri(result.assets[0].uri);
   };
 
-  // -----------------------------------------------------------
-  // Create a post object and save it using context
-  // -----------------------------------------------------------
   const handlePost = async () => {
-  // Validation
     if (!photoUri) {
+      setIsSuccess(false);
       setAlertTitle("Missing Photo");
       setAlertMessage("Please upload an image of your product.");
       setAlertVisible(true);
@@ -70,6 +60,7 @@ export default function AddPostScreen({ navigation }) {
     }
 
     if (!title.trim()) {
+      setIsSuccess(false);
       setAlertTitle("Missing Title");
       setAlertMessage("Please enter a product title.");
       setAlertVisible(true);
@@ -77,6 +68,7 @@ export default function AddPostScreen({ navigation }) {
     }
 
     if (!price.trim()) {
+      setIsSuccess(false);
       setAlertTitle("Missing Price");
       setAlertMessage("Please enter a price.");
       setAlertVisible(true);
@@ -84,6 +76,7 @@ export default function AddPostScreen({ navigation }) {
     }
 
     if (!description.trim()) {
+      setIsSuccess(false);
       setAlertTitle("Missing Description");
       setAlertMessage("Please describe your product.");
       setAlertVisible(true);
@@ -91,16 +84,15 @@ export default function AddPostScreen({ navigation }) {
     }
 
     if (!category.trim()) {
+      setIsSuccess(false);
       setAlertTitle("Missing Category");
       setAlertMessage("Please enter a product category.");
       setAlertVisible(true);
       return;
     }
 
-    // Get current logged-in user
     const user = await getUser();
 
-    // Build the post object
     const newProduct = {
       id: Date.now(),
       userId: user?.id,
@@ -111,52 +103,41 @@ export default function AddPostScreen({ navigation }) {
       category,
     };
 
-    // Save post
     await addPost(newProduct);
 
-    // Show success alert
+    // 🔹 Updated success handling (navigation done only after user presses OK)
+    setIsSuccess(true);
     setAlertTitle("Success");
     setAlertMessage("Your product has been posted!");
     setAlertVisible(true);
   };
 
-
-  // -----------------------------------------------------------
-  // UI LAYOUT
-  // -----------------------------------------------------------
   return (
     <SafeAreaView style={styles.container}>
-
       <CustomAlert
         visible={alertVisible}
         title={alertTitle}
         message={alertMessage}
         onClose={() => {
           setAlertVisible(false);
-          navigation.navigate("Home"); // ← navigate ONLY when user taps OK
+          if (isSuccess) {
+            navigation.navigate("Home");
+          }
         }}
       />
 
-
-      {/* Header component */}
       <Header navigation={navigation} title="Add Post" />
 
-      {/* Scrollable content */}
       <ScrollView contentContainerStyle={[styles.content, { paddingBottom: 120 }]}>
-
-        {/* Photo picker */}
         <Text style={styles.inputLabel}>Add photo</Text>
         <TouchableOpacity style={styles.photoBox} onPress={pickImage}>
           {photoUri ? (
-            // Show preview if selected
             <Image source={{ uri: photoUri }} style={styles.previewImage} />
           ) : (
-            // Show plus icon if no photo selected
             <Ionicons name="add" size={32} color="#2E5E3E" />
           )}
         </TouchableOpacity>
 
-        {/* Title input */}
         <Text style={styles.inputLabel}>Title</Text>
         <TextInput
           style={styles.input}
@@ -166,7 +147,6 @@ export default function AddPostScreen({ navigation }) {
           onChangeText={setTitle}
         />
 
-        {/* Price input */}
         <Text style={styles.inputLabel}>Price</Text>
         <TextInput
           style={styles.input}
@@ -177,7 +157,6 @@ export default function AddPostScreen({ navigation }) {
           onChangeText={setPrice}
         />
 
-        {/* Description input */}
         <Text style={styles.inputLabel}>Description</Text>
         <TextInput
           style={[styles.input, styles.description]}
@@ -188,7 +167,6 @@ export default function AddPostScreen({ navigation }) {
           onChangeText={setDescription}
         />
 
-        {/* Category input */}
         <Text style={styles.inputLabel}>Category</Text>
         <TextInput
           style={styles.input}
@@ -198,21 +176,16 @@ export default function AddPostScreen({ navigation }) {
           onChangeText={setCategory}
         />
 
-        {/* Submit post */}
         <TouchableOpacity style={styles.postButton} onPress={handlePost}>
           <Text style={styles.postText}>Post</Text>
         </TouchableOpacity>
       </ScrollView>
 
-      {/* Bottom navigation bar */}
       <BottomNav navigation={navigation} />
     </SafeAreaView>
   );
 }
 
-// -----------------------------------------------------------
-// STYLES
-// -----------------------------------------------------------
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: "#ECF2E8" },
   content: { paddingHorizontal: 20, paddingVertical: 20 },
