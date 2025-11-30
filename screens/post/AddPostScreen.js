@@ -16,6 +16,8 @@ import Header from "../../components/Header";
 import BottomNav from "../../components/BottomNav";
 import { getUser } from "../../utils/storage";
 import { PostsContext } from "../../context/PostsContext"; // Import global post context
+import CustomAlert from "../../components/CustomAlert";
+
 
 export default function AddPostScreen({ navigation }) {
   // Local state for the new post fields
@@ -24,6 +26,10 @@ export default function AddPostScreen({ navigation }) {
   const [price, setPrice] = useState("");
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("");
+  const [alertVisible, setAlertVisible] = useState(false);
+  const [alertTitle, setAlertTitle] = useState("");
+  const [alertMessage, setAlertMessage] = useState("");
+
 
   // Access the addPost function from PostsContext
   const { addPost } = useContext(PostsContext);
@@ -55,44 +61,83 @@ export default function AddPostScreen({ navigation }) {
   // Create a post object and save it using context
   // -----------------------------------------------------------
   const handlePost = async () => {
-    // Basic validation
-    if (!title.trim()) {
-      Alert.alert("Missing info", "Please enter a title for your product.");
+  // Validation
+    if (!photoUri) {
+      setAlertTitle("Missing Photo");
+      setAlertMessage("Please upload an image of your product.");
+      setAlertVisible(true);
       return;
     }
 
-    // Get current logged-in user from storage
+    if (!title.trim()) {
+      setAlertTitle("Missing Title");
+      setAlertMessage("Please enter a product title.");
+      setAlertVisible(true);
+      return;
+    }
+
+    if (!price.trim()) {
+      setAlertTitle("Missing Price");
+      setAlertMessage("Please enter a price.");
+      setAlertVisible(true);
+      return;
+    }
+
+    if (!description.trim()) {
+      setAlertTitle("Missing Description");
+      setAlertMessage("Please describe your product.");
+      setAlertVisible(true);
+      return;
+    }
+
+    if (!category.trim()) {
+      setAlertTitle("Missing Category");
+      setAlertMessage("Please enter a product category.");
+      setAlertVisible(true);
+      return;
+    }
+
+    // Get current logged-in user
     const user = await getUser();
 
     // Build the post object
     const newProduct = {
-      id: Date.now(), // Unique ID based on timestamp
-      userId: user?.id, // Attach the user who posted it
+      id: Date.now(),
+      userId: user?.id,
       name: title,
-      price: price ? `₱${price}` : "₱0",
-      image:
-        photoUri || "https://via.placeholder.com/200x200.png?text=New+Product",
+      price: `₱${price}`,
+      image: photoUri,
       description,
       category,
     };
 
-    // Save the post using context + AsyncStorage
+    // Save post
     await addPost(newProduct);
 
-    // Success popup
-    Alert.alert("Success", "Posted", [
-      {
-        text: "OK",
-        onPress: () => navigation.navigate("Home"),
-      },
-    ]);
+    // Show success alert
+    setAlertTitle("Success");
+    setAlertMessage("Your product has been posted!");
+    setAlertVisible(true);
   };
+
 
   // -----------------------------------------------------------
   // UI LAYOUT
   // -----------------------------------------------------------
   return (
     <SafeAreaView style={styles.container}>
+
+      <CustomAlert
+        visible={alertVisible}
+        title={alertTitle}
+        message={alertMessage}
+        onClose={() => {
+          setAlertVisible(false);
+          navigation.navigate("Home"); // ← navigate ONLY when user taps OK
+        }}
+      />
+
+
       {/* Header component */}
       <Header navigation={navigation} title="Add Post" />
 
