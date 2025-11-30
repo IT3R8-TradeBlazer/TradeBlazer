@@ -37,6 +37,18 @@ export default function RegistrationScreen({ navigation }) {
     { label: 'School of Medicine', value: 'School of Medicine' },
   ];
 
+  //State for user agreement
+  const [isAgreed, setIsAgreed] = useState(false);
+
+  // Show agreement modal
+  const [showAgreementModal, setShowAgreementModal] = useState(false);
+
+  const agreementText =
+    "This app is solely for advertising USTP CDO Trailblazers' products and services.\n\n" +
+    "No in-app purchases are made inside the application.\n" +
+    "All transactions must be done via chat and meet-ups inside the USTP CDO campus.\n\n" +
+    "By continuing, you agree to follow these terms.";
+
   // ---------------------------
   // VALIDATION FUNCTION
   // ---------------------------
@@ -44,19 +56,14 @@ export default function RegistrationScreen({ navigation }) {
     let valid = true;
     let newErrors = { name: "", email: "", password: "" };
 
-    // Name validation
     if (name.trim() === "") {
       newErrors.name = "Name cannot be empty";
       valid = false;
     }
-
-    // Email validation
     if (!email.includes("@")) {
       newErrors.email = "Email must contain '@'";
       valid = false;
     }
-
-    // Password validation
     if (password.trim() === "") {
       newErrors.password = "Password cannot be empty";
       valid = false;
@@ -73,11 +80,7 @@ export default function RegistrationScreen({ navigation }) {
   // HANDLE REGISTRATION
   // ---------------------------
   const handleContinue = async () => {
-
-    // Check if all inputs are valid before proceeding
     if (!validate()) return;
-
-    // Make sure user chose a role
     if (!selectedRole) {
       setIsSuccess(false);
       setAlertTitle("Missing Role");
@@ -85,8 +88,6 @@ export default function RegistrationScreen({ navigation }) {
       setAlertVisible(true);
       return;
     }
-
-    // Make sure user selected a department
     if (!selectedDepartment) {
       setIsSuccess(false);
       setAlertTitle("Missing Department");
@@ -94,26 +95,21 @@ export default function RegistrationScreen({ navigation }) {
       setAlertVisible(true);
       return;
     }
+    if (!isAgreed) {
+      setIsSuccess(false);
+      setAlertTitle("Agreement Required");
+      setAlertMessage("Please read and agree to the terms before continuing.");
+      setAlertVisible(true);
+      return;
+    }
 
     try {
-      // Bundle user info into an object
-      const userData = {
-        name,
-        email,
-        password,
-        role: selectedRole,
-        department: selectedDepartment,
-      };
-
-      // Save to local storage (acts like a temporary database)
+      const userData = { name, email, password, role: selectedRole, department: selectedDepartment };
       await AsyncStorage.setItem('userData', JSON.stringify(userData));
-
-      // Confirmation message
       setIsSuccess(true);
       setAlertTitle("Account Created");
       setAlertMessage(`Welcome, ${name}!`);
       setAlertVisible(true);
-
     } catch (error) {
       console.error("Error saving user data:", error);
     }
@@ -126,33 +122,33 @@ export default function RegistrationScreen({ navigation }) {
         title={alertTitle}
         message={alertMessage}
         success={isSuccess}
-        autoClose={isSuccess}  // auto-close for successful registration
+        autoClose={isSuccess}
         onClose={() => {
           setAlertVisible(false);
-          if (isSuccess) {
-            navigation.navigate("SignIn");
-          }
+          if (isSuccess) navigation.navigate("SignIn");
         }}
       />
 
-      <View style={styles.container}>
+      {/* Agreement Modal */}
+      <CustomAlert
+        visible={showAgreementModal}
+        title="User Agreement"
+        message={agreementText}
+        success={true}
+        onClose={() => setShowAgreementModal(false)}
+      />
 
+      <View style={styles.container}>
         {/* Logo */}
         <View style={styles.header}>
-          <Image
-            source={require('../../assets/lo.png')}
-            style={styles.headerImg}
-          />
+          <Image source={require('../../assets/lo.png')} style={styles.headerImg} />
         </View>
 
         <Text style={styles.title}>Register to TradeBlazer</Text>
         <Text style={styles.subtitle}>An online market within campus</Text>
 
         <View style={styles.form}>
-
-          {/* --------------------
-              NAME INPUT
-          -------------------- */}
+          {/* Input Fields */}
           <View style={styles.input}>
             <Text style={styles.inputLabel}>Name</Text>
             <TextInput
@@ -160,23 +156,11 @@ export default function RegistrationScreen({ navigation }) {
               placeholderTextColor='#6b7288'
               style={styles.inputControl}
               value={name}
-              onChangeText={(text) => {
-                setName(text);
-
-                // Live validation
-                if (text.trim() === "") {
-                  setErrors((prev) => ({ ...prev, name: "Name cannot be empty" }));
-                } else {
-                  setErrors((prev) => ({ ...prev, name: "" }));
-                }
-              }}
+              onChangeText={(text) => setName(text)}
             />
           </View>
           {errors.name ? <Text style={styles.errorText}>{errors.name}</Text> : null}
 
-          {/* --------------------
-              EMAIL INPUT
-          -------------------- */}
           <View style={styles.input}>
             <Text style={styles.inputLabel}>Email Address</Text>
             <TextInput
@@ -187,23 +171,11 @@ export default function RegistrationScreen({ navigation }) {
               placeholderTextColor='#6b7288'
               style={styles.inputControl}
               value={email}
-              onChangeText={(text) => {
-                setEmail(text);
-
-                // Live validation
-                if (!text.includes("@")) {
-                  setErrors((prev) => ({ ...prev, email: "Email must contain '@'" }));
-                } else {
-                  setErrors((prev) => ({ ...prev, email: "" }));
-                }
-              }}
+              onChangeText={(text) => setEmail(text)}
             />
           </View>
           {errors.email ? <Text style={styles.errorText}>{errors.email}</Text> : null}
 
-          {/* --------------------
-              PASSWORD INPUT
-          -------------------- */}
           <View style={styles.input}>
             <Text style={styles.inputLabel}>Password</Text>
             <TextInput
@@ -212,62 +184,27 @@ export default function RegistrationScreen({ navigation }) {
               placeholderTextColor='#6b7288'
               style={styles.inputControl}
               value={password}
-              onChangeText={(text) => {
-                setPassword(text);
-
-                // Live validation
-                if (text.trim() === "") {
-                  setErrors((prev) => ({ ...prev, password: "Password cannot be empty" }));
-                } else if (text.length < 6) {
-                  setErrors((prev) => ({ ...prev, password: "Password must be at least 6 characters" }));
-                } else {
-                  setErrors((prev) => ({ ...prev, password: "" }));
-                }
-              }}
+              onChangeText={(text) => setPassword(text)}
             />
           </View>
           {errors.password ? <Text style={styles.errorText}>{errors.password}</Text> : null}
 
-          {/* --------------------
-              ROLE SELECTION BUTTONS
-          -------------------- */}
+          {/* Role */}
           <View style={styles.roleContainer}>
-            {/* Student button */}
             <TouchableOpacity onPress={() => setSelectedRole("student")}>
-              <View style={[
-                buttonStyles.btn,
-                selectedRole === "student" ? buttonStyles.btnActive : buttonStyles.btnInactive
-              ]}>
-                <Text style={[
-                  buttonStyles.btnText,
-                  selectedRole === "student" ? buttonStyles.textActive : buttonStyles.textInactive
-                ]}>
-                  Student
-                </Text>
+              <View style={[buttonStyles.btn, selectedRole === "student" ? buttonStyles.btnActive : buttonStyles.btnInactive]}>
+                <Text style={[buttonStyles.btnText, selectedRole === "student" ? buttonStyles.textActive : buttonStyles.textInactive]}>Student</Text>
               </View>
             </TouchableOpacity>
-
             <Text style={styles.orText}>or</Text>
-
-            {/* Employee button */}
             <TouchableOpacity onPress={() => setSelectedRole("employee")}>
-              <View style={[
-                buttonStyles.btn,
-                selectedRole === "employee" ? buttonStyles.btnActive : buttonStyles.btnInactive
-              ]}>
-                <Text style={[
-                  buttonStyles.btnText,
-                  selectedRole === "employee" ? buttonStyles.textActive : buttonStyles.textInactive
-                ]}>
-                  Employee
-                </Text>
+              <View style={[buttonStyles.btn, selectedRole === "employee" ? buttonStyles.btnActive : buttonStyles.btnInactive]}>
+                <Text style={[buttonStyles.btnText, selectedRole === "employee" ? buttonStyles.textActive : buttonStyles.textInactive]}>Employee</Text>
               </View>
             </TouchableOpacity>
           </View>
 
-          {/* --------------------
-              DEPARTMENT DROPDOWN
-          -------------------- */}
+          {/* Department */}
           <View style={styles.input}>
             <Text style={styles.inputLabel}>Department</Text>
             <View style={styles.dropdownContainer}>
@@ -275,18 +212,25 @@ export default function RegistrationScreen({ navigation }) {
                 onValueChange={(value) => setSelectedDepartment(value)}
                 items={departments}
                 placeholder={{ label: 'Select your department...', value: null }}
-                style={{
-                  inputIOS: styles.dropdownInput,
-                  inputAndroid: styles.dropdownInput,
-                }}
+                style={{ inputIOS: styles.dropdownInput, inputAndroid: styles.dropdownInput }}
                 value={selectedDepartment}
               />
             </View>
           </View>
 
-          {/* --------------------
-              SUBMIT BUTTON
-          -------------------- */}
+          {/* Agreement Section */}
+          <View style={styles.agreementContainer}>
+            <TouchableOpacity onPress={() => setIsAgreed(!isAgreed)} style={styles.checkboxWrapper}>
+              <View style={[styles.checkbox, isAgreed && styles.checkboxChecked]} />
+              <Text style={styles.agreementLabel}>
+                I've read and agreed to the 
+                <Text style={styles.linkText} onPress={() => setShowAgreementModal(true)}> User Agreement</Text>
+              </Text>
+            </TouchableOpacity>
+          </View>
+          {!isAgreed && <Text style={styles.errorText}>You must agree to the terms before continuing.</Text>}
+
+          {/* Submit */}
           <View style={styles.formAction}>
             <TouchableOpacity onPress={handleContinue}>
               <View style={buttonStyles.btn}>
@@ -295,12 +239,11 @@ export default function RegistrationScreen({ navigation }) {
             </TouchableOpacity>
           </View>
 
-          {/* Navigate to Sign In */}
+          {/* Sign In */}
           <Text style={styles.formFooter}>Already have an account?</Text>
           <TouchableOpacity onPress={() => navigation.navigate("SignIn")}>
             <Text style={styles.reg}>Sign In</Text>
           </TouchableOpacity>
-
         </View>
       </View>
     </ScrollView>
@@ -308,15 +251,17 @@ export default function RegistrationScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  reg: {
-    textDecorationLine: 'underline',
-    marginVertical: -5.8,
-    fontSize: 17,
-    fontWeight: '600',
-    color: '#222',
-    textAlign: 'center',
-    letterSpacing: 0.5,
+  agreementContainer: { marginVertical: 10 },
+  checkboxWrapper: { flexDirection: 'row', alignItems: 'center' },
+  checkbox: {
+    width: 20, height: 20, borderWidth: 2, borderColor: '#222',
+    borderRadius: 4, marginRight: 8,
   },
+  checkboxChecked: { backgroundColor: '#222' },
+  agreementLabel: { fontSize: 14, color: '#222' },
+  linkText: { color: '#0066cc', textDecorationLine: 'underline', fontWeight: '500' },
+
+  reg: { textDecorationLine: 'underline', marginVertical: -5.8, fontSize: 17, fontWeight: '600', color: '#222', textAlign: 'center', letterSpacing: 0.5 },
   container: { padding: 24, flex: 1 },
   header: { marginTop: 20, marginBottom: 20 },
   headerImg: { width: 150, height: 150, alignSelf: 'center' },
