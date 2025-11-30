@@ -1,18 +1,4 @@
-import {
-  StyleSheet,
-  Text,
-  View,
-  Image,
-  TextInput,
-  TouchableOpacity,
-  Alert,
-  KeyboardAvoidingView,
-  Platform,
-  ScrollView,
-  TouchableWithoutFeedback,
-  Keyboard,
-} from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, StyleSheet, Text, View, Image, TextInput, TouchableOpacity, Alert, KeyboardAvoidingView, Platform, ScrollView, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import React, { useState } from 'react';
 import buttonStyles from '../../components/SigninRegisButton';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -32,12 +18,8 @@ export default function SignInScreen({ navigation }) {
   // ---------------------------------------------------------
   const validate = () => {
     let valid = true;
-    let newErrors = { name: "", email: "", password: "" };
+    let newErrors = { email: "", password: "" };
 
-    if (name.trim() === "") {
-      newErrors.name = "Name cannot be empty";
-      valid = false;
-    }
     if (!email.includes("@")) {
       newErrors.email = "Email must contain '@'";
       valid = false;
