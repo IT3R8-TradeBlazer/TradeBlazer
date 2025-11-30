@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import RNPickerSelect from 'react-native-picker-select';
 import buttonStyles from '../../components/SigninRegisButton'; 
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import CustomAlert from '../../components/CustomAlert';
 
 export default function RegistrationScreen({ navigation }) {
 
@@ -11,6 +12,10 @@ export default function RegistrationScreen({ navigation }) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [alertVisible, setAlertVisible] = useState(false);
+  const [alertTitle, setAlertTitle] = useState("");
+  const [alertMessage, setAlertMessage] = useState("");
+  const [isSuccess, setIsSuccess] = useState(false);
 
   // Stores validation error messages for each input
   const [errors, setErrors] = useState({ name: "", email: "", password: "" });
@@ -74,13 +79,19 @@ export default function RegistrationScreen({ navigation }) {
 
     // Make sure user chose a role
     if (!selectedRole) {
-      Alert.alert("Missing Role", "Please select your role (Student or Employee).");
+      setIsSuccess(false);
+      setAlertTitle("Missing Role");
+      setAlertMessage("Please select your role (Student or Employee).");
+      setAlertVisible(true);
       return;
     }
 
     // Make sure user selected a department
     if (!selectedDepartment) {
-      Alert.alert("Missing Department", "Please select your department or college.");
+      setIsSuccess(false);
+      setAlertTitle("Missing Department");
+      setAlertMessage("Please select your department or college.");
+      setAlertVisible(true);
       return;
     }
 
@@ -98,11 +109,10 @@ export default function RegistrationScreen({ navigation }) {
       await AsyncStorage.setItem('userData', JSON.stringify(userData));
 
       // Confirmation message
-      Alert.alert(
-        "Account Created",
-        `Welcome, ${name}!`,
-        [{ text: "Continue", onPress: () => navigation.navigate("SignIn") }]
-      );
+      setIsSuccess(true);
+      setAlertTitle("Account Created");
+      setAlertMessage(`Welcome, ${name}!`);
+      setAlertVisible(true);
 
     } catch (error) {
       console.error("Error saving user data:", error);
@@ -111,6 +121,20 @@ export default function RegistrationScreen({ navigation }) {
 
   return (
     <ScrollView style={{ flex: 1, backgroundColor: '#eBecf4' }}>
+      <CustomAlert
+        visible={alertVisible}
+        title={alertTitle}
+        message={alertMessage}
+        success={isSuccess}
+        autoClose={isSuccess}  // auto-close for successful registration
+        onClose={() => {
+          setAlertVisible(false);
+          if (isSuccess) {
+            navigation.navigate("SignIn");
+          }
+        }}
+      />
+
       <View style={styles.container}>
 
         {/* Logo */}
