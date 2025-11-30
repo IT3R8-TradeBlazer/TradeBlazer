@@ -2,11 +2,17 @@ import { SafeAreaView, StyleSheet, Text, View, Image, TextInput, TouchableOpacit
 import React, { useState } from 'react';
 import buttonStyles from '../../components/SigninRegisButton';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import CustomAlert from '../../components/CustomAlert';
 
 export default function SignInScreen({ navigation }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState({ email: "", password: "" });
+  const [alertVisible, setAlertVisible] = useState(false);
+  const [alertTitle, setAlertTitle] = useState("");
+  const [alertMessage, setAlertMessage] = useState("");
+  const [isSuccess, setIsSuccess] = useState(false);
+
 
   const validate = () => {
     let valid = true;  
@@ -34,25 +40,26 @@ export default function SignInScreen({ navigation }) {
   try {
     const storedUser = await AsyncStorage.getItem('userData');
     if (!storedUser) {
-      Alert.alert("No account found", "Please register first.");
+      setIsSuccess(false);
+      setAlertTitle("No Account Found");
+      setAlertMessage("Please register first.");
+      setAlertVisible(true);
       return;
     }
 
     const { name: storedName, email: storedEmail, password: storedPassword } = JSON.parse(storedUser);
 
     if (email === storedEmail && password === storedPassword) {
-      Alert.alert("Login successful!", `Welcome, ${storedName}!`, [
-        {
-          text: "Continue",
-          onPress: () =>
-            navigation.reset({
-              index: 0,
-              routes: [{ name: "Main" }],
-            })
-        }
-      ]);
+      setIsSuccess(true);
+      setAlertTitle("Login Successful!");
+      setAlertMessage(`Welcome, ${storedName}!`);
+      setAlertVisible(true);
     } else {
-      Alert.alert("Invalid credentials", "Your email or password is incorrect.");
+      setIsSuccess(false);
+      setAlertTitle("Invalid Credentials");
+      setAlertMessage("Your email or password is incorrect.");
+      setAlertVisible(true);
+
     }
   } catch (error) {
     console.error("Error reading user data:", error);
@@ -61,6 +68,22 @@ export default function SignInScreen({ navigation }) {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#eBecf4' }}>
+      <CustomAlert
+        visible={alertVisible}
+        title={alertTitle}
+        message={alertMessage}
+        success={isSuccess} 
+        autoClose={isSuccess} // <-- auto-close only for successful login
+        onClose={() => {
+          setAlertVisible(false);
+          if (isSuccess) {
+            navigation.reset({
+              index: 0,
+              routes: [{ name: "Main" }],
+            });
+          }
+        }}
+      />
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={{ flex: 1 }}

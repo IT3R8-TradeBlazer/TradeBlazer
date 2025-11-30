@@ -1,17 +1,29 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Modal, View, Text, StyleSheet, TouchableOpacity } from "react-native";
 
-export default function CustomAlert({ visible, title, message, onClose }) {
+export default function CustomAlert({ visible, title, message, onClose, success, autoClose }) {
+
+  useEffect(() => {
+    if (visible && autoClose) {
+      const timeout = setTimeout(() => {
+        onClose();
+      }, 2000); // auto-close after 2s
+      return () => clearTimeout(timeout);
+    }
+  }, [visible]);
+
   return (
     <Modal visible={visible} transparent animationType="fade">
       <View style={styles.overlay}>
-        <View style={styles.alertBox}>
-          <Text style={styles.title}>{title}</Text>
+        <View style={[styles.alertBox, { backgroundColor: success ? "#ECF8E7" : "#FBE7E7" }]}>
+          <Text style={[styles.title, { color: success ? "#2E5E3E" : "#B3261E" }]}>{title}</Text>
           <Text style={styles.message}>{message}</Text>
 
-          <TouchableOpacity style={styles.button} onPress={onClose}>
-            <Text style={styles.buttonText}>OK</Text>
-          </TouchableOpacity>
+          {!autoClose && (  // show OK button only if not auto-close
+            <TouchableOpacity style={[styles.button, { backgroundColor: success ? "#2E5E3E" : "#B3261E" }]} onPress={onClose}>
+              <Text style={styles.buttonText}>OK</Text>
+            </TouchableOpacity>
+          )}
         </View>
       </View>
     </Modal>
@@ -25,37 +37,29 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-
   alertBox: {
     width: 300,
-    backgroundColor: "#ECF2E8",
     padding: 20,
     borderRadius: 16,
     alignItems: "center",
     elevation: 6,
   },
-
   title: {
     fontSize: 18,
     fontWeight: "700",
-    color: "#2E5E3E",
     marginBottom: 8,
   },
-
   message: {
     fontSize: 14,
     color: "#333",
     textAlign: "center",
     marginBottom: 20,
   },
-
   button: {
-    backgroundColor: "#2E5E3E",
     paddingVertical: 10,
     paddingHorizontal: 25,
     borderRadius: 8,
   },
-
   buttonText: {
     color: "#fff",
     fontWeight: "600",
