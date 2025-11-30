@@ -4,25 +4,42 @@ import { useNavigation } from "@react-navigation/native";
 import Header from "../../components/Header";
 import BottomNav from "../../components/BottomNav";
 import { Ionicons } from "@expo/vector-icons";
+import CustomAlert from '../../components/CustomAlert';
+import { useState } from 'react';
+
 
 export default function SettingsScreen() {
+  const [alertVisible, setAlertVisible] = useState(false);
+  const [alertTitle, setAlertTitle] = useState("");
+  const [alertMessage, setAlertMessage] = useState("");
+  const [isLogout, setIsLogout] = useState(false);
+
   const navigation = useNavigation();
 
   const handleLogout = () => {
-    Alert.alert(
-      "Logout",
-      "Are you sure you want to logout?",
-      [
-        { text: "Cancel", style: "cancel" },
-        { text: "OK", onPress: () => navigation.replace("SignIn") },
-      ],
-      { cancelable: true }
-    );
+    setAlertTitle("Logout");
+    setAlertMessage("Are you sure you want to logout?");
+    setIsLogout(true);  // special flag to show two buttons
+    setAlertVisible(true);
   };
 
   return (
     <SafeAreaView style={styles.container}>
-      
+      <CustomAlert
+        visible={alertVisible}
+        title={alertTitle}
+        message={alertMessage}
+        success={false}   // not a success alert
+        logoutConfirm={isLogout}  // custom prop to show Cancel + Logout buttons
+        onClose={(action) => {
+          setAlertVisible(false);
+          setIsLogout(false);
+          if (action === "logout") {
+            navigation.replace("SignIn");
+          }
+        }}
+      />
+
       {/* Main Header */}
       <Header navigation={navigation} />
 

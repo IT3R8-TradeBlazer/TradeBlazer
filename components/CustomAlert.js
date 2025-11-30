@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Modal, View, Text, StyleSheet, TouchableOpacity } from "react-native";
 
-export default function CustomAlert({ visible, title, message, onClose, success, autoClose }) {
+export default function CustomAlert({ visible, title, message, onClose, success, autoClose, logoutConfirm }) {
 
   useEffect(() => {
     if (visible && autoClose) {
@@ -17,13 +17,27 @@ export default function CustomAlert({ visible, title, message, onClose, success,
       <View style={styles.overlay}>
         <View style={[styles.alertBox, { backgroundColor: success ? "#ECF8E7" : "#FBE7E7" }]}>
           <Text style={[styles.title, { color: success ? "#2E5E3E" : "#B3261E" }]}>{title}</Text>
-          <Text style={styles.message}>{message}</Text>
+          <Text style={[styles.message, { color: "#2C4B23" }]}>{message}</Text>
 
-          {!autoClose && (  // show OK button only if not auto-close
-            <TouchableOpacity style={[styles.button, { backgroundColor: success ? "#2E5E3E" : "#B3261E" }]} onPress={onClose}>
+          {/* Normal OK button */}
+          {!autoClose && !logoutConfirm && (
+            <TouchableOpacity style={[styles.button, { backgroundColor: success ? "#2E5E3E" : "#B3261E" }]} onPress={() => onClose("ok")}>
               <Text style={styles.buttonText}>OK</Text>
             </TouchableOpacity>
           )}
+
+          {/* Logout confirm buttons */}
+          {logoutConfirm && (
+            <View style={styles.buttonRow}>
+              <TouchableOpacity style={[styles.button, { backgroundColor: "#A6C2A0", marginHorizontal: 5 }]} onPress={() => onClose("cancel")}>
+                <Text style={styles.buttonText}>Cancel</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={[styles.button, { backgroundColor: "#B3261E", marginHorizontal: 5 }]} onPress={() => onClose("logout")}>
+                <Text style={styles.buttonText}>Logout</Text>
+              </TouchableOpacity>
+            </View>
+          )}
+
         </View>
       </View>
     </Modal>
@@ -51,7 +65,6 @@ const styles = StyleSheet.create({
   },
   message: {
     fontSize: 14,
-    color: "#333",
     textAlign: "center",
     marginBottom: 20,
   },
@@ -64,5 +77,9 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontWeight: "600",
     fontSize: 14,
+  },
+  buttonRow: {
+    flexDirection: "row",
+    justifyContent: "center",
   },
 });
