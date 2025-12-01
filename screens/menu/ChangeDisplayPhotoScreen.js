@@ -13,10 +13,16 @@ import { getUser, saveUser } from '../../utils/storage';
 import Header from '../../components/Header';
 import BottomNav from '../../components/BottomNav';
 import { Ionicons } from '@expo/vector-icons';
+import CustomAlert from '../../components/CustomAlert';
 
 export default function ChangeDisplayPhotoScreen({ navigation }) {
   const [user, setUser] = useState(null);
   const [newPhoto, setNewPhoto] = useState(null);
+  const [alertVisible, setAlertVisible] = useState(false);
+  const [alertTitle, setAlertTitle] = useState("");
+  const [alertMessage, setAlertMessage] = useState("");
+  const [isSuccess, setIsSuccess] = useState(false);
+
 
   const loadUser = async () => {
     const currentUser = await getUser();
@@ -57,8 +63,10 @@ export default function ChangeDisplayPhotoScreen({ navigation }) {
     const updatedUser = { ...user, photo: newPhoto };
     await saveUser(updatedUser);
 
-    Alert.alert("Success", "Profile photo updated!");
-    navigation.goBack();
+    setIsSuccess(true);
+    setAlertTitle("Success");
+    setAlertMessage("Profile photo updated!");
+    setAlertVisible(true);
   };
 
   if (!user) {
@@ -71,6 +79,18 @@ export default function ChangeDisplayPhotoScreen({ navigation }) {
 
   return (
     <SafeAreaView style={styles.container}>
+
+      <CustomAlert
+        visible={alertVisible}
+        title={alertTitle}
+        message={alertMessage}
+        success={isSuccess}
+        autoClose={true}  // automatically closes for success
+        onClose={() => {
+          setAlertVisible(false);
+          if (isSuccess) navigation.goBack();
+        }}
+      />
 
       <Header navigation={navigation} />
 

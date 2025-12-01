@@ -228,14 +228,21 @@ const styles = StyleSheet.create({
   description: { height: 80, textAlignVertical: "top" },
 
   postButton: {
-    alignSelf: "center",
-    marginTop: 50,
+  backgroundColor: "#2E5E3E",
+  paddingVertical: 14,
+  borderRadius: 10,
+  alignItems: "center",
+  justifyContent: "center",
+  marginTop: 35,
+  width: "60%",
+  alignSelf: "center",
+  elevation: 3,
   },
 
   postText: {
-    color: "#2E5E3E",
+    color: "#fff",
+    fontSize: 18,
     fontWeight: "600",
-    fontSize: 16,
-    textDecorationLine: "underline",
+    letterSpacing: 0.5,
   },
 });
