@@ -18,10 +18,13 @@ export default function RegistrationScreen({ navigation }) {
   const [isSuccess, setIsSuccess] = useState(false);
 
   // Stores validation error messages for each input
-  const [errors, setErrors] = useState({ name: "", email: "", password: "" });
+  const [errors, setErrors] = useState({ name: "", email: "", password: "", idNumber: "" });
 
   // Role = student or employee
   const [selectedRole, setSelectedRole] = useState(null);
+
+  // ID Number
+  const [idNumber, setIdNumber] = useState("");
 
   // Department picker selection
   const [selectedDepartment, setSelectedDepartment] = useState(null);
@@ -58,6 +61,10 @@ export default function RegistrationScreen({ navigation }) {
 
     if (name.trim() === "") {
       newErrors.name = "Name cannot be empty";
+      valid = false;
+    }
+    if (idNumber.trim() === "") {
+      newErrors.idNumber = "ID Number cannot be empty";
       valid = false;
     }
     if (!email.includes("@")) {
@@ -104,7 +111,7 @@ export default function RegistrationScreen({ navigation }) {
     }
 
     try {
-      const userData = { name, email, password, role: selectedRole, department: selectedDepartment };
+      const userData = { name, email, password, idNumber, role: selectedRole, department: selectedDepartment };
       await AsyncStorage.setItem('userData', JSON.stringify(userData));
       setIsSuccess(true);
       setAlertTitle("Account Created");
@@ -175,6 +182,18 @@ export default function RegistrationScreen({ navigation }) {
             />
           </View>
           {errors.email ? <Text style={styles.errorText}>{errors.email}</Text> : null}
+
+          <View style={styles.input}>
+            <Text style={styles.inputLabel}>ID Number</Text>
+            <TextInput
+              placeholder="e.g. 2021311632"
+              placeholderTextColor="#6b7288"
+              style={styles.inputControl}
+              value={idNumber}
+              onChangeText={(text) => setIdNumber(text)}
+            />
+          </View>
+          {errors.idNumber ? <Text style={styles.errorText}>{errors.idNumber}</Text> : null}
 
           <View style={styles.input}>
             <Text style={styles.inputLabel}>Password</Text>

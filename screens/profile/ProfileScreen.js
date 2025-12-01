@@ -80,11 +80,12 @@ export default function ProfileScreen({ navigation }) {
 
           {/* User name, department, and role */}
           <Text style={styles.name}>{user.name}</Text>
-          <Text style={styles.subtext}>{user.department}</Text>
+          <Text style={styles.subtext}>{user.idNumber}</Text>
           <Text style={styles.subtext}>
-            {user.role === "student" ? "Student" : "Employee"}
+            {user.department} | {user.role === "student" ? "Student" : "Employee"}
           </Text>
         </View>
+
 
         {/* ABOUT & CONTACT SECTION */}
         <View style={styles.infoSection}>
