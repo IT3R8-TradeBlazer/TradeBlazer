@@ -1,8 +1,11 @@
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
 
-export default function Header({ title = "TradeBlazer", navigation }) {
+export default function Header({ title = "TradeBlazer" }) {
+  const navigation = useNavigation();
+
   return (
     <View style={styles.header}>
       <Text style={styles.logo}>{title}</Text>

@@ -3,9 +3,12 @@ import { View, Text, StyleSheet, FlatList, TouchableOpacity, TextInput, SafeArea
 import { Ionicons } from "@expo/vector-icons";
 import Header from "../../components/Header";
 import BottomNav from "../../components/BottomNav";
+import SearchBar from "../../components/SearchBar";
 
 export default function ChatListScreen({ navigation }) {
   const [search, setSearch] = useState("");
+  const [dropdownVisible, setDropdownVisible] = useState(false); // ← ADD THIS
+
   const names = ["Syntyche", "Cypress", "Bryan"];
 
   const filtered = names.filter((n) =>
@@ -29,32 +32,22 @@ export default function ChatListScreen({ navigation }) {
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* Header */}
       <Header navigation={navigation} title="TradeBlazer" />
 
-      {/* Search Bar */}
-      <View style={styles.searchContainer}>
-        <Ionicons
-          name="search"
-          size={18}
-          color="#555"
-          style={{ marginLeft: 10 }}
-        />
-        <TextInput
-          style={styles.searchInput}
-          placeholder="Search…"
-          placeholderTextColor="#888"
-          value={search}
-          onChangeText={setSearch}
-        />
-      </View>
+    
+      <SearchBar
+        navigation={navigation}
+        value={search}
+        onChangeText={setSearch}
+        showDropdown={dropdownVisible}
+        setShowDropdown={setDropdownVisible}
+        placeholder="Search for anything…"
+      />
 
-      {/* Screen Title */}
       <View style={styles.screenTitleContainer}>
         <Text style={styles.screenTitle}>Chats</Text>
       </View>
 
-      {/* Chat List */}
       <FlatList
         data={filtered}
         keyExtractor={(item) => item}
@@ -62,7 +55,6 @@ export default function ChatListScreen({ navigation }) {
         contentContainerStyle={{ padding: 16, paddingBottom: 120 }}
       />
 
-      {/* Bottom Navigation */}
       <BottomNav navigation={navigation} />
     </SafeAreaView>
   );

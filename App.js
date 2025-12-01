@@ -2,8 +2,11 @@ import React, { useEffect, useState } from "react";
 import { View, StyleSheet } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import AuthNavigator from "./navigation/AuthNavigator";
+
 import { MessagesProvider } from "./context/MessagesContext";
 import { PostsProvider } from "./context/PostsContext";
+import { FavoritesProvider } from "./src/context/FavoritesContext";
+
 import SplashScreen from "./views/SplashScreen";
 import * as ExpoSplashScreen from "expo-splash-screen";
 
@@ -23,13 +26,15 @@ export default function App() {
   return (
     <PostsProvider>
       <MessagesProvider>
-        {isShowSplashScreen ? (
-          <SplashScreen />
-        ) : (
-          <NavigationContainer>
-            <AuthNavigator />
-          </NavigationContainer>
-        )}
+        <FavoritesProvider>
+          {isShowSplashScreen ? (
+            <SplashScreen />
+          ) : (
+            <NavigationContainer>
+              <AuthNavigator />
+            </NavigationContainer>
+          )}
+        </FavoritesProvider>
       </MessagesProvider>
     </PostsProvider>
   );
