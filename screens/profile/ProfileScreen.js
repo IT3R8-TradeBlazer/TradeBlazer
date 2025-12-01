@@ -168,7 +168,7 @@ const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: "#ECF2E8" },
   center: { flex: 1, alignItems: "center", justifyContent: "center" },
 
-  profileSection: { alignItems: "center", marginTop: 20 },
+  profileSection: { alignItems: "center", marginTop: 20,  },
   profilePic: { width: 100, height: 100, borderRadius: 50, backgroundColor: "#ccc" },
   name: { fontSize: 20, fontWeight: "bold", color: "#2E5E3E" },
   subtext: { color: "#777" },
