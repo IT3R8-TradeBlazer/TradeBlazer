@@ -15,8 +15,8 @@ export default function CustomAlert({ visible, title, message, onClose, success,
   return (
     <Modal visible={visible} transparent animationType="fade">
       <View style={styles.overlay}>
-        <View style={[styles.alertBox, { backgroundColor: success ? "#ECF8E7" : "#FBE7E7" }]}>
-          <Text style={[styles.title, { color: success ? "#2E5E3E" : "#B3261E" }]}>{title}</Text>
+        <View style={[styles.alertBox, {backgroundColor: success ? "#DFF5E1" : "#FBE7E7" }]}>
+          <Text style={[styles.title, { color: success ? "#0F7B45" : "#B3261E" }]}>{title}</Text>
           <Text style={[styles.message, { color: "#2C4B23" }]}>{message}</Text>
 
           {/* Normal OK button */}

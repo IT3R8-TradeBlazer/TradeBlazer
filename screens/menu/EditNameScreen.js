@@ -4,9 +4,16 @@ import Header from "../../components/Header";
 import BottomNav from "../../components/BottomNav";
 import { Ionicons } from "@expo/vector-icons";
 import { getUser, saveUser } from "../../utils/storage";
+import CustomAlert from "../../components/CustomAlert";
+
 
 export default function EditNameScreen({ navigation }) {
   const [name, setName] = useState("");
+  const [alertVisible, setAlertVisible] = useState(false);
+  const [alertTitle, setAlertTitle] = useState("");
+  const [alertMessage, setAlertMessage] = useState("");
+  const [isSuccess, setIsSuccess] = useState(false);
+
 
   useEffect(() => {
     const loadUser = async () => {
@@ -17,15 +24,41 @@ export default function EditNameScreen({ navigation }) {
   }, []);
 
   const handleSave = async () => {
+    if (!name.trim()) {
+      setIsSuccess(false);
+      setAlertTitle("Error");
+      setAlertMessage("Name cannot be empty.");
+      setAlertVisible(true);
+      return;
+    }
+
     const user = await getUser();
     const updatedUser = { ...user, name };
     await saveUser(updatedUser);
 
-    navigation.goBack();
+    // ✅ GREEN SUCCESS ALERT
+    setIsSuccess(true);
+    setAlertTitle("Success");
+    setAlertMessage("Name updated successfully!");
+    setAlertVisible(true);
   };
+
 
     return (
     <SafeAreaView style={styles.container}>
+      <CustomAlert
+        visible={alertVisible}
+        title={alertTitle}
+        message={alertMessage}
+        success={isSuccess}
+        onClose={() => {
+          setAlertVisible(false);
+          if (isSuccess) {
+            navigation.goBack(); // ✅ Auto return after success
+          }
+        }}
+      />
+
 
     {/* Main Header */}
     <Header navigation={navigation} />

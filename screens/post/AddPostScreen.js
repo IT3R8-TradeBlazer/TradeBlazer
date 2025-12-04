@@ -17,6 +17,8 @@ import BottomNav from "../../components/BottomNav";
 import { getUser } from "../../utils/storage";
 import { PostsContext } from "../../context/PostsContext";
 import CustomAlert from "../../components/CustomAlert";
+import { Picker } from "@react-native-picker/picker";
+
 
 export default function AddPostScreen({ navigation }) {
   const [photoUri, setPhotoUri] = useState(null);
@@ -118,6 +120,7 @@ export default function AddPostScreen({ navigation }) {
         visible={alertVisible}
         title={alertTitle}
         message={alertMessage}
+        success={isSuccess}
         onClose={() => {
           setAlertVisible(false);
           if (isSuccess) {
@@ -165,16 +168,34 @@ export default function AddPostScreen({ navigation }) {
           multiline
           value={description}
           onChangeText={setDescription}
-        />
+        />  
 
         <Text style={styles.inputLabel}>Category</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="e.g. Gifts, Clothes, Accessories"
-          placeholderTextColor="#888"
-          value={category}
-          onChangeText={setCategory}
-        />
+        <View style={styles.dropdown}>
+          <Picker
+            selectedValue={category}
+            onValueChange={(value) => setCategory(value)}
+            style={{
+              fontSize: 14,
+              height: 50,
+              color: category ? "#2E5E3E" : "#7A7A7A", // dark green if selected, gray if placeholder
+            }}
+            dropdownIconColor="#2E5E3E"
+            mode="dropdown"
+          >
+            <Picker.Item label="Select category" value="" color="#7A7A7A" /> 
+            <Picker.Item label="School Supplies" value="School Supplies" />
+            <Picker.Item label="Women's Apparel" value="Women's Apparel" />
+            <Picker.Item label="Men's Apparel" value="Men's Apparel" />
+            <Picker.Item label="Health & Personal Care" value="Health & Personal Care" />
+            <Picker.Item label="Gifts" value="Gifts" />
+            <Picker.Item label="Accessories" value="Accessories" />
+            <Picker.Item label="Food & Snacks" value="Food & Snacks" />
+            <Picker.Item label="Books & Stationery" value="Books & Stationery" />
+            <Picker.Item label="Home and Decor" value="Home and Decor" />
+          </Picker>
+        </View>
+
 
         <TouchableOpacity style={styles.postButton} onPress={handlePost}>
           <Text style={styles.postText}>Post</Text>
@@ -244,5 +265,20 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "600",
     letterSpacing: 0.5,
+  },
+
+
+  dropdown: {
+  backgroundColor: "#D9D9D9", // same as other inputs
+  borderRadius: 4,             // match other input corners
+  height: 50,
+  justifyContent: "center",
+  marginBottom: 12,
+  paddingHorizontal: 10,       // match input padding
+  },
+
+  picker: {
+    fontSize: 14,
+    height: 50,
   },
 });

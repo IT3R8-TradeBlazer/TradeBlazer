@@ -4,12 +4,19 @@ import Header from "../../components/Header";
 import BottomNav from "../../components/BottomNav";
 import { Ionicons } from "@expo/vector-icons";
 import { getUser, saveUser } from "../../utils/storage";
+import CustomAlert from "../../components/CustomAlert";
+
 
 export default function ChangePasswordScreen({ navigation }) {
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [user, setUser] = useState(null);
+  const [alertVisible, setAlertVisible] = useState(false);
+  const [alertTitle, setAlertTitle] = useState("");
+  const [alertMessage, setAlertMessage] = useState("");
+  const [isSuccess, setIsSuccess] = useState(false);
+
 
   useEffect(() => {
     const loadUser = async () => {
@@ -21,30 +28,47 @@ export default function ChangePasswordScreen({ navigation }) {
 
   const handleSave = async () => {
     if (!currentPassword || !newPassword || !confirmPassword) {
-      Alert.alert("Error", "Please fill in all fields.");
+      setIsSuccess(false);
+      setAlertTitle("Error");
+      setAlertMessage("Please fill in all fields.");
+      setAlertVisible(true);
       return;
     }
 
     if (currentPassword !== user.password) {
-      Alert.alert("Error", "Current password is incorrect.");
+      setIsSuccess(false);
+      setAlertTitle("Error");
+      setAlertMessage("Current password is incorrect.");
+      setAlertVisible(true);
       return;
     }
 
     if (newPassword.length < 6) {
-      Alert.alert("Error", "New password must be at least 6 characters.");
+      setIsSuccess(false);
+      setAlertTitle("Error");
+      setAlertMessage("New password must be at least 6 characters.");
+      setAlertVisible(true);
       return;
     }
 
     if (newPassword !== confirmPassword) {
-      Alert.alert("Error", "New password and confirm password do not match.");
+      setIsSuccess(false);
+      setAlertTitle("Error");
+      setAlertMessage("New password and confirm password do not match.");
+      setAlertVisible(true);
       return;
     }
 
     const updatedUser = { ...user, password: newPassword };
     await saveUser(updatedUser);
-    Alert.alert("Success", "Password updated successfully!");
-    navigation.goBack();
+
+    // ✅ GREEN SUCCESS ALERT
+    setIsSuccess(true);
+    setAlertTitle("Success");
+    setAlertMessage("Password updated successfully!");
+    setAlertVisible(true);
   };
+
 
   if (!user) {
     return (
@@ -56,6 +80,19 @@ export default function ChangePasswordScreen({ navigation }) {
 
   return (
     <SafeAreaView style={styles.container}>
+      <CustomAlert
+        visible={alertVisible}
+        title={alertTitle}
+        message={alertMessage}
+        success={isSuccess}
+        onClose={() => {
+          setAlertVisible(false);
+          if (isSuccess) {
+            navigation.goBack(); // ✅ auto return after success
+          }
+        }}
+      />
+
       {/* Main Header */}
       <Header navigation={navigation} />
 
