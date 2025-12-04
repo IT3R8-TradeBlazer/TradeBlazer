@@ -86,53 +86,68 @@ export default function RegistrationScreen({ navigation }) {
   // ---------------------------
   // HANDLE REGISTRATION
   // ---------------------------
-  const handleContinue = async () => {
-    if (!validate()) return;
-    if (!selectedRole) {
-      setIsSuccess(false);
-      setAlertTitle("Missing Role");
-      setAlertMessage("Please select your role (Student or Employee).");
-      setAlertVisible(true);
-      return;
-    }
-    if (!selectedDepartment) {
-      setIsSuccess(false);
-      setAlertTitle("Missing Department");
-      setAlertMessage("Please select your department or college.");
-      setAlertVisible(true);
-      return;
-    }
-    if (!isAgreed) {
-      setIsSuccess(false);
-      setAlertTitle("Agreement Required");
-      setAlertMessage("Please read and agree to the terms before continuing.");
-      setAlertVisible(true);
-      return;
-    }
+const handleContinue = async () => {
+  if (!validate()) return;
 
-    try {
-      // ✅ Assign unique id to user
-      const userData = {
-      id: idNumber,      // ✅ use registered ID number as user id
+  if (!selectedRole) {
+    setIsSuccess(false);
+    setAlertTitle("Missing Role");
+    setAlertMessage("Please select your role (Student or Employee).");
+    setAlertVisible(true);
+    return;
+  }
+
+  if (!selectedDepartment) {
+    setIsSuccess(false);
+    setAlertTitle("Missing Department");
+    setAlertMessage("Please select your department or college.");
+    setAlertVisible(true);
+    return;
+  }
+
+  if (!isAgreed) {
+    setIsSuccess(false);
+    setAlertTitle("Agreement Required");
+    setAlertMessage("Please read and agree to the terms before continuing.");
+    setAlertVisible(true);
+    return;
+  }
+
+  try {
+    // Load existing users array
+    const storedUsers = await AsyncStorage.getItem('users');
+    const users = storedUsers ? JSON.parse(storedUsers) : [];
+
+    // Create new user object
+    const newUser = {
+      id: Date.now(),
       name,
       email,
       password,
       idNumber,
       role: selectedRole,
-      department: selectedDepartment,
+      department: selectedDepartment
     };
 
-      await AsyncStorage.setItem('userData', JSON.stringify(userData));
+    // Add new user to array
+    users.push(newUser);
 
-      setIsSuccess(true);
-      setAlertTitle("Account Created");
-      setAlertMessage(`Welcome, ${name}!`);
-      setAlertVisible(true);
-    } catch (error) {
-      console.error("Error saving user data:", error);
-    }
-  };
+    // Save updated array
+    await AsyncStorage.setItem('users', JSON.stringify(users));
 
+    // Also save current user session (ProfileScreen reads this)
+    await AsyncStorage.setItem('userData', JSON.stringify(newUser));
+
+    // Success alert
+    setIsSuccess(true);
+    setAlertTitle("Account Created");
+    setAlertMessage(`Welcome, ${name}!`);
+    setAlertVisible(true);
+
+  } catch (error) {
+    console.error("Error saving user data:", error);
+  }
+};
 
   return (
     <ScrollView style={{ flex: 1, backgroundColor: '#eBecf4' }}>
