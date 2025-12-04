@@ -11,7 +11,6 @@ import {
   TouchableOpacity,
   Keyboard,
 } from "react-native";
-
 import { Ionicons } from "@expo/vector-icons";
 import Header from "../../components/Header";
 import SearchBar from "../../components/SearchBar";
@@ -27,13 +26,15 @@ export default function HomeScreen({ navigation }) {
   const [products, setProducts] = useState([
     {
       id: 1,
-      name: "Ferro Rocherrrr Bouquet",
+      name: "Ferro Rocher Bouquet",
       price: "₱1,100",
       image:
         "https://i.pinimg.com/1200x/2c/82/eb/2c82ebd17b033b757144f0b0c6da9e5a.jpg",
       description: "Blah blah baahvdhwvf",
       category: "Gift",
       isFavorite: false,
+      sellerId: "syntyche",
+      sellerName: "Syntyche"
     },
     {
       id: 2,
@@ -43,6 +44,8 @@ export default function HomeScreen({ navigation }) {
         "https://i.pinimg.com/736x/72/bb/51/72bb51b23cf78b03d532234af0e6e9ae.jpg",
       description: "Blah dasdafaff",
       isFavorite: false,
+      sellerId: "cypress",
+      sellerName: "Cypress"
     },
     {
       id: 3,
@@ -52,6 +55,8 @@ export default function HomeScreen({ navigation }) {
         "https://i.pinimg.com/736x/5a/bc/1b/5abc1b02fc9539d7e969e3e8249ed53d.jpg",
       description: "kapoy na",
       isFavorite: false,
+      sellerId: "bryan",
+      sellerName: "Bryan"
     },
     {
       id: 4,
@@ -61,6 +66,8 @@ export default function HomeScreen({ navigation }) {
         "https://i.pinimg.com/736x/9b/78/0c/9b780ca25db2bce72b62acc72723ddb5.jpg",
       description: "rawrrawrrr",
       isFavorite: false,
+      sellerId: "bryan",
+      sellerName: "Bryan"      
     },
   ]);
 
@@ -189,3 +196,4 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
 });
+

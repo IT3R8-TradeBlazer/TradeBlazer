@@ -4,7 +4,7 @@ import Header from "../../components/Header";
 import { useMessages } from "../../context/MessagesContext";
 
 export default function ChatScreen({ navigation, route }) {
-  const contact = route?.params?.name || "Synteche";
+  const contact = route?.params?.name ?? "";
   const { messages, setMessages } = useMessages();
 
   const chatMessages = messages[contact] || [];
@@ -110,7 +110,16 @@ export default function ChatScreen({ navigation, route }) {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Header navigation={navigation} title={contact} />
+      <Header
+        navigation={navigation}
+        title={contact}
+        onTitlePress={() => {
+          navigation.navigate("UserProfileScreen", {
+            userId: route.params?.sellerId,
+            name: contact
+          });
+        }}
+      />
 
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <KeyboardAvoidingView
@@ -218,3 +227,4 @@ const styles = StyleSheet.create({
 
   sendText: { color: "#FFFFFF", fontWeight: "600" },
 });
+

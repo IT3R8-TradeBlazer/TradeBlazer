@@ -84,7 +84,7 @@ export default function MainNavigator() {
       <Stack.Screen name="HomeDecorScreen" component={HomeDecorScreen} />
 
       {/* USER PROFILE + REPORT */}
-      <Stack.Screen name="UserProfile" component={UserProfileScreen} />
+      <Stack.Screen name="UserProfileScreen" component={UserProfileScreen} />
       <Stack.Screen name="ReportUser" component={ReportUserScreen} />
 
       {/* MENU SCREENS */}
@@ -110,3 +110,4 @@ export default function MainNavigator() {
     </Stack.Navigator>
   );
 }
+

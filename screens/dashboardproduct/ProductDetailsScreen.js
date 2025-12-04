@@ -36,7 +36,17 @@ export default function ProductDetailsScreen({ route, navigation }) {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Header navigation={navigation} title="TradeBlazer" />
+
+      {/* 🔥 UPDATED HEADER */}
+      <Header
+        title={product.sellerName}
+        onTitlePress={() =>
+          navigation.navigate("UserProfileScreen", {
+            userId: product.sellerId,
+            name: product.sellerName,
+          })
+        }
+      />
 
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <View style={styles.box}>
@@ -54,6 +64,19 @@ export default function ProductDetailsScreen({ route, navigation }) {
           <Text style={styles.label}>Title</Text>
           <Text style={styles.info}>{product.name}</Text>
 
+          <TouchableOpacity
+            onPress={() =>
+              navigation.navigate("UserProfileScreen", {
+                userId: product.sellerId,
+                name: product.sellerName
+              })
+            }
+          >
+            <Text style={{ color: "#2E5E3E", fontWeight: "bold", marginTop: 10 }}>
+              Seller: {product.sellerName}
+            </Text>
+          </TouchableOpacity>
+
           <Text style={styles.label}>Price</Text>
           <Text style={styles.info}>{product.price}</Text>
 
@@ -68,7 +91,10 @@ export default function ProductDetailsScreen({ route, navigation }) {
           <TouchableOpacity
             style={styles.contactBtn}
             onPress={() =>
-              navigation.navigate("ChatScreen", { sellerId: product.sellerId })
+              navigation.navigate("ChatScreen", {
+                name: product.sellerName,
+                sellerId: product.sellerId
+              })
             }
           >
             <Ionicons name="chatbubble-outline" size={20} color="#000" />
