@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useContext, useState } from "react";
 import {
   View,
   Text,
@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   Alert,
 } from "react-native";
+import { useFocusEffect } from "@react-navigation/native";
 import { getUser } from "../../utils/storage";
 import Header from "../../components/Header";
 import BottomNav from "../../components/BottomNav";
@@ -16,22 +17,22 @@ import { Ionicons } from "@expo/vector-icons";
 import { PostsContext } from "../../context/PostsContext";
 
 export default function ProfileScreen({ navigation }) {
-  const [user, setUser] = useState(null);  
-  const [menuVisible, setMenuVisible] = useState(null);  
+  const [user, setUser] = useState(null);
+  const [menuVisible, setMenuVisible] = useState(null);
 
-  // Access all posts and the delete function from PostsContext
   const { posts, deletePost } = useContext(PostsContext);
 
-  // Load the saved user data from async storage when the screen opens
-  useEffect(() => {
-    const loadUser = async () => {
-      const currentUser = await getUser();
-      setUser(currentUser);
-    };
-    loadUser();
-  }, []);
+  // Load the logged-in user on focus
+  useFocusEffect(
+    React.useCallback(() => {
+      const loadUser = async () => {
+        const currentUser = await getUser();
+        setUser(currentUser);
+      };
+      loadUser();
+    }, [])
+  );
 
-  // Show a loading screen while user data is being fetched
   if (!user) {
     return (
       <SafeAreaView style={styles.center}>
@@ -40,45 +41,26 @@ export default function ProfileScreen({ navigation }) {
     );
   }
 
-  // Get only the posts created by this user
-  // Also sort them so the newest posts appear first
+  // Only show posts created by the current user
   const myPosts = posts
-    .filter((p) => p.userId === user?.id)
+    .filter((p) => p.userId === user.idNumber)
     .sort((a, b) => b.id - a.id);
 
-  // Ask for confirmation before deleting a post
   const confirmDelete = (postId) => {
-    Alert.alert(
-      "Delete Post",
-      "Are you sure you want to delete this post?",
-      [
-        { text: "Cancel", style: "cancel" },
-        {
-          text: "Delete",
-          style: "destructive",
-          onPress: () => deletePost(postId),
-        },
-      ]
-    );
+    Alert.alert("Delete Post", "Are you sure you want to delete this post?", [
+      { text: "Cancel", style: "cancel" },
+      { text: "Delete", style: "destructive", onPress: () => deletePost(postId) },
+    ]);
   };
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* Main app header */}
       <Header navigation={navigation} title="TradeBlazer" />
 
       <ScrollView contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 120 }}>
-
-        {/* USER PROFILE INFO */}
+        {/* PROFILE INFO */}
         <View style={styles.profileSection}>
-          {/* User image */}
-          <Image
-            key={user.photo}
-            source={{ uri: user.photo || undefined }}
-            style={styles.profilePic}
-          />
-
-          {/* User name, department, and role */}
+          <Image source={{ uri: user.photo || undefined }} style={styles.profilePic} />
           <Text style={styles.name}>{user.name}</Text>
           <Text style={styles.subtext}>{user.idNumber}</Text>
           <Text style={styles.subtext}>
@@ -86,8 +68,7 @@ export default function ProfileScreen({ navigation }) {
           </Text>
         </View>
 
-
-        {/* ABOUT & CONTACT SECTION */}
+        {/* ABOUT & CONTACT */}
         <View style={styles.infoSection}>
           <Text style={styles.label}>About</Text>
           <Text>{user.address || "Cagayan de Oro, Philippines"}</Text>
@@ -97,30 +78,22 @@ export default function ProfileScreen({ navigation }) {
           <Text>{user.phone || "N/A"}</Text>
         </View>
 
-        {/* USER POSTS SECTION */}
+        {/* USER POSTS */}
         <View style={styles.postsSection}>
           <Text style={styles.screenTitle}>My Posts</Text>
 
-          {/* If no posts exist */}
           {myPosts.length === 0 && (
             <Text style={{ marginTop: 10, textAlign: "center" }}>No posts yet</Text>
           )}
 
-          {/* Render each post */}
           {myPosts.map((post) => (
             <View key={post.id} style={styles.card}>
-
-              {/* Post image */}
               <Image source={{ uri: post.image }} style={styles.image} />
-
-              {/* Post header: name, price, and options menu */}
               <View style={styles.cardHeader}>
                 <View>
                   <Text style={styles.productName}>{post.name}</Text>
                   <Text style={styles.productPrice}>{post.price}</Text>
                 </View>
-
-                {/* Button to toggle the options menu */}
                 <TouchableOpacity
                   onPress={() =>
                     setMenuVisible(menuVisible === post.id ? null : post.id)
@@ -130,11 +103,8 @@ export default function ProfileScreen({ navigation }) {
                 </TouchableOpacity>
               </View>
 
-              {/* WHEN MENU IS OPEN — Edit / Delete options */}
               {menuVisible === post.id && (
                 <View style={styles.menu}>
-                  
-                  {/* Edit button */}
                   <TouchableOpacity
                     style={styles.menuItem}
                     onPress={() => {
@@ -145,7 +115,6 @@ export default function ProfileScreen({ navigation }) {
                     <Text style={styles.menuText}>Edit</Text>
                   </TouchableOpacity>
 
-                  {/* Delete button */}
                   <TouchableOpacity
                     style={styles.menuItem}
                     onPress={() => confirmDelete(post.id)}
@@ -159,7 +128,6 @@ export default function ProfileScreen({ navigation }) {
         </View>
       </ScrollView>
 
-      {/* Bottom navigation bar */}
       <BottomNav navigation={navigation} />
     </SafeAreaView>
   );
@@ -167,19 +135,15 @@ export default function ProfileScreen({ navigation }) {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: "#ECF2E8" },
-  center: { flex: 1, alignItems: "center", justifyContent: "center" },
-
-  profileSection: { alignItems: "center", marginTop: 20,  },
+  center: { flex: 1, justifyContent: "center", alignItems: "center" },
+  profileSection: { alignItems: "center", marginTop: 20 },
   profilePic: { width: 100, height: 100, borderRadius: 50, backgroundColor: "#ccc" },
   name: { fontSize: 20, fontWeight: "bold", color: "#2E5E3E" },
   subtext: { color: "#777" },
-
   infoSection: { marginVertical: 20 },
   label: { marginTop: 10, fontWeight: "bold", fontSize: 16, color: "#2E5E3E" },
-
   postsSection: { marginTop: 20 },
   screenTitle: { fontSize: 20, fontWeight: "700", color: "#2E5E3E" },
-
   card: {
     backgroundColor: "#fff",
     borderRadius: 15,
@@ -190,16 +154,9 @@ const styles = StyleSheet.create({
     position: "relative",
   },
   image: { width: "100%", height: 180 },
-
-  cardHeader: {
-    padding: 15,
-    flexDirection: "row",
-    justifyContent: "space-between",
-  },
-
+  cardHeader: { padding: 15, flexDirection: "row", justifyContent: "space-between" },
   productName: { fontSize: 16, fontWeight: "600", color: "#2E5E3E" },
   productPrice: { fontSize: 14, color: "#444", marginTop: 4 },
-
   menu: {
     position: "absolute",
     right: 10,

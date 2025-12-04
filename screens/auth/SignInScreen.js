@@ -38,8 +38,10 @@ export default function SignInScreen({ navigation }) {
     if (!validate()) return;
 
   try {
-    const storedUser = await AsyncStorage.getItem('userData');
-    if (!storedUser) {
+    const storedUsers = await AsyncStorage.getItem('users');
+    const users = storedUsers ? JSON.parse(storedUsers) : [];
+
+    if (users.length === 0) {
       setIsSuccess(false);
       setAlertTitle("No Account Found");
       setAlertMessage("Please register first.");
@@ -47,23 +49,42 @@ export default function SignInScreen({ navigation }) {
       return;
     }
 
-    const { name: storedName, email: storedEmail, password: storedPassword } = JSON.parse(storedUser);
+    // Find the user with matching email and password
+    const currentUser = users.find(u => u.email === email && u.password === password);
 
-    if (email === storedEmail && password === storedPassword) {
+    if (currentUser) {
+      // Save the logged-in user for later usage
+      await AsyncStorage.setItem('userData', JSON.stringify(currentUser));
+      
       setIsSuccess(true);
       setAlertTitle("Login Successful!");
-      setAlertMessage(`Welcome, ${storedName}!`);
+      setAlertMessage(`Welcome, ${currentUser.name}!`);
       setAlertVisible(true);
     } else {
       setIsSuccess(false);
       setAlertTitle("Invalid Credentials");
       setAlertMessage("Your email or password is incorrect.");
       setAlertVisible(true);
-
     }
+
   } catch (error) {
     console.error("Error reading user data:", error);
   }
+
+
+  const handleSignIn = async (userData) => {
+    try {
+      // Overwrite previous user
+      await AsyncStorage.setItem('userData', JSON.stringify(userData));
+
+      // Navigate to Home
+      navigation.replace('Home');
+    } catch (error) {
+      console.error("Error saving user data:", error);
+    }
+  };
+
+  
 };
 
   return (

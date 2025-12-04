@@ -94,10 +94,17 @@ export default function AddPostScreen({ navigation }) {
     }
 
     const user = await getUser();
+      if (!user?.idNumber) {
+      setIsSuccess(false);
+      setAlertTitle("Error");
+      setAlertMessage("User not found. Please sign in again.");
+      setAlertVisible(true);
+      return;
+    }
 
     const newProduct = {
-      id: Date.now(),
-      userId: user?.id,
+      id: Date.now(),         // unique post id
+      userId: user.idNumber,        // will now be the registered ID number
       name: title,
       price: `₱${price}`,
       image: photoUri,

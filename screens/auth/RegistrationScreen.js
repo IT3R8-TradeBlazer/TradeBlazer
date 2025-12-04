@@ -111,8 +111,19 @@ export default function RegistrationScreen({ navigation }) {
     }
 
     try {
-      const userData = { name, email, password, idNumber, role: selectedRole, department: selectedDepartment };
+      // ✅ Assign unique id to user
+      const userData = {
+      id: idNumber,      // ✅ use registered ID number as user id
+      name,
+      email,
+      password,
+      idNumber,
+      role: selectedRole,
+      department: selectedDepartment,
+    };
+
       await AsyncStorage.setItem('userData', JSON.stringify(userData));
+
       setIsSuccess(true);
       setAlertTitle("Account Created");
       setAlertMessage(`Welcome, ${name}!`);
@@ -121,6 +132,7 @@ export default function RegistrationScreen({ navigation }) {
       console.error("Error saving user data:", error);
     }
   };
+
 
   return (
     <ScrollView style={{ flex: 1, backgroundColor: '#eBecf4' }}>
