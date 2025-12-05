@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, Image, StyleSheet, SafeAreaView, TouchableOpacity, Alert } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
-import { getUser, saveUser } from '../../utils/storage';
+import { getUser, saveUser, updateUserInList } from '../../utils/storage';
 import Header from '../../components/Header';
 import BottomNav from '../../components/BottomNav';
 import { Ionicons } from '@expo/vector-icons';
@@ -51,9 +51,14 @@ export default function ChangeDisplayPhotoScreen({ navigation }) {
 
   const handleSave = async () => {
     if (!user) return;
-    
+
     const updatedUser = { ...user, photo: newPhoto };
+
+    // Save the active user
     await saveUser(updatedUser);
+
+    // 🔥 IMPORTANT — update the main users list so login loads correct data
+    await updateUserInList(updatedUser);
 
     setIsSuccess(true);
     setAlertTitle("Success");
