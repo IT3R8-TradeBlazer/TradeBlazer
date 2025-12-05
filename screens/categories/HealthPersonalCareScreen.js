@@ -1,20 +1,31 @@
-import React, { useState } from "react";
-import { View, Text, ScrollView, Image, StyleSheet, TouchableOpacity, TouchableWithoutFeedback, SafeAreaView } from "react-native";
+import React, { useState, useContext } from "react";
+import {
+  View,
+  Text,
+  ScrollView,
+  Image,
+  StyleSheet,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  SafeAreaView,
+} from "react-native";
 import Header from "../../components/Header";
 import SearchBar from "../../components/SearchBar";
 import BottomNav from "../../components/BottomNav";
+import { PostsContext } from "../../context/PostsContext";
 
-import products from "../../data/products";
+export default function HealthPersonalCareScreen({ navigation }) {
+  const { posts } = useContext(PostsContext); // 🔥 Use live posts
 
-export default function HomeDecorScreen({ navigation }) {
   const [searchText, setSearchText] = useState("");
   const [dropdownVisible, setDropdownVisible] = useState(false);
 
   const closeDropdown = () => setDropdownVisible(false);
 
-  const filteredProducts = products.filter(
+  // 🔥 Filter posts by category & search
+  const filteredProducts = posts.filter(
     (item) =>
-      item.category.toLowerCase() === "home & decor" &&
+      item.category.toLowerCase() === "health & personal care" &&
       item.name.toLowerCase().includes(searchText.toLowerCase())
   );
 
@@ -22,19 +33,19 @@ export default function HomeDecorScreen({ navigation }) {
     <SafeAreaView style={styles.container}>
       <TouchableWithoutFeedback onPress={closeDropdown}>
         <View style={{ flex: 1 }}>
-          <Header title="Home & Decor" />
+          <Header title="Health & Personal Care" navigation={navigation} />
 
           <SearchBar
             navigation={navigation}
             value={searchText}
             onChangeText={setSearchText}
-            placeholder="Search Home & Decor"
+            placeholder="Search Health & Personal Care..."
             showDropdown={dropdownVisible}
             setShowDropdown={setDropdownVisible}
           />
 
           <ScrollView contentContainerStyle={styles.scrollContent}>
-            <Text style={styles.sectionTitle}>Home & Decor</Text>
+            <Text style={styles.sectionTitle}>Health & Personal Care</Text>
 
             {filteredProducts.length === 0 ? (
               <Text style={styles.noResult}>No matching items found.</Text>
@@ -45,7 +56,9 @@ export default function HomeDecorScreen({ navigation }) {
                   style={styles.card}
                   activeOpacity={0.8}
                   onPress={() =>
-                    navigation.navigate("ProductDetails", { product: item })
+                    navigation.navigate("ProductDetailsScreen", {
+                      product: item,
+                    })
                   }
                 >
                   <Image source={{ uri: item.image }} style={styles.image} />

@@ -1,17 +1,29 @@
-import React, { useState } from "react";
-import { View, Text, ScrollView, Image, StyleSheet, TouchableOpacity, TouchableWithoutFeedback, SafeAreaView } from "react-native";
+import React, { useState, useContext } from "react";
+import {
+  View,
+  Text,
+  ScrollView,
+  Image,
+  StyleSheet,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  SafeAreaView,
+} from "react-native";
 import Header from "../../components/Header";
 import SearchBar from "../../components/SearchBar";
 import BottomNav from "../../components/BottomNav";
-import products from "../../data/products";
+import { PostsContext } from "../../context/PostsContext";
 
 export default function AccessoriesScreen({ navigation }) {
+  const { posts } = useContext(PostsContext);
+
   const [searchText, setSearchText] = useState("");
   const [dropdownVisible, setDropdownVisible] = useState(false);
 
   const closeDropdown = () => setDropdownVisible(false);
 
-  const filteredProducts = products.filter(
+  // 🔥 Filter LIVE posts by category & search
+  const filteredProducts = posts.filter(
     (item) =>
       item.category.toLowerCase() === "accessories" &&
       item.name.toLowerCase().includes(searchText.toLowerCase())

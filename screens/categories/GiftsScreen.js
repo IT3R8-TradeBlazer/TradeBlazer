@@ -1,50 +1,68 @@
-import React, { useState } from "react";
-import { View, Text, ScrollView, Image, StyleSheet, TouchableOpacity, TouchableWithoutFeedback, SafeAreaView } from "react-native";
+import React, { useState, useContext, useMemo } from "react";
+import {
+  View,
+  Text,
+  ScrollView,
+  Image,
+  StyleSheet,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  SafeAreaView,
+  Keyboard,
+} from "react-native";
 import Header from "../../components/Header";
 import SearchBar from "../../components/SearchBar";
 import BottomNav from "../../components/BottomNav";
 import products from "../../data/products";
+import { PostsContext } from "../../context/PostsContext";
 
-export default function FoodSnacksScreen({ navigation }) {
+export default function GiftsScreen({ navigation }) {
+  const { posts } = useContext(PostsContext); // dynamic posts
   const [searchText, setSearchText] = useState("");
   const [dropdownVisible, setDropdownVisible] = useState(false);
 
-  const closeDropdown = () => setDropdownVisible(false);
+  const closeDropdown = () => {
+    Keyboard.dismiss();
+    setDropdownVisible(false);
+  };
 
-  const foodProducts = products.filter(
+  // Merge built-in products + dynamic posts
+  const allItems = useMemo(() => [...products, ...posts], [posts]);
+
+  // Filter items by category and search
+  const filteredItems = allItems.filter(
     (item) =>
-      item.category.toLowerCase() === "food & snacks" &&
+      item.category.toLowerCase() === "gifts" &&
       item.name.toLowerCase().includes(searchText.toLowerCase())
   );
 
   return (
     <TouchableWithoutFeedback onPress={closeDropdown}>
       <SafeAreaView style={styles.container}>
-        <Header title="Food & Snacks" navigation={navigation} />
+        <Header title="Gifts" navigation={navigation} />
 
         <SearchBar
           navigation={navigation}
           value={searchText}
           onChangeText={setSearchText}
-          placeholder="Search Food & Snacks..."
+          placeholder="Search Gifts..."
           showDropdown={dropdownVisible}
           setShowDropdown={setDropdownVisible}
         />
 
         <ScrollView contentContainerStyle={styles.scrollContent}>
-          <Text style={styles.sectionTitle}>Food & Snacks</Text>
+          <Text style={styles.sectionTitle}>Gifts</Text>
 
-          {foodProducts.length === 0 ? (
+          {filteredItems.length === 0 ? (
             <Text style={styles.noResult}>No matching items found.</Text>
           ) : (
-            foodProducts.map((item) => (
+            filteredItems.map((item) => (
               <TouchableOpacity
                 key={item.id}
                 style={styles.card}
+                activeOpacity={0.8}
                 onPress={() =>
-                  navigation.navigate("ProductDetailsScreen", {
-                    product: item,
-                  })
+                  navigation.navigate("ProductDetailsScreen", { product: item })
                 }
               >
                 <Image source={{ uri: item.image }} style={styles.image} />
@@ -105,5 +123,6 @@ const styles = StyleSheet.create({
     textAlign: "center",
     color: "#777",
     marginTop: 20,
+    fontSize: 16,
   },
 });

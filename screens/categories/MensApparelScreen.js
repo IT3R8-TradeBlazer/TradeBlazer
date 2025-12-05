@@ -1,18 +1,29 @@
-import React, { useState } from "react";
-import { View, Text, ScrollView, Image, StyleSheet, TouchableWithoutFeedback, SafeAreaView } from "react-native";
+import React, { useState, useContext } from "react";
+import {
+  View,
+  Text,
+  ScrollView,
+  Image,
+  StyleSheet,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  SafeAreaView,
+} from "react-native";
 import Header from "../../components/Header";
 import SearchBar from "../../components/SearchBar";
 import BottomNav from "../../components/BottomNav";
-
-import products from "../../data/products";
+import { PostsContext } from "../../context/PostsContext";
 
 export default function MensApparelScreen({ navigation }) {
+  const { posts } = useContext(PostsContext); // 🔥 Use live posts
+
   const [searchText, setSearchText] = useState("");
   const [dropdownVisible, setDropdownVisible] = useState(false);
 
   const closeDropdown = () => setDropdownVisible(false);
 
-  const mensProducts = products.filter(
+  // 🔥 Filter posts by category & search
+  const filteredProducts = posts.filter(
     (item) =>
       item.category.toLowerCase() === "men's apparel" &&
       item.name.toLowerCase().includes(searchText.toLowerCase())
@@ -32,7 +43,7 @@ export default function MensApparelScreen({ navigation }) {
             navigation={navigation}
             value={searchText}
             onChangeText={setSearchText}
-            placeholder="Search Men's Apparel"
+            placeholder="Search Men's Apparel..."
             showDropdown={dropdownVisible}
             setShowDropdown={setDropdownVisible}
           />
@@ -40,17 +51,24 @@ export default function MensApparelScreen({ navigation }) {
           <ScrollView contentContainerStyle={styles.scrollContent}>
             <Text style={styles.sectionTitle}>Men's Apparel</Text>
 
-            {mensProducts.length === 0 ? (
+            {filteredProducts.length === 0 ? (
               <Text style={styles.noResult}>No matching items found.</Text>
             ) : (
-              mensProducts.map((item) => (
-                <View key={item.id} style={styles.card}>
+              filteredProducts.map((item) => (
+                <TouchableOpacity
+                  key={item.id}
+                  style={styles.card}
+                  activeOpacity={0.8}
+                  onPress={() =>
+                    navigation.navigate("ProductDetails", { product: item })
+                  }
+                >
                   <Image source={{ uri: item.image }} style={styles.image} />
                   <View style={styles.cardDetails}>
                     <Text style={styles.productName}>{item.name}</Text>
                     <Text style={styles.productPrice}>{item.price}</Text>
                   </View>
-                </View>
+                </TouchableOpacity>
               ))
             )}
           </ScrollView>

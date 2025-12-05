@@ -4,16 +4,16 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import HomeScreen from "../screens/main/HomeScreen";
 import CategoriesScreen from "../screens/main/CategoriesScreen";
 
-import GiftsScreen from "../screens/main/GiftsScreen";
-import SchoolSuppliesScreen from "../screens/main/SchoolSuppliesScreen";
-import WomensApparelScreen from "../screens/main/WomensApparelScreen";
-import MensApparelScreen from "../screens/main/MensApparelScreen";
-import MobilesGadgetsScreen from "../screens/main/MobilesGadgetsScreen";
-import HealthPersonalCareScreen from "../screens/main/HealthPersonalCareScreen";
-import AccessoriesScreen from "../screens/main/AccessoriesScreen";
-import FoodSnacksScreen from "../screens/main/FoodSnacksScreen";
-import BooksScreen from "../screens/main/BooksScreen";
-import HomeDecorScreen from "../screens/main/HomeDecorScreen";
+import GiftsScreen from "../screens/categories/GiftsScreen";
+import SchoolSuppliesScreen from "../screens/categories/SchoolSuppliesScreen";
+import WomensApparelScreen from "../screens/categories/WomensApparelScreen";
+import MensApparelScreen from "../screens/categories/MensApparelScreen";
+import MobilesGadgetsScreen from "../screens/categories/MobilesGadgetsScreen";
+import HealthPersonalCareScreen from "../screens/categories/HealthPersonalCareScreen";
+import AccessoriesScreen from "../screens/categories/AccessoriesScreen";
+import FoodSnacksScreen from "../screens/categories/FoodSnacksScreen";
+import BooksScreen from "../screens/categories/BooksScreen";
+import HomeDecorScreen from "../screens/categories/HomeDecorScreen";
 
 import NotificationsScreen from "../screens/notifications/NotificationsScreen";
 import AddPostScreen from "../screens/post/AddPostScreen";

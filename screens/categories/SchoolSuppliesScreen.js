@@ -1,61 +1,75 @@
-import React, { useState, useMemo } from "react";
-import { View, Text, ScrollView, StyleSheet, Image, SafeAreaView, TouchableWithoutFeedback, Keyboard } from "react-native";
+import React, { useState, useContext } from "react";
+import {
+  View,
+  Text,
+  ScrollView,
+  StyleSheet,
+  Image,
+  SafeAreaView,
+  TouchableWithoutFeedback,
+  Keyboard,
+} from "react-native";
 import Header from "../../components/Header";
 import SearchBar from "../../components/SearchBar";
 import BottomNav from "../../components/BottomNav";
+import { PostsContext } from "../../context/PostsContext";
 
-import products from "../../data/products";
-
-export default function WomensApparelScreen({ navigation }) {
+export default function SchoolSuppliesScreen({ navigation }) {
+  const { posts } = useContext(PostsContext); // 🔥 Use live posts
   const [searchText, setSearchText] = useState("");
-  const [dropdownVisible, setDropdownVisible] = useState(false);
+  const [showDropdown, setShowDropdown] = useState(false);
 
-  const womensProducts = useMemo(
-    () => products.filter((item) => item.category === "Women's Apparel"),
-    []
-  );
-
-  const filteredProducts = womensProducts.filter((item) =>
-    item.name.toLowerCase().includes(searchText.toLowerCase())
+  // 🔥 Filter posts by "School Supplies" category
+  const filteredProducts = posts.filter(
+    (item) =>
+      item.category.toLowerCase() === "school supplies" &&
+      item.name.toLowerCase().includes(searchText.toLowerCase())
   );
 
   return (
     <TouchableWithoutFeedback
       onPress={() => {
         Keyboard.dismiss();
-        setDropdownVisible(false);
+        setShowDropdown(false);
       }}
     >
       <SafeAreaView style={styles.container}>
-        <Header title="Women's Apparel" navigation={navigation} />
+        <Header navigation={navigation} title="School Supplies" />
 
         <SearchBar
-          navigation={navigation}
+          placeholder="Search School Supplies"
           value={searchText}
           onChangeText={setSearchText}
-          placeholder="Search Women's Apparel"
-          showDropdown={dropdownVisible}
-          setShowDropdown={setDropdownVisible}
+          navigation={navigation}
+          showDropdown={showDropdown}
+          setShowDropdown={setShowDropdown}
         />
 
         <ScrollView
           contentContainerStyle={styles.scrollContent}
           keyboardShouldPersistTaps="handled"
         >
-          <Text style={styles.sectionTitle}>Women's Apparel</Text>
+          <Text style={styles.sectionTitle}>School Supplies</Text>
 
           {filteredProducts.length === 0 && (
             <Text style={styles.noResults}>No matching items found.</Text>
           )}
 
           {filteredProducts.map((item) => (
-            <View key={item.id} style={styles.card}>
-              <Image source={{ uri: item.image }} style={styles.image} />
-              <View style={styles.cardDetails}>
-                <Text style={styles.productName}>{item.name}</Text>
-                <Text style={styles.productPrice}>{item.price}</Text>
+            <TouchableWithoutFeedback
+              key={item.id}
+              onPress={() =>
+                navigation.navigate("ProductDetails", { product: item })
+              }
+            >
+              <View style={styles.card}>
+                <Image source={{ uri: item.image }} style={styles.image} />
+                <View style={styles.cardDetails}>
+                  <Text style={styles.productName}>{item.name}</Text>
+                  <Text style={styles.productPrice}>{item.price}</Text>
+                </View>
               </View>
-            </View>
+            </TouchableWithoutFeedback>
           ))}
         </ScrollView>
 

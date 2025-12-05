@@ -186,6 +186,7 @@ export default function AddPostScreen({ navigation }) {
             <Picker.Item label="Men's Apparel" value="Men's Apparel" />
             <Picker.Item label="Health & Personal Care" value="Health & Personal Care" />
             <Picker.Item label="Gifts" value="Gifts" />
+            <Picker.Item label="Mobiles & Gadgets" value="Mobiles & Gadgets" /> 
             <Picker.Item label="Accessories" value="Accessories" />
             <Picker.Item label="Food & Snacks" value="Food & Snacks" />
             <Picker.Item label="Books & Stationery" value="Books & Stationery" />

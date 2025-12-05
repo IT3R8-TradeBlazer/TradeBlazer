@@ -1,19 +1,31 @@
-import React, { useState } from "react";
-import { View, Text, ScrollView, Image, StyleSheet, TouchableWithoutFeedback, SafeAreaView } from "react-native";
+import React, { useState, useContext } from "react";
+import {
+  View,
+  Text,
+  ScrollView,
+  Image,
+  StyleSheet,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  SafeAreaView,
+} from "react-native";
 import Header from "../../components/Header";
 import SearchBar from "../../components/SearchBar";
 import BottomNav from "../../components/BottomNav";
-import products from "../../data/products";
+import { PostsContext } from "../../context/PostsContext";
 
-export default function HealthPersonalCareScreen({ navigation }) {
+export default function MobilesGadgetsScreen({ navigation }) {
+  const { posts } = useContext(PostsContext); // 🔥 Use live posts
+
   const [searchText, setSearchText] = useState("");
   const [dropdownVisible, setDropdownVisible] = useState(false);
 
   const closeDropdown = () => setDropdownVisible(false);
 
-  const filteredProducts = products.filter(
+  // 🔥 Filter posts by category & search text
+  const filteredProducts = posts.filter(
     (item) =>
-      item.category.toLowerCase() === "health & personal care" &&
+      item.category.toLowerCase() === "mobiles & gadgets" &&
       item.name.toLowerCase().includes(searchText.toLowerCase())
   );
 
@@ -21,31 +33,38 @@ export default function HealthPersonalCareScreen({ navigation }) {
     <SafeAreaView style={styles.container}>
       <TouchableWithoutFeedback onPress={closeDropdown}>
         <View style={{ flex: 1 }}>
-          <Header title="Health & Personal Care" navigation={navigation} />
+          <Header title="Mobiles & Gadgets" navigation={navigation} />
 
           <SearchBar
             navigation={navigation}
             value={searchText}
             onChangeText={setSearchText}
-            placeholder="Search Health & Personal Care"
+            placeholder="Search Mobiles & Gadgets..."
             showDropdown={dropdownVisible}
             setShowDropdown={setDropdownVisible}
           />
 
           <ScrollView contentContainerStyle={styles.scrollContent}>
-            <Text style={styles.sectionTitle}>Health & Personal Care</Text>
+            <Text style={styles.sectionTitle}>Mobiles & Gadgets</Text>
 
             {filteredProducts.length === 0 ? (
               <Text style={styles.noResult}>No matching items found.</Text>
             ) : (
               filteredProducts.map((item) => (
-                <View key={item.id} style={styles.card}>
+                <TouchableOpacity
+                  key={item.id}
+                  style={styles.card}
+                  activeOpacity={0.8}
+                  onPress={() =>
+                    navigation.navigate("ProductDetails", { product: item })
+                  }
+                >
                   <Image source={{ uri: item.image }} style={styles.image} />
                   <View style={styles.cardDetails}>
                     <Text style={styles.productName}>{item.name}</Text>
                     <Text style={styles.productPrice}>{item.price}</Text>
                   </View>
-                </View>
+                </TouchableOpacity>
               ))
             )}
           </ScrollView>
