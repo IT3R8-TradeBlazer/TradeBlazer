@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useMemo } from "react";
 import {
   View,
   Text,
@@ -10,18 +10,17 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
 } from "react-native";
-import { PostsContext } from "../../context/PostsContext";
 import Header from "../../components/Header";
 import SearchBar from "../../components/SearchBar";
 import BottomNav from "../../components/BottomNav";
+import { PostsContext } from "../../context/PostsContext";
 
 export default function HomeScreen({ navigation }) {
-  // === Search + dropdown state ===
   const [searchText, setSearchText] = useState("");
   const [dropdownVisible, setDropdownVisible] = useState(false);
 
-  // === Static default products ===
-  const defaultProducts = [
+  // Hardcoded default products
+  const [products] = useState([
     {
       id: 1,
       name: "Ferrero Rocher Bouquet",
@@ -67,27 +66,33 @@ export default function HomeScreen({ navigation }) {
       price: "₱600",
       image:
         "https://i.pinimg.com/736x/9b/78/0c/9b780ca25db2bce72b62acc72723ddb5.jpg",
-      description:
-        "A soft and cuddly teddy bear, ideal as a thoughtful gift.",
+      description: "A soft and cuddly teddy bear, ideal as a thoughtful gift.",
       category: "Gift",
       isFavorite: false,
       sellerId: "bryan",
       sellerName: "Bryan",
     },
-  ];
+  ]);
 
-  // === Get posts from context ===
+  // Posts from context
   const { posts } = useContext(PostsContext);
 
-  // Sort posts by newest first
-  const sortedPosts = [...posts].sort((a, b) => b.id - a.id);
-
-  // Combine context posts + static products
-  const combinedProducts = [...sortedPosts, ...defaultProducts];
+  // Combine posts + default products (avoid duplicates)
+  const combinedProducts = useMemo(() => {
+    const sortedPosts = [...posts].sort((a, b) => b.id - a.id);
+    const filteredDefault = products.filter(
+      (p) => !sortedPosts.some((sp) => sp.id === p.id)
+    );
+    return [...sortedPosts, ...filteredDefault];
+  }, [posts, products]);
 
   // Apply search filter
-  const filteredProducts = combinedProducts.filter((item) =>
-    item.name.toLowerCase().includes(searchText.toLowerCase())
+  const filteredCombined = useMemo(
+    () =>
+      combinedProducts.filter((item) =>
+        item.name.toLowerCase().includes(searchText.toLowerCase())
+      ),
+    [combinedProducts, searchText]
   );
 
   return (
@@ -115,25 +120,25 @@ export default function HomeScreen({ navigation }) {
         >
           <Text style={styles.sectionTitle}>Products</Text>
 
-          {filteredProducts.map((item) => (
-            <TouchableOpacity
-              key={item.id}
-              style={styles.card}
-              onPress={() =>
-                navigation.navigate("ProductDetailsScreen", {
-                  product: item,
-                })
-              }
-            >
-              <Image source={{ uri: item.image }} style={styles.image} />
-              <View style={styles.cardDetails}>
-                <Text style={styles.productName}>{item.name}</Text>
-                <Text style={styles.productPrice}>{item.price}</Text>
-              </View>
-            </TouchableOpacity>
-          ))}
-
-          {filteredProducts.length === 0 && (
+          {filteredCombined.length > 0 ? (
+            filteredCombined.map((item) => (
+              <TouchableOpacity
+                key={item.id}
+                style={styles.card}
+                onPress={() =>
+                  navigation.navigate("ProductDetailsScreen", {
+                    product: item,
+                  })
+                }
+              >
+                <Image source={{ uri: item.image }} style={styles.image} />
+                <View style={styles.cardDetails}>
+                  <Text style={styles.productName}>{item.name}</Text>
+                  <Text style={styles.productPrice}>{item.price}</Text>
+                </View>
+              </TouchableOpacity>
+            ))
+          ) : (
             <Text style={styles.noResult}>No matching items found.</Text>
           )}
         </ScrollView>
