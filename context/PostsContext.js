@@ -1,96 +1,49 @@
-  import React, { createContext, useState, useEffect } from "react";
-  import { getPosts, savePosts } from "../utils/storage";
+import React, { createContext, useState, useEffect } from "react";
+import { getUser } from "../utils/storage";
+import { getPosts, savePosts } from "../utils/storage";
 
-  // Create a global context so any component can access posts
-  export const PostsContext = createContext();
+export const PostsContext = createContext();
 
-  export const PostsProvider = ({ children }) => {
-    // Global state that stores all posts in the app
-    const [posts, setPosts] = useState([]);
+export const PostsProvider = ({ children }) => {
+  const [posts, setPosts] = useState([]);
+  const [userId, setUserId] = useState(null);
 
-    // ----------------------------------------------
-    // LOAD POSTS FROM STORAGE WHEN APP STARTS
-    // ----------------------------------------------
-    useEffect(() => {
-      const loadPosts = async () => {
-        try {
-          // Retrieve posts from persistent storage
-          const storedPosts = await getPosts();
+  useEffect(() => {
+    const loadUserPosts = async () => {
+      const user = await getUser();
+      if (!user?.idNumber) return;
 
-          // Ensure data exists and is an array
-          if (storedPosts && Array.isArray(storedPosts)) {
-            // Sort posts by newest first (higher ID assumed newer)
-            const sortedPosts = storedPosts.sort((a, b) => b.id - a.id);
-
-            // Set posts into global state
-            setPosts(sortedPosts);
-          }
-        } catch (error) {
-          console.log("Error loading posts:", error);
-        }
-      };
-
-      // Run load function on mount
-      loadPosts();
-    }, []);
-
-    // ----------------------------------------------
-    // SAVE UPDATED POSTS TO STORAGE + STATE
-    // (Reusable helper to avoid repeating logic)
-    // ----------------------------------------------
-    const saveUpdatedPosts = async (updatedPosts) => {
-      try {
-        // Save to persistent storage
-        await savePosts(updatedPosts);
-
-        // Update global state
-        setPosts(updatedPosts);
-      } catch (error) {
-        console.log("Error saving posts:", error);
-      }
+      setUserId(user.idNumber);
+      const storedPosts = await getPosts(user.idNumber);
+      setPosts(storedPosts.sort((a, b) => b.id - a.id));
     };
+    loadUserPosts();
+  }, []);
 
-    // ----------------------------------------------
-    // ADD A NEW POST (insert at top of list)
-    // ----------------------------------------------
-    const addPost = async (post) => {
-      const updatedPosts = [post, ...posts];
-
-      // Reuse helper to save + update state
-      await saveUpdatedPosts(updatedPosts);
-    };
-    
-
-    // ----------------------------------------------
-    // EDIT EXISTING POST (replace item with same ID)
-    // ----------------------------------------------
-    const editPost = async (updatedPost) => {
-      const updatedPosts = posts.map((p) =>
-        p.id === updatedPost.id ? updatedPost : p
-      );
-
-      // Save changes
-      await saveUpdatedPosts(updatedPosts);
-    };
-
-    // ----------------------------------------------
-    // DELETE A POST BY ID
-    // ----------------------------------------------
-    const deletePost = async (postId) => {
-      const updatedPosts = posts.filter((p) => p.id !== postId);
-
-      // Save after removal
-      await saveUpdatedPosts(updatedPosts);
-    };
-
-    // ----------------------------------------------
-    // PROVIDE POSTS + CRUD FUNCTIONS TO THE APP
-    // ----------------------------------------------
-    return (
-      <PostsContext.Provider
-        value={{ posts, addPost, editPost, deletePost }}
-      >
-        {children}
-      </PostsContext.Provider>
-    );
+  const saveUpdatedPosts = async (updatedPosts) => {
+    if (!userId) return;
+    setPosts(updatedPosts);
+    await savePosts(userId, updatedPosts);
   };
+
+  const addPost = async (post) => {
+    const updatedPosts = [post, ...posts];
+    await saveUpdatedPosts(updatedPosts);
+  };
+
+  const editPost = async (updatedPost) => {
+    const updatedPosts = posts.map(p => (p.id === updatedPost.id ? updatedPost : p));
+    await saveUpdatedPosts(updatedPosts);
+  };
+
+  const deletePost = async (postId) => {
+    const updatedPosts = posts.filter(p => p.id !== postId);
+    await saveUpdatedPosts(updatedPosts);
+  };
+
+  return (
+    <PostsContext.Provider value={{ posts, addPost, editPost, deletePost }}>
+      {children}
+    </PostsContext.Provider>
+  );
+};
