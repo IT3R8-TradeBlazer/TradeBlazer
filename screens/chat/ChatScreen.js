@@ -110,16 +110,19 @@ export default function ChatScreen({ navigation, route }) {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Header
-        navigation={navigation}
-        title={contact}
-        onTitlePress={() => {
-          navigation.navigate("UserProfileScreen", {
-            userId: route.params?.sellerId,
-            name: contact
-          });
-        }}
-      />
+    <Header
+      navigation={navigation}
+      title={contact}
+onTitlePress={() => {
+  if (contact === "Syntyche") {
+    navigation.navigate("SyntycheProfileScreen");
+  } else if (contact === "Cypress") {
+    navigation.navigate("CypressProfileScreen");
+  } else if (contact === "Bryan") {
+    navigation.navigate("BryanProfileScreen");
+  }
+}}
+    />
 
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <KeyboardAvoidingView

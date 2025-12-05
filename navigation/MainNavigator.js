@@ -36,6 +36,11 @@ import FAQScreen from "../screens/menu/FAQScreen";
 
 import ProductDetailsScreen from "../screens/dashboardproduct/ProductDetailsScreen";
 
+import SyntycheProfileScreen from "../screens/profile/SyntycheProfileScreen";
+import CypressProfileScreen from "../screens/profile/CypressProfileScreen";
+import BryanProfileScreen from "../screens/profile/BryanProfileScreen";
+
+
 // Create the stack navigator
 const Stack = createNativeStackNavigator();
 
@@ -106,6 +111,11 @@ export default function MainNavigator() {
 
       {/* PRODUCT DETAILS */}
       <Stack.Screen name="ProductDetailsScreen" component={ProductDetailsScreen} />
+
+      {/* DEFAULT ACCS */}
+<Stack.Screen name="SyntycheProfileScreen" component={SyntycheProfileScreen} />
+<Stack.Screen name="CypressProfileScreen" component={CypressProfileScreen} />
+<Stack.Screen name="BryanProfileScreen" component={BryanProfileScreen} />
 
     </Stack.Navigator>
   );

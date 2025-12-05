@@ -1,61 +1,124 @@
 import React from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, Image, StyleSheet, TouchableOpacity, SafeAreaView, ScrollView } from 'react-native';
+import { Ionicons } from "@expo/vector-icons";
 import Header from '../../components/Header';
 import BottomNav from '../../components/BottomNav';
 
-export default function SyntycheProfileScreen() {
+export default function SyntycheProfileScreen({ navigation }) {
   const user = {
     name: 'Syntyche',
     department: 'Information Technology',
-    photo: 'https://cdn-icons-png.flaticon.com/512/9942/9942203.png',
+    photo: 'https://i.pinimg.com/236x/82/47/0b/82470b4ed44c3edacfcd4201e2297050.jpg',
     address: 'Cagayan de Oro, Philippines',
     email: 'syntyche@example.com',
     phone: '09171234567',
   };
 
   return (
-    <View style={styles.container}>
-      <Header title="TradeBlazer" />
+    <SafeAreaView style={styles.container}>
+      {/* HEADER */}
+      <Header navigation={navigation} title="TradeBlazer" />
+
+      {/* BACK + REPORT ICON ROW */}
+      <View style={styles.headerRow}>
+        {/* BACK BUTTON */}
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <Ionicons name="chevron-back" size={24} color="#2E5E3E" />
+        </TouchableOpacity>
+
+        {/* REPORT ICON */}
+        <TouchableOpacity onPress={() => navigation.navigate("ReportUser")}>
+          <Ionicons name="flag-outline" size={24} color="#d32f2f" />
+        </TouchableOpacity>
+      </View>
+
+      <ScrollView
+        contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 120 }}
+      >
+
+      {/* PROFILE SECTION */}
       <View style={styles.profileSection}>
         <Image source={{ uri: user.photo }} style={styles.profilePic} />
         <Text style={styles.name}>{user.name}</Text>
-        <Text style={styles.subtext}>{user.department}</Text>
-      </View>
+        <Text style={styles.subtext}>{user.department} | Student</Text>
 
-      <View style={styles.buttons}>
-        <TouchableOpacity style={styles.contactBtn}>
+        {/* CONTACT BUTTON navigates to ChatScreen */}
+        <TouchableOpacity
+          style={styles.contactBtn}
+          onPress={() => navigation.navigate("ChatScreen", { name: user.name })}
+        >
           <Text style={styles.btnText}>CONTACT</Text>
         </TouchableOpacity>
-
-        <TouchableOpacity style={styles.reportBtn}>
-          <Text style={styles.btnText}>REPORT</Text>
-        </TouchableOpacity>
       </View>
 
-      <View style={styles.infoSection}>
-        <Text style={styles.label}>About</Text>
-        <Text>{user.address}</Text>
+        {/* ABOUT & CONTACT INFO */}
+        <View style={styles.infoSection}>
+          <Text style={styles.label}>About</Text>
+          <Text>{user.address}</Text>
 
-        <Text style={styles.label}>Contact</Text>
-        <Text>{user.email}</Text>
-        <Text>{user.phone}</Text>
-      </View>
+          <Text style={styles.label}>Contact</Text>
+          <Text>{user.email}</Text>
+          <Text>{user.phone}</Text>
+        </View>
+      </ScrollView>
 
-      <BottomNav />
-    </View>
+      {/* BOTTOM NAV */}
+      <BottomNav navigation={navigation} />
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#f9f9f9' },
-  profileSection: { alignItems: 'center', marginTop: 20 },
-  profilePic: { width: 100, height: 100, borderRadius: 50, marginBottom: 10 },
-  name: { fontSize: 20, fontWeight: 'bold' },
-  subtext: { color: '#777' },
-  buttons: { flexDirection: 'row', justifyContent: 'center', gap: 10, marginTop: 15 },
-  contactBtn: { backgroundColor: '#2e7d32', padding: 10, borderRadius: 8 },
-  reportBtn: { backgroundColor: '#d32f2f', padding: 10, borderRadius: 8 },
-  btnText: { color: '#fff', fontWeight: 'bold' },
-  infoSection: { margin: 20 },
-  label: { marginTop: 10, fontWeight: 'bold' },
+  container: {
+    flex: 1,
+    backgroundColor: "#ECF2E8",
+  },
+  headerRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingHorizontal: 16,
+    marginTop: 8,
+    marginBottom: -10,
+  },
+  profileSection: {
+    alignItems: 'center',
+    marginTop: 20,
+  },
+  profilePic: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    backgroundColor: "#ccc",
+  },
+  name: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#2E5E3E',
+  },
+  subtext: {
+    color: '#777',
+    marginTop: 2,
+    marginBottom: 12,
+  },
+  contactBtn: {
+    backgroundColor: '#2e7d32',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+    marginTop: 8,
+  },
+  btnText: {
+    color: '#fff',
+    fontWeight: 'bold',
+  },
+  infoSection: {
+    marginVertical: 20,
+  },
+  label: {
+    marginTop: 10,
+    fontWeight: 'bold',
+    fontSize: 16,
+    color: "#2E5E3E",
+  },
 });

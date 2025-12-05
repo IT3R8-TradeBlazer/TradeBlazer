@@ -1,60 +1,147 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
-import { useRoute, useNavigation } from '@react-navigation/native';
-import { saveReport } from '../../utils/storage';
+import { SafeAreaView, ScrollView, View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import Header from '../../components/Header';
 import BottomNav from '../../components/BottomNav';
+import { Ionicons } from '@expo/vector-icons';
+import CustomAlert from '../../components/CustomAlert';
 
 export default function ReportUserScreen() {
-  const route = useRoute();
   const navigation = useNavigation();
-  const { reportedUserId } = route.params || {};
   const [reason, setReason] = useState('');
 
-  const handleSubmit = async () => {
+  // Alert states
+  const [alertVisible, setAlertVisible] = useState(false);
+  const [alertTitle, setAlertTitle] = useState('');
+  const [alertMessage, setAlertMessage] = useState('');
+  const [isSuccess, setIsSuccess] = useState(false);
+
+  const handleSubmit = () => {
     if (!reason.trim()) {
-      Alert.alert('Please enter a reason for reporting.');
+      setIsSuccess(false);
+      setAlertTitle('Empty Reason');
+      setAlertMessage('Please enter a reason for reporting.');
+      setAlertVisible(true);
       return;
     }
 
-    await saveReport(reportedUserId, reason);
-    Alert.alert('Reported Successfully');
+    // Show success alert
+    setIsSuccess(true);
+    setAlertTitle('Report Submitted');
+    setAlertMessage('The user has been reported successfully.');
+    setAlertVisible(true);
+
     setReason('');
-    navigation.goBack();
   };
 
   return (
-    <View style={styles.container}>
-      <Header title="TradeBlazer" />
-      <Text style={styles.label}>Reason for reporting...</Text>
-
-      <TextInput
-        style={styles.input}
-        multiline
-        placeholder="Write it here..."
-        value={reason}
-        onChangeText={setReason}
+    <SafeAreaView style={styles.container}>
+      <CustomAlert
+        visible={alertVisible}
+        title={alertTitle}
+        message={alertMessage}
+        success={isSuccess} 
+        autoClose={isSuccess} // auto-close after successful report
+        onClose={() => {
+          setAlertVisible(false);
+          if (isSuccess) navigation.goBack();
+        }}
       />
 
-      <TouchableOpacity style={styles.reportBtn} onPress={handleSubmit}>
-        <Text style={styles.reportText}>Report</Text>
-      </TouchableOpacity>
+      <Header navigation={navigation} />
 
-      <BottomNav />
-    </View>
+      {/* Back + Title Row */}
+      <View style={styles.headerRow}>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <Ionicons name="chevron-back" size={28} color="#2E5E3E" />
+        </TouchableOpacity>
+        <Text style={styles.headerTitle}>Report User</Text>
+      </View>
+
+      <ScrollView contentContainerStyle={styles.scrollContent}>
+        <View style={styles.section}>
+          <Text style={styles.label}>Reason for reporting</Text>
+          <TextInput
+            style={styles.input}
+            multiline
+            placeholder="Write it here..."
+            value={reason}
+            onChangeText={setReason}
+          />
+
+          <TouchableOpacity style={styles.submitBtn} onPress={handleSubmit}>
+            <Text style={styles.submitText}>Submit Report</Text>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
+
+      <BottomNav navigation={navigation} />
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#f9f9f9', padding: 20 },
-  label: { fontSize: 16, fontWeight: 'bold', marginBottom: 10 },
+  container: {
+    flex: 1,
+    backgroundColor: '#ECF2E8',
+  },
+
+  headerRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    paddingTop: 10,
+  },
+
+  headerTitle: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    marginLeft: 10,
+    color: '#2E5E3E',
+  },
+
+  scrollContent: {
+    paddingHorizontal: 20,
+    paddingBottom: 120,
+  },
+
+  section: {
+    marginTop: 30,
+  },
+
+  label: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#2E5E3E',
+    marginBottom: 10,
+  },
+
   input: {
-    backgroundColor: '#eaeaea',
+    backgroundColor: '#fff',
     height: 150,
     textAlignVertical: 'top',
-    borderRadius: 10,
-    padding: 10,
+    borderRadius: 12,
+    padding: 15,
+    fontSize: 16,
+    color: '#2E5E3E',
+    elevation: 2,
   },
-  reportBtn: { marginTop: 20, alignItems: 'center' },
-  reportText: { color: 'red', fontSize: 16, fontWeight: 'bold' },
+
+  submitBtn: {
+    backgroundColor: '#2E5E3E',
+    paddingVertical: 14,
+    borderRadius: 10,
+    alignItems: 'center',
+    marginTop: 20,
+    width: '50%',
+    alignSelf: 'center',
+    elevation: 3,
+  },
+
+  submitText: {
+    color: '#fff',
+    fontSize: 18,
+    fontWeight: '600',
+    letterSpacing: 0.5,
+  },
 });

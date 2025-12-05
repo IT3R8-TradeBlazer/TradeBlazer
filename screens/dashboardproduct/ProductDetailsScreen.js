@@ -37,16 +37,7 @@ export default function ProductDetailsScreen({ route, navigation }) {
   return (
     <SafeAreaView style={styles.container}>
 
-      {/* 🔥 UPDATED HEADER */}
-      <Header
-        title={product.sellerName}
-        onTitlePress={() =>
-          navigation.navigate("UserProfileScreen", {
-            userId: product.sellerId,
-            name: product.sellerName,
-          })
-        }
-      />
+      <Header />
 
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <View style={styles.box}>
