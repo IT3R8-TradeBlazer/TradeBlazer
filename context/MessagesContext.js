@@ -4,24 +4,36 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 const MessagesContext = createContext();
 
 export const MessagesProvider = ({ children }) => {
-  const [messages, setMessages] = useState({}); // all users
+  const [messages, setMessages] = useState({});
+  const [myId, setMyId] = useState(null);
 
-  // Load messages from storage
   useEffect(() => {
-    const loadMessages = async () => {
-      const stored = await AsyncStorage.getItem("messages");
-      if (stored) setMessages(JSON.parse(stored));
+    const loadMyId = async () => {
+      const userData = await AsyncStorage.getItem("userData");
+      if (userData) {
+        const parsed = JSON.parse(userData);
+        setMyId(parsed.idNumber);
+
+        const storedMessages = await AsyncStorage.getItem("messages");
+        const allMessages = storedMessages ? JSON.parse(storedMessages) : {};
+        setMessages({ [parsed.idNumber]: allMessages[parsed.idNumber] || {} });
+      }
     };
-    loadMessages();
+    loadMyId();
   }, []);
 
-  // Save messages to storage every time they change
   useEffect(() => {
-    AsyncStorage.setItem("messages", JSON.stringify(messages));
-  }, [messages]);
+    if (myId) {
+      AsyncStorage.getItem("messages").then((stored) => {
+        const allMessages = stored ? JSON.parse(stored) : {};
+        allMessages[myId] = messages[myId];
+        AsyncStorage.setItem("messages", JSON.stringify(allMessages));
+      });
+    }
+  }, [messages, myId]);
 
   return (
-    <MessagesContext.Provider value={{ messages, setMessages }}>
+    <MessagesContext.Provider value={{ messages, setMessages, myId }}>
       {children}
     </MessagesContext.Provider>
   );

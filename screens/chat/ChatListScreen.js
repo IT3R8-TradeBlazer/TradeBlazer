@@ -1,21 +1,25 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, TextInput, SafeAreaView } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, SafeAreaView } from "react-native";
 import Header from "../../components/Header";
 import BottomNav from "../../components/BottomNav";
 import SearchBar from "../../components/SearchBar";
 
 export default function ChatListScreen({ navigation }) {
   const [search, setSearch] = useState("");
-  const [dropdownVisible, setDropdownVisible] = useState(false); // ← ADD THIS
+  const [dropdownVisible, setDropdownVisible] = useState(false);
 
-  const names = ["Syntyche", "Cypress", "Bryan"];
+  const users = [
+    { idNumber: "001", name: "Syntyche" },
+    { idNumber: "002", name: "Cypress" },
+    { idNumber: "003", name: "Bryan" },
+  ];
 
-  const filtered = names.filter((n) =>
-    n.toLowerCase().includes(search.toLowerCase())
+  const filtered = users.filter((user) =>
+    user.name.toLowerCase().includes(search.toLowerCase())
   );
 
-  const goToChat = (name) => navigation.navigate("ChatScreen", { name });
+  const goToChat = (contact) =>
+    navigation.navigate("ChatScreen", { idNumber: contact.idNumber, name: contact.name });
 
   const renderItem = ({ item }) => (
     <TouchableOpacity
@@ -24,9 +28,11 @@ export default function ChatListScreen({ navigation }) {
       activeOpacity={0.75}
     >
       <View style={styles.avatar}>
-        <Text style={styles.avatarText}>{item[0].toUpperCase()}</Text>
+        <Text style={styles.avatarText}>
+          {item.name ? item.name[0].toUpperCase() : "?"}
+        </Text>
       </View>
-      <Text style={styles.itemText}>{item}</Text>
+      <Text style={styles.itemText}>{item.name}</Text>
     </TouchableOpacity>
   );
 
@@ -34,7 +40,6 @@ export default function ChatListScreen({ navigation }) {
     <SafeAreaView style={styles.container}>
       <Header navigation={navigation} title="TradeBlazer" />
 
-    
       <SearchBar
         navigation={navigation}
         value={search}
@@ -50,7 +55,7 @@ export default function ChatListScreen({ navigation }) {
 
       <FlatList
         data={filtered}
-        keyExtractor={(item) => item}
+        keyExtractor={(item) => item.idNumber}
         renderItem={renderItem}
         contentContainerStyle={{ padding: 16, paddingBottom: 120 }}
       />
@@ -61,41 +66,9 @@ export default function ChatListScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#ECF2E8",
-  },
-
-  searchContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "#fff",
-    marginHorizontal: 16,
-    marginTop: 16,
-    paddingVertical: 8,
-    borderRadius: 25,
-    elevation: 2,
-  },
-
-  searchInput: {
-    flex: 1,
-    paddingHorizontal: 10,
-    color: "#333",
-  },
-
-  screenTitleContainer: {
-    paddingHorizontal: 16,
-    paddingTop: 8,
-    paddingBottom: 8,
-  },
-
-  screenTitle: {
-    fontSize: 20,
-    fontWeight: "700",
-    color: "#2E5E3E",
-  },
-
-  // Chat Row
+  container: { flex: 1, backgroundColor: "#ECF2E8" },
+  screenTitleContainer: { paddingHorizontal: 16, paddingTop: 8, paddingBottom: 8 },
+  screenTitle: { fontSize: 20, fontWeight: "700", color: "#2E5E3E" },
   row: {
     flexDirection: "row",
     alignItems: "center",
@@ -108,7 +81,6 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 1,
   },
-
   avatar: {
     width: 45,
     height: 45,
@@ -118,16 +90,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginRight: 12,
   },
-
-  avatarText: {
-    fontSize: 18,
-    fontWeight: "700",
-    color: "#2E5E3E",
-  },
-
-  itemText: {
-    fontSize: 18,
-    fontWeight: "600",
-    color: "#2E5E3E",
-  },
+  avatarText: { fontSize: 18, fontWeight: "700", color: "#2E5E3E" },
+  itemText: { fontSize: 18, fontWeight: "600", color: "#2E5E3E" },
 });
