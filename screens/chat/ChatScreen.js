@@ -113,15 +113,15 @@ export default function ChatScreen({ navigation, route }) {
     <Header
       navigation={navigation}
       title={contact}
-onTitlePress={() => {
-  if (contact === "Syntyche") {
-    navigation.navigate("SyntycheProfileScreen");
-  } else if (contact === "Cypress") {
-    navigation.navigate("CypressProfileScreen");
-  } else if (contact === "Bryan") {
-    navigation.navigate("BryanProfileScreen");
-  }
-}}
+      onTitlePress={() => {
+        if (contact === "Syntyche") {
+          navigation.navigate("SyntycheProfileScreen");
+        } else if (contact === "Cypress") {
+          navigation.navigate("CypressProfileScreen");
+        } else if (contact === "Bryan") {
+          navigation.navigate("BryanProfileScreen");
+        }
+      }}
     />
 
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -159,8 +159,14 @@ onTitlePress={() => {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#ECF2E8" },
-  content: { flex: 1 },
+  container: {
+    flex: 1,
+    backgroundColor: "#ECF2E8",
+  },
+
+  content: {
+    flex: 1,
+  },
 
   listContainer: {
     paddingHorizontal: 12,
@@ -168,9 +174,18 @@ const styles = StyleSheet.create({
     paddingBottom: 8,
   },
 
-  messageRow: { marginVertical: 6, flexDirection: "row" },
-  rowLeft: { justifyContent: "flex-start" },
-  rowRight: { justifyContent: "flex-end" },
+  messageRow: {
+    marginVertical: 6,
+    flexDirection: "row",
+  },
+
+  rowLeft: {
+    justifyContent: "flex-start",
+  },
+
+  rowRight: {
+    justifyContent: "flex-end",
+  },
 
   bubble: {
     maxWidth: "80%",
@@ -183,16 +198,42 @@ const styles = StyleSheet.create({
     elevation: 1,
   },
 
-  bubbleOther: { backgroundColor: "#FFFFFF", borderTopLeftRadius: 4 },
-  bubbleMe: { backgroundColor: "#2E5E3E", borderTopRightRadius: 4 },
+  bubbleOther: {
+    backgroundColor: "#FFFFFF",
+    borderTopLeftRadius: 4,
+  },
 
-  messageText: { fontSize: 16, lineHeight: 20 },
-  messageTextOther: { color: "#2E5E3E" },
-  messageTextMe: { color: "#FFFFFF" },
+  bubbleMe: {
+    backgroundColor: "#2E5E3E",
+    borderTopRightRadius: 4,
+  },
 
-  timeText: { fontSize: 11, marginTop: 6, alignSelf: "flex-end" },
-  timeTextOther: { color: "#8AA88A" },
-  timeTextMe: { color: "#D6F0D7" },
+  messageText: {
+    fontSize: 16,
+    lineHeight: 20,
+  },
+
+  messageTextOther: {
+    color: "#2E5E3E",
+  },
+
+  messageTextMe: {
+    color: "#FFFFFF",
+  },
+
+  timeText: {
+    fontSize: 11,
+    marginTop: 6,
+    alignSelf: "flex-end",
+  },
+
+  timeTextOther: {
+    color: "#8AA88A",
+  },
+
+  timeTextMe: {
+    color: "#D6F0D7",
+  },
 
   inputRow: {
     flexDirection: "row",
@@ -228,6 +269,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
 
-  sendText: { color: "#FFFFFF", fontWeight: "600" },
+  sendText: {
+    color: "#FFFFFF",
+    fontWeight: "600",
+  },
 });
-

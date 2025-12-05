@@ -1,14 +1,5 @@
 import React, { useContext, useState } from "react";
-import {
-  View,
-  Text,
-  Image,
-  StyleSheet,
-  SafeAreaView,
-  ScrollView,
-  TouchableOpacity,
-  Alert,
-} from "react-native";
+import { View, Text, Image, StyleSheet, SafeAreaView, ScrollView, TouchableOpacity, Alert } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
 import { getUser } from "../../utils/storage";
 import Header from "../../components/Header";
@@ -134,16 +125,50 @@ export default function ProfileScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#ECF2E8" },
-  center: { flex: 1, justifyContent: "center", alignItems: "center" },
-  profileSection: { alignItems: "center", marginTop: 20 },
-  profilePic: { width: 100, height: 100, borderRadius: 50, backgroundColor: "#ccc" },
-  name: { fontSize: 20, fontWeight: "bold", color: "#2E5E3E" },
-  subtext: { color: "#777" },
-  infoSection: { marginVertical: 20 },
-  label: { marginTop: 10, fontWeight: "bold", fontSize: 16, color: "#2E5E3E" },
-  postsSection: { marginTop: 20 },
-  screenTitle: { fontSize: 20, fontWeight: "700", color: "#2E5E3E" },
+  container: {
+    flex: 1,
+    backgroundColor: "#ECF2E8",
+  },
+  center: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  profileSection: {
+    alignItems: "center",
+    marginTop: 20,
+  },
+  profilePic: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    backgroundColor: "#ccc",
+  },
+  name: {
+    fontSize: 20,
+    fontWeight: "bold",
+    color: "#2E5E3E",
+  },
+  subtext: {
+    color: "#777",
+  },
+  infoSection: {
+    marginVertical: 20,
+  },
+  label: {
+    marginTop: 10,
+    fontWeight: "bold",
+    fontSize: 16,
+    color: "#2E5E3E",
+  },
+  postsSection: {
+    marginTop: 20,
+  },
+  screenTitle: {
+    fontSize: 20,
+    fontWeight: "700",
+    color: "#2E5E3E",
+  },
   card: {
     backgroundColor: "#fff",
     borderRadius: 15,
@@ -153,10 +178,25 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
     position: "relative",
   },
-  image: { width: "100%", height: 180 },
-  cardHeader: { padding: 15, flexDirection: "row", justifyContent: "space-between" },
-  productName: { fontSize: 16, fontWeight: "600", color: "#2E5E3E" },
-  productPrice: { fontSize: 14, color: "#444", marginTop: 4 },
+  image: {
+    width: "100%",
+    height: 180,
+  },
+  cardHeader: {
+    padding: 15,
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  productName: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: "#2E5E3E",
+  },
+  productPrice: {
+    fontSize: 14,
+    color: "#444",
+    marginTop: 4,
+  },
   menu: {
     position: "absolute",
     right: 10,
@@ -168,6 +208,11 @@ const styles = StyleSheet.create({
     elevation: 4,
     zIndex: 999,
   },
-  menuItem: { paddingVertical: 6 },
-  menuText: { fontSize: 14, color: "#2E5E3E" },
+  menuItem: {
+    paddingVertical: 6,
+  },
+  menuText: {
+    fontSize: 14,
+    color: "#2E5E3E",
+  },
 });

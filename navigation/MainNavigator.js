@@ -1,7 +1,6 @@
 import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
-// Import all screens used in the main app
 import HomeScreen from "../screens/main/HomeScreen";
 import CategoriesScreen from "../screens/main/CategoriesScreen";
 
@@ -22,7 +21,6 @@ import ChatListScreen from "../screens/chat/ChatListScreen";
 import ChatScreen from "../screens/chat/ChatScreen";
 
 import ProfileScreen from "../screens/profile/ProfileScreen";
-import UserProfileScreen from "../screens/profile/UserProfileScreen";
 import ReportUserScreen from "../screens/profile/ReportUserScreen";
 
 import MenuSettingsScreen from "../screens/menu/MenuSettingsScreen";
@@ -40,40 +38,18 @@ import SyntycheProfileScreen from "../screens/profile/SyntycheProfileScreen";
 import CypressProfileScreen from "../screens/profile/CypressProfileScreen";
 import BryanProfileScreen from "../screens/profile/BryanProfileScreen";
 
-
-// Create the stack navigator
 const Stack = createNativeStackNavigator();
 
 export default function MainNavigator() {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
 
-      {/* MAIN APP (NO ANIMATION) */}
-      <Stack.Screen
-        name="Home"
-        component={HomeScreen}
-        options={{ animation: "none" }}
-      />
-      <Stack.Screen
-        name="Notifications"
-        component={NotificationsScreen}
-        options={{ animation: "none" }}
-      />
-      <Stack.Screen
-        name="AddPost"
-        component={AddPostScreen}
-        options={{ animation: "none" }}
-      />
-      <Stack.Screen
-        name="ChatList"
-        component={ChatListScreen}
-        options={{ animation: "none" }}
-      />
-      <Stack.Screen
-        name="Profile"
-        component={ProfileScreen}
-        options={{ animation: "none" }}
-      />
+      {/* Bottom Navs */}
+      <Stack.Screen name="Home" component={HomeScreen} />
+      <Stack.Screen name="Notifications" component={NotificationsScreen} />
+      <Stack.Screen name="AddPost" component={AddPostScreen} />
+      <Stack.Screen name="ChatList" component={ChatListScreen} />
+      <Stack.Screen name="Profile" component={ProfileScreen} />
 
       {/* CATEGORY SCREENS */}
       <Stack.Screen name="CategoriesScreen" component={CategoriesScreen} />
@@ -88,22 +64,22 @@ export default function MainNavigator() {
       <Stack.Screen name="BooksScreen" component={BooksScreen} />
       <Stack.Screen name="HomeDecorScreen" component={HomeDecorScreen} />
 
-      {/* USER PROFILE + REPORT */}
-      <Stack.Screen name="UserProfileScreen" component={UserProfileScreen} />
+      {/* Default user profiles + report */}
       <Stack.Screen name="ReportUser" component={ReportUserScreen} />
+      <Stack.Screen name="SyntycheProfileScreen" component={SyntycheProfileScreen} />
+      <Stack.Screen name="CypressProfileScreen" component={CypressProfileScreen} />
+      <Stack.Screen name="BryanProfileScreen" component={BryanProfileScreen} />
 
       {/* MENU SCREENS */}
       <Stack.Screen name="MenuSettings" component={MenuSettingsScreen} />
       <Stack.Screen name="Favorites" component={FavoritesScreen} />
       <Stack.Screen name="Settings" component={SettingsScreen} />
       <Stack.Screen name="EditName" component={EditNameScreen} />
-
-      {/* PROFILE PHOTO */}
+      <Stack.Screen name="ChangePassword" component={ChangePasswordScreen} />
       <Stack.Screen name="ChangeDisplayPhoto" component={ChangeDisplayPhotoScreen} />
 
       {/* INFO & SETTINGS */}
       <Stack.Screen name="SupportAndInfo" component={SupportAndInfoScreen} />
-      <Stack.Screen name="ChangePassword" component={ChangePasswordScreen} />
       <Stack.Screen name="FAQ" component={FAQScreen} />
 
       {/* CHAT SCREEN */}
@@ -111,11 +87,6 @@ export default function MainNavigator() {
 
       {/* PRODUCT DETAILS */}
       <Stack.Screen name="ProductDetailsScreen" component={ProductDetailsScreen} />
-
-      {/* DEFAULT ACCS */}
-<Stack.Screen name="SyntycheProfileScreen" component={SyntycheProfileScreen} />
-<Stack.Screen name="CypressProfileScreen" component={CypressProfileScreen} />
-<Stack.Screen name="BryanProfileScreen" component={BryanProfileScreen} />
 
     </Stack.Navigator>
   );

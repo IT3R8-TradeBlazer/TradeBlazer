@@ -1,13 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { 
-  View, 
-  Text, 
-  Image, 
-  StyleSheet, 
-  SafeAreaView, 
-  TouchableOpacity, 
-  Alert 
-} from 'react-native';
+import { View, Text, Image, StyleSheet, SafeAreaView, TouchableOpacity, Alert } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { getUser, saveUser } from '../../utils/storage';
 import Header from '../../components/Header';
@@ -128,8 +120,16 @@ export default function ChangeDisplayPhotoScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#ECF2E8' },
-  center: { flex: 1, alignItems: 'center', justifyContent: 'center' },
+  container: {
+    flex: 1,
+    backgroundColor: '#ECF2E8',
+  },
+
+  center: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
 
   headerRow: {
     flexDirection: 'row',
@@ -137,6 +137,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingTop: 10,
   },
+
   headerTitle: {
     fontSize: 22,
     fontWeight: 'bold',
@@ -146,8 +147,8 @@ const styles = StyleSheet.create({
 
   photoWrapper: {
     marginTop: 35,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 
   photo: {
@@ -158,36 +159,37 @@ const styles = StyleSheet.create({
   },
 
   changeBtn: {
-  backgroundColor: "#2E5E3E",
-  paddingVertical: 14,
-  borderRadius: 10,
-  alignItems: "center",
-  marginTop: 15,
-  width: "50%",
-  alignSelf: "center",
-  elevation: 3,
+    backgroundColor: '#2E5E3E',
+    paddingVertical: 14,
+    borderRadius: 10,
+    alignItems: 'center',
+    marginTop: 15,
+    width: '50%',
+    alignSelf: 'center',
+    elevation: 3,
   },
+
   changeBtnText: {
-  color: "#fff",
-  fontSize: 18,
-  fontWeight: "600",
+    color: '#fff',
+    fontSize: 18,
+    fontWeight: '600',
   },
 
   saveBtn: {
-  backgroundColor: "#2E5E3E",
-  paddingVertical: 14,
-  borderRadius: 10,
-  alignItems: "center",
-  marginTop: 10,
-  width: "50%",
-  alignSelf: "center",
-  elevation: 3,
-},
+    backgroundColor: '#2E5E3E',
+    paddingVertical: 14,
+    borderRadius: 10,
+    alignItems: 'center',
+    marginTop: 10,
+    width: '50%',
+    alignSelf: 'center',
+    elevation: 3,
+  },
 
   saveText: {
-  color: "#fff",
-  fontSize: 18,
-  fontWeight: "600",
-  letterSpacing: 0.5,
+    color: '#fff',
+    fontSize: 18,
+    fontWeight: '600',
+    letterSpacing: 0.5,
   },
 });

@@ -1,13 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  View,
-  Text,
-  ScrollView,
-  StyleSheet,
-  Image,
-  TouchableOpacity,
-  SafeAreaView,
-} from "react-native";
+import { View, Text, ScrollView, StyleSheet, Image, TouchableOpacity, SafeAreaView } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import Header from "../../components/Header";
 import BottomNav from "../../components/BottomNav";
@@ -100,33 +92,55 @@ export default function ProductDetailsScreen({ route, navigation }) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#ECF2E8" },
-  scrollContent: { padding: 15, paddingBottom: 150 },
+  container: {
+    flex: 1,
+    backgroundColor: "#ECF2E8",
+  },
+
+  scrollContent: {
+    padding: 15,
+    paddingBottom: 150,
+  },
+
   box: {
     backgroundColor: "#E6F2E6",
     borderRadius: 15,
     padding: 15,
     elevation: 2,
   },
+
   photoRow: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
   },
-  photo: { width: "75%", height: 180, borderRadius: 15 },
+
+  photo: {
+    width: "75%",
+    height: 180,
+    borderRadius: 15,
+  },
+
   favoriteBtn: {
     marginLeft: 10,
     padding: 5,
     justifyContent: "center",
     alignItems: "center",
   },
-  label: { marginTop: 12, fontWeight: "bold", fontSize: 14 },
+
+  label: {
+    marginTop: 12,
+    fontWeight: "bold",
+    fontSize: 14,
+  },
+
   info: {
     backgroundColor: "#fff",
     borderRadius: 10,
     padding: 10,
     marginTop: 4,
   },
+
   contactBtn: {
     marginTop: 20,
     backgroundColor: "#dcded6",
@@ -137,5 +151,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: 8,
   },
-  contactText: { fontWeight: "bold", fontSize: 14 },
+
+  contactText: {
+    fontWeight: "bold",
+    fontSize: 14,
+  },
 });

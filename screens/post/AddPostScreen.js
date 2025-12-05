@@ -1,15 +1,5 @@
 import React, { useState, useContext } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  SafeAreaView,
-  TouchableOpacity,
-  TextInput,
-  ScrollView,
-  Image,
-  Alert,
-} from "react-native";
+import { View, Text, StyleSheet, SafeAreaView, TouchableOpacity, TextInput, ScrollView, Image, Alert } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { Ionicons } from "@expo/vector-icons";
 import Header from "../../components/Header";
@@ -215,8 +205,15 @@ export default function AddPostScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#ECF2E8" },
-  content: { paddingHorizontal: 20, paddingVertical: 20 },
+  container: {
+    flex: 1,
+    backgroundColor: "#ECF2E8",
+  },
+
+  content: {
+    paddingHorizontal: 20,
+    paddingVertical: 20,
+  },
 
   inputLabel: {
     marginTop: 10,
@@ -253,18 +250,21 @@ const styles = StyleSheet.create({
     color: "#000",
   },
 
-  description: { height: 80, textAlignVertical: "top" },
+  description: {
+    height: 80,
+    textAlignVertical: "top",
+  },
 
   postButton: {
-  backgroundColor: "#2E5E3E",
-  paddingVertical: 14,
-  borderRadius: 10,
-  alignItems: "center",
-  justifyContent: "center",
-  marginTop: 35,
-  width: "60%",
-  alignSelf: "center",
-  elevation: 3,
+    backgroundColor: "#2E5E3E",
+    paddingVertical: 14,
+    borderRadius: 10,
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 35,
+    width: "60%",
+    alignSelf: "center",
+    elevation: 3,
   },
 
   postText: {
@@ -274,14 +274,13 @@ const styles = StyleSheet.create({
     letterSpacing: 0.5,
   },
 
-
   dropdown: {
-  backgroundColor: "#D9D9D9", // same as other inputs
-  borderRadius: 4,             // match other input corners
-  height: 50,
-  justifyContent: "center",
-  marginBottom: 12,
-  paddingHorizontal: 10,       // match input padding
+    backgroundColor: "#D9D9D9", // same as other inputs
+    borderRadius: 4,             // match other input corners
+    height: 50,
+    justifyContent: "center",
+    marginBottom: 12,
+    paddingHorizontal: 10,       // match input padding
   },
 
   picker: {

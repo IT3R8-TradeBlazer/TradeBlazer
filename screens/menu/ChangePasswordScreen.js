@@ -62,7 +62,7 @@ export default function ChangePasswordScreen({ navigation }) {
     const updatedUser = { ...user, password: newPassword };
     await saveUser(updatedUser);
 
-    // ✅ GREEN SUCCESS ALERT
+    // GREEN SUCCESS ALERT
     setIsSuccess(true);
     setAlertTitle("Success");
     setAlertMessage("Password updated successfully!");
@@ -88,7 +88,7 @@ export default function ChangePasswordScreen({ navigation }) {
         onClose={() => {
           setAlertVisible(false);
           if (isSuccess) {
-            navigation.goBack(); // ✅ auto return after success
+            navigation.goBack(); // auto return after success
           }
         }}
       />
@@ -141,8 +141,17 @@ export default function ChangePasswordScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#ECF2E8" },
-  center: { flex: 1, alignItems: "center", justifyContent: "center" },
+  container: {
+    flex: 1,
+    backgroundColor: "#ECF2E8",
+  },
+
+  center: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+
   headerRow: {
     flexDirection: "row",
     alignItems: "center",
@@ -150,17 +159,20 @@ const styles = StyleSheet.create({
     paddingTop: 15,
     paddingBottom: 10,
   },
+
   headerTitle: {
     fontSize: 22,
     fontWeight: "bold",
     color: "#2E5E3E",
     marginLeft: 6,
   },
+
   content: {
     flex: 1,
     paddingHorizontal: 20,
     marginTop: 15,
   },
+
   input: {
     borderWidth: 1,
     borderColor: "#2C4B23",
@@ -170,24 +182,24 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     marginBottom: 15,
   },
+
   saveButton: {
-  backgroundColor: "#2E5E3E",
-  paddingVertical: 14,
-  paddingHorizontal: 20,
-  borderRadius: 12,
-  alignItems: "center",
-  justifyContent: "center",
-  alignSelf: "center",
-  width: "50%",
-  marginTop: 10,
-  elevation: 3,
-},
+    backgroundColor: "#2E5E3E",
+    paddingVertical: 14,
+    paddingHorizontal: 20,
+    borderRadius: 12,
+    alignItems: "center",
+    justifyContent: "center",
+    alignSelf: "center",
+    width: "50%",
+    marginTop: 10,
+    elevation: 3,
+  },
 
-saveText: {
-  color: "#fff",
-  fontSize: 18,
-  fontWeight: "600",
-  letterSpacing: 0.5,
-},
-
+  saveText: {
+    color: "#fff",
+    fontSize: 18,
+    fontWeight: "600",
+    letterSpacing: 0.5,
+  },
 });

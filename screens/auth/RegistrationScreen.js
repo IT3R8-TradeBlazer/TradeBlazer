@@ -297,29 +297,134 @@ const handleContinue = async () => {
 }
 
 const styles = StyleSheet.create({
-  agreementContainer: { marginVertical: 10 },
-  checkboxWrapper: { flexDirection: 'row', alignItems: 'center' },
-  checkbox: {
-    width: 20, height: 20, borderWidth: 2, borderColor: '#222',
-    borderRadius: 4, marginRight: 8,
+  agreementContainer: {
+    marginVertical: 10,
   },
-  checkboxChecked: { backgroundColor: '#222' },
-  agreementLabel: { fontSize: 14, color: '#222' },
-  linkText: { color: '#0066cc', textDecorationLine: 'underline', fontWeight: '500' },
 
-  reg: { textDecorationLine: 'underline', marginVertical: -5.8, fontSize: 17, fontWeight: '600', color: '#222', textAlign: 'center', letterSpacing: 0.5 },
-  container: { padding: 24, flex: 1 },
-  header: { marginTop: 20, marginBottom: 20 },
-  headerImg: { width: 150, height: 150, alignSelf: 'center' },
-  title: { textAlign: 'center', fontWeight: '700', fontSize: 20, marginBottom: 6 },
-  subtitle: { fontSize: 14, fontWeight: '500', color: '#929292', textAlign: 'center', marginBottom: 30 },
-  input: { marginBottom: 12 },
-  inputLabel: { fontSize: 16, fontWeight: '600', color: '#222', marginBottom: 6 },
-  inputControl: { height: 44, paddingHorizontal: 16, backgroundColor: '#fff', borderRadius: 9 },
-  roleContainer: { flexDirection: 'row', justifyContent: 'space-evenly', alignItems: 'center', marginVertical: 10 },
-  orText: { fontSize: 16 },
-  formFooter: { marginVertical: 10, fontSize: 17, fontWeight: '600', color: '#222', textAlign: 'center', letterSpacing: 0.5 },
-  errorText: { color: "red", marginBottom: 8, textAlign: 'center' },
-  dropdownContainer: { backgroundColor: '#fff', borderRadius: 9, paddingHorizontal: 16, height: 44, justifyContent: 'center' },
-  dropdownInput: { fontSize: 16, color: '#000' },
+  checkboxWrapper: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+
+  checkbox: {
+    width: 20,
+    height: 20,
+    borderWidth: 2,
+    borderColor: '#222',
+    borderRadius: 4,
+    marginRight: 8,
+  },
+
+  checkboxChecked: {
+    backgroundColor: '#222',
+  },
+
+  agreementLabel: {
+    fontSize: 14,
+    color: '#222',
+  },
+
+  linkText: {
+    color: '#0066cc',
+    textDecorationLine: 'underline',
+    fontWeight: '500',
+  },
+
+  reg: {
+    textDecorationLine: 'underline',
+    marginVertical: -5.8,
+    fontSize: 17,
+    fontWeight: '600',
+    color: '#222',
+    textAlign: 'center',
+    letterSpacing: 0.5,
+  },
+
+  container: {
+    padding: 24,
+    flex: 1,
+  },
+
+  header: {
+    marginTop: 20,
+    marginBottom: 20,
+  },
+
+  headerImg: {
+    width: 150,
+    height: 150,
+    alignSelf: 'center',
+  },
+
+  title: {
+    textAlign: 'center',
+    fontWeight: '700',
+    fontSize: 20,
+    marginBottom: 6,
+  },
+
+  subtitle: {
+    fontSize: 14,
+    fontWeight: '500',
+    color: '#929292',
+    textAlign: 'center',
+    marginBottom: 30,
+  },
+
+  input: {
+    marginBottom: 12,
+  },
+
+  inputLabel: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#222',
+    marginBottom: 6,
+  },
+
+  inputControl: {
+    height: 44,
+    paddingHorizontal: 16,
+    backgroundColor: '#fff',
+    borderRadius: 9,
+  },
+
+  roleContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+    alignItems: 'center',
+    marginVertical: 10,
+  },
+
+  orText: {
+    fontSize: 16,
+  },
+
+  formFooter: {
+    marginVertical: 10,
+    fontSize: 17,
+    fontWeight: '600',
+    color: '#222',
+    textAlign: 'center',
+    letterSpacing: 0.5,
+  },
+
+  errorText: {
+    color: 'red',
+    marginBottom: 8,
+    textAlign: 'center',
+  },
+
+  dropdownContainer: {
+    backgroundColor: '#fff',
+    borderRadius: 9,
+    paddingHorizontal: 16,
+    height: 44,
+    justifyContent: 'center',
+  },
+
+  dropdownInput: {
+    fontSize: 16,
+    color: '#000',
+  },
 });

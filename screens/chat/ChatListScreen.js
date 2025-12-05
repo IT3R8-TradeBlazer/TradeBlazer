@@ -61,9 +61,11 @@ export default function ChatListScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#ECF2E8" },
+  container: {
+    flex: 1,
+    backgroundColor: "#ECF2E8",
+  },
 
-  // Search Bar
   searchContainer: {
     flexDirection: "row",
     alignItems: "center",
@@ -74,14 +76,19 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     elevation: 2,
   },
-  searchInput: { flex: 1, paddingHorizontal: 10, color: "#333" },
 
-  // Screen Title
+  searchInput: {
+    flex: 1,
+    paddingHorizontal: 10,
+    color: "#333",
+  },
+
   screenTitleContainer: {
     paddingHorizontal: 16,
     paddingTop: 8,
     paddingBottom: 8,
   },
+
   screenTitle: {
     fontSize: 20,
     fontWeight: "700",
@@ -101,6 +108,7 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 1,
   },
+
   avatar: {
     width: 45,
     height: 45,
@@ -110,6 +118,16 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginRight: 12,
   },
-  avatarText: { fontSize: 18, fontWeight: "700", color: "#2E5E3E" },
-  itemText: { fontSize: 18, fontWeight: "600", color: "#2E5E3E" },
+
+  avatarText: {
+    fontSize: 18,
+    fontWeight: "700",
+    color: "#2E5E3E",
+  },
+
+  itemText: {
+    fontSize: 18,
+    fontWeight: "600",
+    color: "#2E5E3E",
+  },
 });

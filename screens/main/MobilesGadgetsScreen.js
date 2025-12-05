@@ -1,15 +1,5 @@
 import React, { useState } from "react";
-import {
-  View,
-  Text,
-  ScrollView,
-  Image,
-  StyleSheet,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-  SafeAreaView,
-} from "react-native";
-
+import { View, Text, ScrollView, Image, StyleSheet, TouchableOpacity, TouchableWithoutFeedback, SafeAreaView } from "react-native";
 import Header from "../../components/Header";
 import SearchBar from "../../components/SearchBar";
 import BottomNav from "../../components/BottomNav";

@@ -36,7 +36,6 @@ export default function EditNameScreen({ navigation }) {
     const updatedUser = { ...user, name };
     await saveUser(updatedUser);
 
-    // ✅ GREEN SUCCESS ALERT
     setIsSuccess(true);
     setAlertTitle("Success");
     setAlertMessage("Name updated successfully!");
@@ -54,7 +53,7 @@ export default function EditNameScreen({ navigation }) {
         onClose={() => {
           setAlertVisible(false);
           if (isSuccess) {
-            navigation.goBack(); // ✅ Auto return after success
+            navigation.goBack(); // Auto return after success
           }
         }}
       />
@@ -152,4 +151,3 @@ const styles = StyleSheet.create({
   },
 
 });
-

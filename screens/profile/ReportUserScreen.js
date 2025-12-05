@@ -85,37 +85,31 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#ECF2E8',
   },
-
   headerRow: {
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 20,
     paddingTop: 10,
   },
-
   headerTitle: {
     fontSize: 22,
     fontWeight: 'bold',
     marginLeft: 10,
     color: '#2E5E3E',
   },
-
   scrollContent: {
     paddingHorizontal: 20,
     paddingBottom: 120,
   },
-
   section: {
     marginTop: 30,
   },
-
   label: {
     fontSize: 16,
     fontWeight: 'bold',
     color: '#2E5E3E',
     marginBottom: 10,
   },
-
   input: {
     backgroundColor: '#fff',
     height: 150,
@@ -126,7 +120,6 @@ const styles = StyleSheet.create({
     color: '#2E5E3E',
     elevation: 2,
   },
-
   submitBtn: {
     backgroundColor: '#2E5E3E',
     paddingVertical: 14,
@@ -137,7 +130,6 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     elevation: 3,
   },
-
   submitText: {
     color: '#fff',
     fontSize: 18,
