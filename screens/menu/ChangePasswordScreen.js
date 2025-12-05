@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, SafeAreaView, Alert } from "react-native";
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, SafeAreaView } from "react-native";
 import Header from "../../components/Header";
 import BottomNav from "../../components/BottomNav";
 import { Ionicons } from "@expo/vector-icons";
-import { getUser, saveUser } from "../../utils/storage";
+import { getUser, saveUser, updateUserInList } from "../../utils/storage";
 import CustomAlert from "../../components/CustomAlert";
-
 
 export default function ChangePasswordScreen({ navigation }) {
   const [currentPassword, setCurrentPassword] = useState("");
@@ -16,7 +15,6 @@ export default function ChangePasswordScreen({ navigation }) {
   const [alertTitle, setAlertTitle] = useState("");
   const [alertMessage, setAlertMessage] = useState("");
   const [isSuccess, setIsSuccess] = useState(false);
-
 
   useEffect(() => {
     const loadUser = async () => {
@@ -60,15 +58,18 @@ export default function ChangePasswordScreen({ navigation }) {
     }
 
     const updatedUser = { ...user, password: newPassword };
+
+    // Save to userData
     await saveUser(updatedUser);
 
-    // GREEN SUCCESS ALERT
+    // 🔥 IMPORTANT FIX — update users[] list for login
+    await updateUserInList(updatedUser);
+
     setIsSuccess(true);
     setAlertTitle("Success");
     setAlertMessage("Password updated successfully!");
     setAlertVisible(true);
   };
-
 
   if (!user) {
     return (
@@ -88,15 +89,15 @@ export default function ChangePasswordScreen({ navigation }) {
         onClose={() => {
           setAlertVisible(false);
           if (isSuccess) {
-            navigation.goBack(); // auto return after success
+            navigation.goBack();
           }
         }}
       />
 
-      {/* Main Header */}
+      {/* Header */}
       <Header navigation={navigation} />
 
-      {/* Header Row with Back Button */}
+      {/* Back Button */}
       <View style={styles.headerRow}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Ionicons name="chevron-back" size={24} color="#2E5E3E" />
@@ -145,13 +146,11 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#ECF2E8",
   },
-
   center: {
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
   },
-
   headerRow: {
     flexDirection: "row",
     alignItems: "center",
@@ -159,20 +158,17 @@ const styles = StyleSheet.create({
     paddingTop: 15,
     paddingBottom: 10,
   },
-
   headerTitle: {
     fontSize: 22,
     fontWeight: "bold",
     color: "#2E5E3E",
     marginLeft: 6,
   },
-
   content: {
     flex: 1,
     paddingHorizontal: 20,
     marginTop: 15,
   },
-
   input: {
     borderWidth: 1,
     borderColor: "#2C4B23",
@@ -182,7 +178,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     marginBottom: 15,
   },
-
   saveButton: {
     backgroundColor: "#2E5E3E",
     paddingVertical: 14,
@@ -195,7 +190,6 @@ const styles = StyleSheet.create({
     marginTop: 10,
     elevation: 3,
   },
-
   saveText: {
     color: "#fff",
     fontSize: 18,
