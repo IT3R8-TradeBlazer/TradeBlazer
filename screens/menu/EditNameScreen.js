@@ -3,7 +3,7 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet, SafeAreaView } fro
 import Header from "../../components/Header";
 import BottomNav from "../../components/BottomNav";
 import { Ionicons } from "@expo/vector-icons";
-import { getUser, saveUser } from "../../utils/storage";
+import { getUser, saveUser, updateUserInList } from "../../utils/storage";
 import CustomAlert from "../../components/CustomAlert";
 
 
@@ -23,24 +23,29 @@ export default function EditNameScreen({ navigation }) {
     loadUser();
   }, []);
 
-  const handleSave = async () => {
-    if (!name.trim()) {
-      setIsSuccess(false);
-      setAlertTitle("Error");
-      setAlertMessage("Name cannot be empty.");
-      setAlertVisible(true);
-      return;
-    }
-
-    const user = await getUser();
-    const updatedUser = { ...user, name };
-    await saveUser(updatedUser);
-
-    setIsSuccess(true);
-    setAlertTitle("Success");
-    setAlertMessage("Name updated successfully!");
+const handleSave = async () => {
+  if (!name.trim()) {
+    setIsSuccess(false);
+    setAlertTitle("Error");
+    setAlertMessage("Name cannot be empty.");
     setAlertVisible(true);
-  };
+    return;
+  }
+
+  const user = await getUser();
+  const updatedUser = { ...user, name };
+
+  // Save to userData
+  await saveUser(updatedUser);
+
+  // Save inside users array
+  await updateUserInList(updatedUser);
+
+  setIsSuccess(true);
+  setAlertTitle("Success");
+  setAlertMessage("Name updated successfully!");
+  setAlertVisible(true);
+};
 
 
     return (
