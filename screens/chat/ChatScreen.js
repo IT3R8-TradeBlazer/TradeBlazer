@@ -1,19 +1,83 @@
-import React, { useState, useRef } from "react";
-import { View, Text, StyleSheet, FlatList, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform, TouchableWithoutFeedback, Keyboard, Alert, SafeAreaView } from "react-native";
+import React, { useState, useRef, useEffect } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  FlatList,
+  TextInput,
+  TouchableOpacity,
+  KeyboardAvoidingView,
+  Platform,
+  TouchableWithoutFeedback,
+  Keyboard,
+  Alert,
+  SafeAreaView,
+} from "react-native";
+
 import Header from "../../components/Header";
 import { useMessages } from "../../context/MessagesContext";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function ChatScreen({ navigation, route }) {
-  const contact = route?.params?.name ?? "";
+  const contactId = route?.params?.idNumber;
+  const contactName = route?.params?.name;
+
   const { messages, setMessages } = useMessages();
 
-  const chatMessages = messages[contact] || [];
   const [text, setText] = useState("");
   const listRef = useRef(null);
+  const [myId, setMyId] = useState(null);
 
-  // ---------------------------------------
-  // 🔥 DELETE MESSAGE FUNCTION
-  // ---------------------------------------
+  // ✅ Get current user ID
+  useEffect(() => {
+    const getMyId = async () => {
+      const userData = await AsyncStorage.getItem("userData");
+      if (userData) {
+        const parsed = JSON.parse(userData);
+        setMyId(parsed.idNumber);
+      }
+    };
+    getMyId();
+  }, []);
+
+  // ✅ Get current user's messages with this contact
+  const chatMessages =
+    (myId && messages[myId] && messages[myId][contactId]) || [];
+
+  // ✅ Send message (per-user)
+  const sendMessage = async () => {
+    if (!text.trim() || !myId) return;
+
+    const newMsg = {
+      id: Date.now().toString(),
+      text: text.trim(),
+      senderId: myId,
+      receiverId: contactId,
+      time: new Date().toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+      }),
+    };
+
+    setMessages((prev) => {
+      const userChats = prev[myId] || {};
+      const contactChats = userChats[contactId] || [];
+      return {
+        ...prev,
+        [myId]: {
+          ...userChats,
+          [contactId]: [newMsg, ...contactChats],
+        },
+      };
+    });
+
+    setText("");
+    setTimeout(() => {
+      listRef.current?.scrollToOffset({ offset: 0, animated: true });
+    }, 100);
+  };
+
+  // ✅ Delete message
   const handleDeleteMessage = (id) => {
     Alert.alert(
       "Delete Message",
@@ -24,67 +88,36 @@ export default function ChatScreen({ navigation, route }) {
           text: "Delete",
           style: "destructive",
           onPress: () => {
-            setMessages((prev) => ({
-              ...prev,
-              [contact]: prev[contact].filter((msg) => msg.id !== id),
-            }));
+            setMessages((prev) => {
+              const userChats = prev[myId] || {};
+              const contactChats = userChats[contactId] || [];
+              return {
+                ...prev,
+                [myId]: {
+                  ...userChats,
+                  [contactId]: contactChats.filter((msg) => msg.id !== id),
+                },
+              };
+            });
           },
         },
       ]
     );
   };
 
-  // ---------------------------------------
-  // SEND MESSAGE
-  // ---------------------------------------
-  const sendMessage = () => {
-    if (!text.trim()) return;
-
-    const newMsg = {
-      id: Date.now().toString(),
-      text: text.trim(),
-      sender: "me",
-      time: new Date().toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-      }),
-    };
-
-    setMessages((prev) => ({
-      ...prev,
-      [contact]: [newMsg, ...(prev[contact] || [])],
-    }));
-
-    setText("");
-
-    setTimeout(() => {
-      listRef.current?.scrollToOffset({ offset: 0, animated: true });
-    }, 100);
-  };
-
-  // ---------------------------------------
-  // RENDER EACH MESSAGE ROW
-  // ---------------------------------------
+  // ✅ Render each message
   const renderItem = ({ item }) => {
-    const isMe = item.sender === "me";
+    const isMe = item.senderId === myId;
 
     return (
       <TouchableOpacity
-        onLongPress={() => handleDeleteMessage(item.id)}  // <--- DELETE ON LONG PRESS
+        onLongPress={() => handleDeleteMessage(item.id)}
         delayLongPress={300}
       >
         <View
-          style={[
-            styles.messageRow,
-            isMe ? styles.rowRight : styles.rowLeft,
-          ]}
+          style={[styles.messageRow, isMe ? styles.rowRight : styles.rowLeft]}
         >
-          <View
-            style={[
-              styles.bubble,
-              isMe ? styles.bubbleMe : styles.bubbleOther,
-            ]}
-          >
+          <View style={[styles.bubble, isMe ? styles.bubbleMe : styles.bubbleOther]}>
             <Text
               style={[
                 styles.messageText,
@@ -93,7 +126,6 @@ export default function ChatScreen({ navigation, route }) {
             >
               {item.text}
             </Text>
-
             <Text
               style={[
                 styles.timeText,
@@ -110,19 +142,19 @@ export default function ChatScreen({ navigation, route }) {
 
   return (
     <SafeAreaView style={styles.container}>
-    <Header
-      navigation={navigation}
-      title={contact}
-      onTitlePress={() => {
-        if (contact === "Syntyche") {
-          navigation.navigate("SyntycheProfileScreen");
-        } else if (contact === "Cypress") {
-          navigation.navigate("CypressProfileScreen");
-        } else if (contact === "Bryan") {
-          navigation.navigate("BryanProfileScreen");
-        }
-      }}
-    />
+      <Header
+        navigation={navigation}
+        title={contactName}
+        onTitlePress={() => {
+          if (contactName === "Syntyche") {
+            navigation.navigate("SyntycheProfileScreen");
+          } else if (contactName === "Cypress") {
+            navigation.navigate("CypressProfileScreen");
+          } else if (contactName === "Bryan") {
+            navigation.navigate("BryanProfileScreen");
+          }
+        }}
+      />
 
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <KeyboardAvoidingView
@@ -159,118 +191,23 @@ export default function ChatScreen({ navigation, route }) {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#ECF2E8",
-  },
-
-  content: {
-    flex: 1,
-  },
-
-  listContainer: {
-    paddingHorizontal: 12,
-    paddingTop: 12,
-    paddingBottom: 8,
-  },
-
-  messageRow: {
-    marginVertical: 6,
-    flexDirection: "row",
-  },
-
-  rowLeft: {
-    justifyContent: "flex-start",
-  },
-
-  rowRight: {
-    justifyContent: "flex-end",
-  },
-
-  bubble: {
-    maxWidth: "80%",
-    paddingVertical: 10,
-    paddingHorizontal: 12,
-    borderRadius: 16,
-    shadowColor: "#000",
-    shadowOpacity: 0.06,
-    shadowRadius: 4,
-    elevation: 1,
-  },
-
-  bubbleOther: {
-    backgroundColor: "#FFFFFF",
-    borderTopLeftRadius: 4,
-  },
-
-  bubbleMe: {
-    backgroundColor: "#2E5E3E",
-    borderTopRightRadius: 4,
-  },
-
-  messageText: {
-    fontSize: 16,
-    lineHeight: 20,
-  },
-
-  messageTextOther: {
-    color: "#2E5E3E",
-  },
-
-  messageTextMe: {
-    color: "#FFFFFF",
-  },
-
-  timeText: {
-    fontSize: 11,
-    marginTop: 6,
-    alignSelf: "flex-end",
-  },
-
-  timeTextOther: {
-    color: "#8AA88A",
-  },
-
-  timeTextMe: {
-    color: "#D6F0D7",
-  },
-
-  inputRow: {
-    flexDirection: "row",
-    paddingHorizontal: 12,
-    paddingVertical: 10,
-    alignItems: "flex-end",
-    backgroundColor: "transparent",
-    paddingBottom: Platform.OS === "android" ? 30 : 10,
-  },
-
-  input: {
-    flex: 1,
-    minHeight: 40,
-    maxHeight: 120,
-    backgroundColor: "#FFFFFF",
-    borderRadius: 20,
-    paddingHorizontal: 14,
-    paddingVertical: 8,
-    color: "#2E5E3E",
-    shadowColor: "#000",
-    shadowOpacity: 0.03,
-    shadowRadius: 2,
-    elevation: 1,
-  },
-
-  sendButton: {
-    marginLeft: 8,
-    backgroundColor: "#2E5E3E",
-    borderRadius: 20,
-    paddingHorizontal: 14,
-    paddingVertical: 10,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-
-  sendText: {
-    color: "#FFFFFF",
-    fontWeight: "600",
-  },
+  container: { flex: 1, backgroundColor: "#ECF2E8" },
+  content: { flex: 1 },
+  listContainer: { paddingHorizontal: 12, paddingTop: 12, paddingBottom: 8 },
+  messageRow: { marginVertical: 6, flexDirection: "row" },
+  rowLeft: { justifyContent: "flex-start" },
+  rowRight: { justifyContent: "flex-end" },
+  bubble: { maxWidth: "80%", paddingVertical: 10, paddingHorizontal: 12, borderRadius: 16, shadowColor: "#000", shadowOpacity: 0.06, shadowRadius: 4, elevation: 1 },
+  bubbleOther: { backgroundColor: "#FFFFFF", borderTopLeftRadius: 4 },
+  bubbleMe: { backgroundColor: "#2E5E3E", borderTopRightRadius: 4 },
+  messageText: { fontSize: 16, lineHeight: 20 },
+  messageTextOther: { color: "#2E5E3E" },
+  messageTextMe: { color: "#FFFFFF" },
+  timeText: { fontSize: 11, marginTop: 6, alignSelf: "flex-end" },
+  timeTextOther: { color: "#8AA88A" },
+  timeTextMe: { color: "#D6F0D7" },
+  inputRow: { flexDirection: "row", paddingHorizontal: 12, paddingVertical: 10, alignItems: "flex-end", backgroundColor: "transparent", paddingBottom: Platform.OS === "android" ? 30 : 10 },
+  input: { flex: 1, minHeight: 40, maxHeight: 120, backgroundColor: "#FFFFFF", borderRadius: 20, paddingHorizontal: 14, paddingVertical: 8, color: "#2E5E3E", shadowColor: "#000", shadowOpacity: 0.03, shadowRadius: 2, elevation: 1 },
+  sendButton: { marginLeft: 8, backgroundColor: "#2E5E3E", borderRadius: 20, paddingHorizontal: 14, paddingVertical: 10, justifyContent: "center", alignItems: "center" },
+  sendText: { color: "#FFFFFF", fontWeight: "600" },
 });
