@@ -157,11 +157,12 @@ export default function ChatScreen({ navigation, route }) {
       />
 
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <KeyboardAvoidingView
-          style={styles.content}
-          behavior={Platform.OS === "ios" ? "padding" : "height"}
-          keyboardVerticalOffset={90}
-        >
+          <KeyboardAvoidingView
+            style={styles.content}
+            behavior={Platform.OS === "ios" ? "padding" : "height"}
+            keyboardVerticalOffset={Platform.OS === "ios" ? 90 : 0}
+          >
+
           <FlatList
             ref={listRef}
             data={chatMessages}
@@ -206,7 +207,7 @@ const styles = StyleSheet.create({
   timeText: { fontSize: 11, marginTop: 6, alignSelf: "flex-end" },
   timeTextOther: { color: "#8AA88A" },
   timeTextMe: { color: "#D6F0D7" },
-  inputRow: { flexDirection: "row", paddingHorizontal: 12, paddingVertical: 10, alignItems: "flex-end", backgroundColor: "transparent", paddingBottom: Platform.OS === "android" ? 30 : 10 },
+  inputRow: { flexDirection: "row",  paddingHorizontal: 12,  paddingVertical: 10,  alignItems: "flex-end", backgroundColor: "transparent", }, 
   input: { flex: 1, minHeight: 40, maxHeight: 120, backgroundColor: "#FFFFFF", borderRadius: 20, paddingHorizontal: 14, paddingVertical: 8, color: "#2E5E3E", shadowColor: "#000", shadowOpacity: 0.03, shadowRadius: 2, elevation: 1 },
   sendButton: { marginLeft: 8, backgroundColor: "#2E5E3E", borderRadius: 20, paddingHorizontal: 14, paddingVertical: 10, justifyContent: "center", alignItems: "center" },
   sendText: { color: "#FFFFFF", fontWeight: "600" },

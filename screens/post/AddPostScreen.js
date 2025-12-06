@@ -1,5 +1,5 @@
 import React, { useState, useContext } from "react";
-import { View, Text, StyleSheet, SafeAreaView, TouchableOpacity, TextInput, ScrollView, Image, Alert } from "react-native";
+import { View, Text, StyleSheet, SafeAreaView, TouchableOpacity, TextInput, ScrollView, Image, Alert, KeyboardAvoidingView, Platform } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { Ionicons } from "@expo/vector-icons";
 import Header from "../../components/Header";
@@ -8,7 +8,6 @@ import { getUser } from "../../utils/storage";
 import { PostsContext } from "../../context/PostsContext";
 import CustomAlert from "../../components/CustomAlert";
 import { Picker } from "@react-native-picker/picker";
-
 
 export default function AddPostScreen({ navigation }) {
   const [photoUri, setPhotoUri] = useState(null);
@@ -20,7 +19,7 @@ export default function AddPostScreen({ navigation }) {
   const [alertTitle, setAlertTitle] = useState("");
   const [alertMessage, setAlertMessage] = useState("");
 
-  // 🔹 Added to manage redirect vs. staying on page
+  // Updated for redirect behavior
   const [isSuccess, setIsSuccess] = useState(false);
 
   const { addPost } = useContext(PostsContext);
@@ -50,7 +49,6 @@ export default function AddPostScreen({ navigation }) {
       setAlertVisible(true);
       return;
     }
-
     if (!title.trim()) {
       setIsSuccess(false);
       setAlertTitle("Missing Title");
@@ -58,7 +56,6 @@ export default function AddPostScreen({ navigation }) {
       setAlertVisible(true);
       return;
     }
-
     if (!price.trim()) {
       setIsSuccess(false);
       setAlertTitle("Missing Price");
@@ -66,7 +63,6 @@ export default function AddPostScreen({ navigation }) {
       setAlertVisible(true);
       return;
     }
-
     if (!description.trim()) {
       setIsSuccess(false);
       setAlertTitle("Missing Description");
@@ -74,7 +70,6 @@ export default function AddPostScreen({ navigation }) {
       setAlertVisible(true);
       return;
     }
-
     if (!category.trim()) {
       setIsSuccess(false);
       setAlertTitle("Missing Category");
@@ -84,7 +79,7 @@ export default function AddPostScreen({ navigation }) {
     }
 
     const user = await getUser();
-      if (!user?.idNumber) {
+    if (!user?.idNumber) {
       setIsSuccess(false);
       setAlertTitle("Error");
       setAlertMessage("User not found. Please sign in again.");
@@ -93,8 +88,8 @@ export default function AddPostScreen({ navigation }) {
     }
 
     const newProduct = {
-      id: Date.now(),         // unique post id
-      userId: user.idNumber,        // will now be the registered ID number
+      id: Date.now(),
+      userId: user.idNumber,
       name: title,
       price: `₱${price}`,
       image: photoUri,
@@ -104,7 +99,6 @@ export default function AddPostScreen({ navigation }) {
 
     await addPost(newProduct);
 
-    // 🔹 Updated success handling (navigation done only after user presses OK)
     setIsSuccess(true);
     setAlertTitle("Success");
     setAlertMessage("Your product has been posted!");
@@ -128,82 +122,89 @@ export default function AddPostScreen({ navigation }) {
 
       <Header navigation={navigation} title="Add Post" />
 
-      <ScrollView contentContainerStyle={[styles.content, { paddingBottom: 120 }]}>
-        <Text style={styles.inputLabel}>Add photo</Text>
-        <TouchableOpacity style={styles.photoBox} onPress={pickImage}>
-          {photoUri ? (
-            <Image source={{ uri: photoUri }} style={styles.previewImage} />
-          ) : (
-            <Ionicons name="add" size={32} color="#2E5E3E" />
-          )}
-        </TouchableOpacity>
+      {/* ONLY THE FORM SHOULD MOVE WITH THE KEYBOARD */}
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        keyboardVerticalOffset={Platform.OS === "ios" ? 80 : 0}
+      >
+        <ScrollView contentContainerStyle={[styles.content, { paddingBottom: 120 }]}>
+          <Text style={styles.inputLabel}>Add photo</Text>
+          <TouchableOpacity style={styles.photoBox} onPress={pickImage}>
+            {photoUri ? (
+              <Image source={{ uri: photoUri }} style={styles.previewImage} />
+            ) : (
+              <Ionicons name="add" size={32} color="#2E5E3E" />
+            )}
+          </TouchableOpacity>
 
-        <Text style={styles.inputLabel}>Title</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Enter product title"
-          placeholderTextColor="#888"
-          value={title}
-          onChangeText={setTitle}
-        />
+          <Text style={styles.inputLabel}>Title</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Enter product title"
+            placeholderTextColor="#888"
+            value={title}
+            onChangeText={setTitle}
+          />
 
-        <Text style={styles.inputLabel}>Price</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="e.g. 500"
-          placeholderTextColor="#888"
-          keyboardType="numeric"
-          value={price}
-          onChangeText={setPrice}
-        />
+          <Text style={styles.inputLabel}>Price</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="e.g. 500"
+            placeholderTextColor="#888"
+            keyboardType="numeric"
+            value={price}
+            onChangeText={setPrice}
+          />
 
-        <Text style={styles.inputLabel}>Description</Text>
-        <TextInput
-          style={[styles.input, styles.description]}
-          placeholder="Describe your product in detail..."
-          placeholderTextColor="#888"
-          multiline
-          value={description}
-          onChangeText={setDescription}
-        />  
+          <Text style={styles.inputLabel}>Description</Text>
+          <TextInput
+            style={[styles.input, styles.description]}
+            placeholder="Describe your product in detail..."
+            placeholderTextColor="#888"
+            multiline
+            value={description}
+            onChangeText={setDescription}
+          />
 
-        <Text style={styles.inputLabel}>Category</Text>
-        <View style={styles.dropdown}>
-          <Picker
-            selectedValue={category}
-            onValueChange={(value) => setCategory(value)}
-            style={{
-              fontSize: 14,
-              height: 50,
-              color: category ? "#2E5E3E" : "#7A7A7A", // dark green if selected, gray if placeholder
-            }}
-            dropdownIconColor="#2E5E3E"
-            mode="dropdown"
-          >
-            <Picker.Item label="Select category" value="" color="#7A7A7A" /> 
-            <Picker.Item label="School Supplies" value="School Supplies" />
-            <Picker.Item label="Women's Apparel" value="Women's Apparel" />
-            <Picker.Item label="Men's Apparel" value="Men's Apparel" />
-            <Picker.Item label="Health & Personal Care" value="Health & Personal Care" />
-            <Picker.Item label="Gifts" value="Gifts" />
-            <Picker.Item label="Mobiles & Gadgets" value="Mobiles & Gadgets" /> 
-            <Picker.Item label="Accessories" value="Accessories" />
-            <Picker.Item label="Food & Snacks" value="Food & Snacks" />
-            <Picker.Item label="Books & Stationery" value="Books & Stationery" />
-            <Picker.Item label="Home and Decor" value="Home and Decor" />
-          </Picker>
-        </View>
+          <Text style={styles.inputLabel}>Category</Text>
+          <View style={styles.dropdown}>
+            <Picker
+              selectedValue={category}
+              onValueChange={(value) => setCategory(value)}
+              dropdownIconColor="#2E5E3E"
+              mode="dropdown"
+              style={{
+                fontSize: 14,
+                height: 50,
+                color: category ? "#2E5E3E" : "#7A7A7A",
+              }}
+            >
+              <Picker.Item label="Select category" value="" color="#7A7A7A" />
+              <Picker.Item label="School Supplies" value="School Supplies" />
+              <Picker.Item label="Women's Apparel" value="Women's Apparel" />
+              <Picker.Item label="Men's Apparel" value="Men's Apparel" />
+              <Picker.Item label="Health & Personal Care" value="Health & Personal Care" />
+              <Picker.Item label="Gifts" value="Gifts" />
+              <Picker.Item label="Mobiles & Gadgets" value="Mobiles & Gadgets" />
+              <Picker.Item label="Accessories" value="Accessories" />
+              <Picker.Item label="Food & Snacks" value="Food & Snacks" />
+              <Picker.Item label="Books & Stationery" value="Books & Stationery" />
+              <Picker.Item label="Home and Decor" value="Home and Decor" />
+            </Picker>
+          </View>
 
+          <TouchableOpacity style={styles.postButton} onPress={handlePost}>
+            <Text style={styles.postText}>Post</Text>
+          </TouchableOpacity>
+        </ScrollView>
+      </KeyboardAvoidingView>
 
-        <TouchableOpacity style={styles.postButton} onPress={handlePost}>
-          <Text style={styles.postText}>Post</Text>
-        </TouchableOpacity>
-      </ScrollView>
-
+      {/* BOTTOM NAV SHOULD NEVER MOVE */}
       <BottomNav navigation={navigation} />
     </SafeAreaView>
   );
-}
+  }
 
 const styles = StyleSheet.create({
   container: {
@@ -276,16 +277,11 @@ const styles = StyleSheet.create({
   },
 
   dropdown: {
-    backgroundColor: "#D9D9D9", // same as other inputs
-    borderRadius: 4,             // match other input corners
+    backgroundColor: "#D9D9D9",
+    borderRadius: 4,
     height: 50,
     justifyContent: "center",
     marginBottom: 12,
-    paddingHorizontal: 10,       // match input padding
-  },
-
-  picker: {
-    fontSize: 14,
-    height: 50,
+    paddingHorizontal: 10,
   },
 });
