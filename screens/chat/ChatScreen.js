@@ -17,11 +17,11 @@ import {
 import Header from "../../components/Header";
 import { useMessages } from "../../context/MessagesContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import CustomAlert from "../../components/CustomAlert";
 
 export default function ChatScreen({ navigation, route }) {
   const contactId = route?.params?.idNumber;
   const contactName = route?.params?.name;
-
   const { messages, setMessages } = useMessages();
 
   const [text, setText] = useState("");
@@ -77,32 +77,31 @@ export default function ChatScreen({ navigation, route }) {
     }, 100);
   };
 
-  // ✅ Delete message
+  // ✅ Delete message with custom confirmation
+  const [isDeleteAlertVisible, setIsDeleteAlertVisible] = useState(false);
+  const [messageToDelete, setMessageToDelete] = useState(null);
+
   const handleDeleteMessage = (id) => {
-    Alert.alert(
-      "Delete Message",
-      "Are you sure you want to delete this message?",
-      [
-        { text: "Cancel", style: "cancel" },
-        {
-          text: "Delete",
-          style: "destructive",
-          onPress: () => {
-            setMessages((prev) => {
-              const userChats = prev[myId] || {};
-              const contactChats = userChats[contactId] || [];
-              return {
-                ...prev,
-                [myId]: {
-                  ...userChats,
-                  [contactId]: contactChats.filter((msg) => msg.id !== id),
-                },
-              };
-            });
+    setMessageToDelete(id); // Store the message id to be deleted
+    setIsDeleteAlertVisible(true); // Show the confirmation modal
+  };
+
+  const handleDeleteConfirm = (action) => {
+    if (action === "delete" && messageToDelete) {
+      // Delete message from state
+      setMessages((prev) => {
+        const userChats = prev[myId] || {};
+        const contactChats = userChats[contactId] || [];
+        return {
+          ...prev,
+          [myId]: {
+            ...userChats,
+            [contactId]: contactChats.filter((msg) => msg.id !== messageToDelete),
           },
-        },
-      ]
-    );
+        };
+      });
+    }
+    setIsDeleteAlertVisible(false); // Close the alert in both cases
   };
 
   // ✅ Render each message
@@ -142,6 +141,15 @@ export default function ChatScreen({ navigation, route }) {
 
   return (
     <SafeAreaView style={styles.container}>
+      {/* Custom Alert for Delete Confirmation */}
+      <CustomAlert
+        visible={isDeleteAlertVisible}
+        title="Delete Message"
+        message="Are you sure you want to delete this message?"
+        onClose={handleDeleteConfirm} // A function to handle the user's choice
+        deleteConfirm={true} // Show delete confirmation buttons
+      />
+
       <Header
         navigation={navigation}
         title={contactName}
@@ -157,12 +165,11 @@ export default function ChatScreen({ navigation, route }) {
       />
 
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <KeyboardAvoidingView
-            style={styles.content}
-            behavior={Platform.OS === "ios" ? "padding" : "height"}
-            keyboardVerticalOffset={Platform.OS === "ios" ? 90 : 0}
-          >
-
+        <KeyboardAvoidingView
+          style={styles.content}
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+          keyboardVerticalOffset={Platform.OS === "ios" ? 90 : 0}
+        >
           <FlatList
             ref={listRef}
             data={chatMessages}
@@ -191,6 +198,7 @@ export default function ChatScreen({ navigation, route }) {
   );
 }
 
+
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: "#ECF2E8" },
   content: { flex: 1 },
@@ -208,7 +216,7 @@ const styles = StyleSheet.create({
   timeTextOther: { color: "#8AA88A" },
   timeTextMe: { color: "#D6F0D7" },
   inputRow: { flexDirection: "row",  paddingHorizontal: 12,  paddingVertical: 10,  alignItems: "flex-end", backgroundColor: "transparent", }, 
-  input: { flex: 1, minHeight: 40, maxHeight: 120, backgroundColor: "#FFFFFF", borderRadius: 20, paddingHorizontal: 14, paddingVertical: 8, color: "#2E5E3E", shadowColor: "#000", shadowOpacity: 0.03, shadowRadius: 2, elevation: 1 },
+  input: { flex: 1, height: 40, backgroundColor: "#FFFFFF", borderRadius: 20, paddingHorizontal: 14, paddingVertical: 8, color: "#2E5E3E", fontSize: 16, lineHeight: 22, shadowColor: "#000", shadowOpacity: 0.03, shadowRadius: 2, elevation: 1 },
   sendButton: { marginLeft: 8, backgroundColor: "#2E5E3E", borderRadius: 20, paddingHorizontal: 14, paddingVertical: 10, justifyContent: "center", alignItems: "center" },
   sendText: { color: "#FFFFFF", fontWeight: "600" },
 });

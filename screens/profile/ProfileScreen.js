@@ -1,15 +1,20 @@
 import React, { useContext, useState } from "react";
-import { View, Text, Image, StyleSheet, SafeAreaView, ScrollView, TouchableOpacity, Alert } from "react-native";
+import { View, Text, Image, StyleSheet, SafeAreaView, ScrollView, TouchableOpacity } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
 import { getUser } from "../../utils/storage";
 import Header from "../../components/Header";
 import BottomNav from "../../components/BottomNav";
 import { Ionicons } from "@expo/vector-icons";
 import { PostsContext } from "../../context/PostsContext";
+import CustomAlert from "../../components/CustomAlert"; // Import CustomAlert
 
 export default function ProfileScreen({ navigation }) {
   const [user, setUser] = useState(null);
   const [menuVisible, setMenuVisible] = useState(null);
+
+  // State for showing the custom delete alert
+  const [isDeleteAlertVisible, setIsDeleteAlertVisible] = useState(false);
+  const [postToDelete, setPostToDelete] = useState(null);
 
   const { posts, deletePost } = useContext(PostsContext);
 
@@ -37,15 +42,32 @@ export default function ProfileScreen({ navigation }) {
     .filter((p) => p.userId === user.idNumber)
     .sort((a, b) => b.id - a.id);
 
+  // Confirm delete and show the custom alert
   const confirmDelete = (postId) => {
-    Alert.alert("Delete Post", "Are you sure you want to delete this post?", [
-      { text: "Cancel", style: "cancel" },
-      { text: "Delete", style: "destructive", onPress: () => deletePost(postId) },
-    ]);
+    setPostToDelete(postId); // Store the postId to be deleted
+    setIsDeleteAlertVisible(true); // Show the custom alert
+  };
+
+  // Handle the delete action based on user confirmation
+  const handleDeleteConfirm = (action) => {
+    if (action === "delete" && postToDelete) {
+      deletePost(postToDelete); // Call deletePost function if "delete" action
+    }
+    // Close the alert in both cases
+    setIsDeleteAlertVisible(false);
   };
 
   return (
     <SafeAreaView style={styles.container}>
+      {/* Custom Alert for Delete Confirmation */}
+      <CustomAlert
+        visible={isDeleteAlertVisible}
+        title="Delete Post"
+        message="Are you sure you want to delete this post?"
+        onClose={handleDeleteConfirm} // A function to handle the user's choice
+        deleteConfirm={true} // Show delete confirmation buttons
+      />
+
       <Header navigation={navigation} title="TradeBlazer" />
 
       <ScrollView contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 120 }}>
@@ -93,22 +115,11 @@ export default function ProfileScreen({ navigation }) {
                   <Ionicons name="ellipsis-vertical" size={22} color="#2E5E3E" />
                 </TouchableOpacity>
               </View>
-
               {menuVisible === post.id && (
                 <View style={styles.menu}>
                   <TouchableOpacity
                     style={styles.menuItem}
-                    onPress={() => {
-                      setMenuVisible(null);
-                      navigation.navigate("EditPost", { post });
-                    }}
-                  >
-                    <Text style={styles.menuText}>Edit</Text>
-                  </TouchableOpacity>
-
-                  <TouchableOpacity
-                    style={styles.menuItem}
-                    onPress={() => confirmDelete(post.id)}
+                    onPress={() => confirmDelete(post.id)} // Trigger delete confirmation
                   >
                     <Text style={[styles.menuText, { color: "red" }]}>Delete</Text>
                   </TouchableOpacity>
